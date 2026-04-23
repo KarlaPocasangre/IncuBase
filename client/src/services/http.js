@@ -9,3 +9,25 @@ export async function httpGet(endpoint) {
 
   return res.json();
 }
+
+export async function httpPost(endpoint, data) {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await res.json();
+
+  if (!res.ok) {
+    throw {
+      response: {
+        data: result,
+      },
+    };
+  }
+
+  return { data: result };
+}

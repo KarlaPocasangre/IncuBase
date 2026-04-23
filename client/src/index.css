@@ -1,1 +1,70 @@
 @import "tailwindcss";
+
+body {
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Animaciones bubbles */
+@keyframes floatBubble1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(120px, 90px) scale(1.12);
+  }
+
+  100% {
+    transform: translate(-70px, -50px) scale(1);
+  }
+}
+
+@keyframes floatBubble2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-140px, -80px) scale(0.96);
+  }
+
+  100% {
+    transform: translate(90px, 120px) scale(1);
+  }
+}
+
+.bubble-1 {
+  width: 620px;
+  height: 620px;
+  top: -22%;
+  left: -6%;
+  animation: floatBubble1 20s infinite ease-in-out alternate;
+}
+
+.bubble-2 {
+  width: 720px;
+  height: 720px;
+  bottom: -28%;
+  right: -10%;
+  animation: floatBubble2 25s infinite ease-in-out alternate;
+}
+
+/* Scroll oculto pero funcional */
+.scroll-hidden {
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scroll-hidden::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/*quitar el ojito nativo de Edge*/
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+

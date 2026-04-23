@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Map,
   Thermometer,
-  Circle,
   Baby,
   Fish,
   FileSearch,
@@ -25,6 +24,17 @@ import logo from "../../assets/incubase-logo-sin-fondo.png";
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [gestionOpen, setGestionOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const usuarioGuardado = localStorage.getItem("usuario");
+  const usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+
+  const nombreCompleto = usuario
+    ? `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim()
+    : "Usuario";
+
+  const rolUsuario = usuario?.rol || "Sin rol";
 
   const mainItems = [
     { label: "Dashboard", sublabel: "Inicio", path: "/", icon: LayoutDashboard },
@@ -101,6 +111,12 @@ function Sidebar() {
 
   const toggleGestion = () => {
     setGestionOpen((prev) => !prev);
+  };
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -286,8 +302,8 @@ function Sidebar() {
 
             {!collapsed && (
               <div className="min-w-0">
-                <p className="text-sm font-semibold truncate">Erick Ulises Martínez</p>
-                <p className="text-xs text-white/65">Administrador</p>
+                <p className="text-sm font-semibold truncate">{nombreCompleto}</p>
+                <p className="text-xs text-white/65">{rolUsuario}</p>
               </div>
             )}
           </div>
@@ -295,6 +311,7 @@ function Sidebar() {
           {!collapsed && (
             <button
               type="button"
+              onClick={cerrarSesion}
               className="p-2 rounded-lg hover:bg-[#0B3B35] transition"
               title="Cerrar sesión"
             >

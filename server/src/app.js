@@ -1,19 +1,12 @@
-import express from "express";
-import cors from "cors";
+const express = require('express')
+const cors = require('cors')
+const authRoutes = require('./routes/auth.routes')
 
-const app = express();
+const app = express()
 
-app.use(cors()); // 👈 obligatorio
+app.use(cors())
+app.use(express.json())
 
-app.get("/", (req, res) => {
-  res.send("Backend funcionando 🚀");
-});
+app.use('/api/auth', authRoutes)
 
-app.get("/api/books", (req, res) => {
-  res.json([
-    { id: 1, titulo: "Clean Code" },
-    { id: 2, titulo: "El Principito" },
-  ]);
-});
-
-export default app;
+module.exports = app
