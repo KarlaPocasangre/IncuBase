@@ -12,6 +12,10 @@ function Topbar() {
       title: "Registro de Nidos",
       subtitle: "Registrar un nuevo nido",
     },
+    "/gestion-nacimientos": {
+      title: "Eclosion",
+      subtitle: "Gestion de Nacimientos",
+},
   };
 
   const current = titles[location.pathname] || {
