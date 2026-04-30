@@ -4,8 +4,6 @@ import {
   LayoutDashboard,
   Map,
   Thermometer,
-  Baby,
-  Fish,
   FileSearch,
   Wrench,
   FileText,
@@ -39,12 +37,7 @@ function Sidebar() {
   const rolUsuario = usuario?.rol || "Sin rol";
 
   const mainItems = [
-    {
-      label: "Dashboard",
-      sublabel: "Inicio",
-      path: "/",
-      icon: LayoutDashboard,
-    },
+    { label: "Dashboard", sublabel: "Inicio", path: "/", icon: LayoutDashboard },
     {
       label: "Corrales y Nidos",
       sublabel: "Detalles",
@@ -133,11 +126,7 @@ function Sidebar() {
         collapsed ? "w-[88px]" : "w-[260px]"
       }`}
     >
-      <div
-        className={`flex-1 min-h-0 ${
-          gestionOpen ? "overflow-y-auto" : "overflow-hidden"
-        } [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
-      >
+      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* HEADER */}
         <div className="h-[80px] border-b border-white/10 px-4 flex items-center">
           <div
@@ -165,7 +154,7 @@ function Sidebar() {
         </div>
 
         {/* MENU */}
-        <nav className="px-4 py-2.5 flex flex-col gap-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <nav className="px-3 py-4 flex flex-col gap-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {/* MAIN ITEMS */}
           {mainItems.map((item) => {
             const Icon = item.icon;
@@ -327,7 +316,11 @@ function Sidebar() {
               collapsed ? "justify-center" : ""
             }`}
           >
-            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+            {collapsed ? (
+              <ChevronRight size={20} />
+            ) : (
+              <ChevronLeft size={20} />
+            )}
 
             {!collapsed && (
               <span className="text-sm font-semibold">Contraer menú</span>
@@ -338,28 +331,25 @@ function Sidebar() {
 
       {/* USER */}
       <div className="border-t border-white/10 px-4 py-4 shrink-0 bg-[#062F2A]">
-        {collapsed ? (
-          <button
-            type="button"
-            onClick={cerrarSesion}
-            className="mx-auto flex h-10 w-10 items-center justify-center rounded-full hover:bg-[#0B3B35] transition"
-            title="Cerrar sesión"
-          >
-            <LogOut size={20} />
-          </button>
-        ) : (
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <UserCircle2 size={30} className="shrink-0 text-white/90" />
+        <div
+          className={`flex items-center ${
+            collapsed ? "justify-center" : "justify-between"
+          } gap-3`}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <UserCircle2 size={30} className="shrink-0 text-white/90" />
 
+            {!collapsed && (
               <div className="min-w-0">
                 <p className="text-sm font-semibold truncate">
                   {nombreCompleto}
                 </p>
                 <p className="text-xs text-white/65">{rolUsuario}</p>
               </div>
-            </div>
+            )}
+          </div>
 
+          {!collapsed && (
             <button
               type="button"
               onClick={cerrarSesion}
@@ -368,8 +358,8 @@ function Sidebar() {
             >
               <LogOut size={17} />
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </aside>
   );

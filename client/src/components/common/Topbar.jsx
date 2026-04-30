@@ -17,16 +17,16 @@ function Topbar() {
       subtitle: "Consulta los detalles de los nidos de un corral",
     },
     "/temperatura": {
-      title: "Temperaura",
+      title: "Temperatura",
       subtitle: "Monitoreo de temperatura",
     },
     "/nacimientos": {
-      title: "Eclosion",
+      title: "Eclosión",
       subtitle: "Nacimientos",
     },
     "/exhumacion": {
-      title: "Exhumacion",
-      subtitle: "Exhumacion",
+      title: "Exhumación",
+      subtitle: "Exhumación",
     },
     "/reportes": {
       title: "Reportes",
@@ -34,23 +34,23 @@ function Topbar() {
     },
     "/gestion-corrales": {
       title: "Corrales",
-      subtitle: "Gestion de corrales",
+      subtitle: "Gestión de corrales",
     },
     "/gestion-nidos": {
-      title: "Gestion de nidos",
-      subtitle: "Gestion de nidos",
+      title: "Gestión de nidos",
+      subtitle: "Gestión de nidos",
     },
     "/gestion-nacimientos": {
-      title: "Eclosion",
-      subtitle: "Gestion de Nacimientos",
+      title: "Eclosión",
+      subtitle: "Gestión de Nacimientos",
     },
     "/gestion-exhumacion": {
-      title: "Exhumacion",
-      subtitle: "Gestion de Exhumacion",
+      title: "Exhumación",
+      subtitle: "Gestión de Exhumación",
     },
     "/usuarios": {
       title: "Usuarios",
-      subtitle: "Gestion de Usuarios",
+      subtitle: "Gestión de Usuarios",
     },
   };
 
