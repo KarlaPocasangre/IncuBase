@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   Map,
   Thermometer,
-  Circle,
   Baby,
   Fish,
   FileSearch,
@@ -20,7 +19,9 @@ import {
   Users,
 } from "lucide-react";
 
-import logo from "../../assets/incubase-logo-sin-fondo.png";
+import logo from "../../assets/logo-tortugaSVG.svg";
+import turtleIcon from "../../assets/turtleWhite.svg";
+import turtleCollapsedIcon from "../../assets/turtle2SVG.svg";
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -50,7 +51,7 @@ function Sidebar() {
       label: "Registro de Nacimientos",
       sublabel: "Nacimientos",
       path: "/nacimientos",
-      icon: Fish,
+      customIcon: turtleIcon,
     },
     {
       label: "Registro de Exhumación",
@@ -80,7 +81,8 @@ function Sidebar() {
     {
       label: "Gestión de Nacimientos",
       path: "/gestion-nacimientos",
-      icon: Baby,
+      customIcon: turtleIcon,
+      collapsedIcon: turtleCollapsedIcon,
     },
     {
       label: "Gestión de Exhumación",
@@ -104,19 +106,20 @@ function Sidebar() {
   };
 
   return (
-    <aside
-      className={`min-h-screen bg-[#062F2A] text-white flex flex-col justify-between border-r border-white/10 transition-all duration-300 ${
-        collapsed ? "w-[88px]" : "w-[260px]"
-      }`}
-    >
-      <div>
+      <aside
+        className={`h-screen shrink-0 bg-[#062F2A] text-white flex flex-col border-r border-white/10 transition-all duration-300 ${
+          collapsed ? "w-[88px]" : "w-[260px]"
+        }`}
+      >
+      <div  className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {/* HEADER */}
         <div className="h-[80px] border-b border-white/10 px-4 flex items-center">
           <div
             className={`flex items-center w-full ${
               collapsed ? "justify-center" : "gap-3"
             }`}
           >
-            <div className="h-12 w-12 rounded-xl bg-[#2B503E] flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="h-12 w-12 rounded-xl bg-[#062F2A] flex items-center justify-center shrink-0 overflow-hidden">
               <img
                 src={logo}
                 alt="Logo IncuBase"
@@ -133,7 +136,9 @@ function Sidebar() {
           </div>
         </div>
 
-        <nav className="px-3 py-4 flex flex-col gap-2">
+        {/* MENU */}
+        <nav className="px-3 py-4 flex flex-col gap-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {/* MAIN ITEMS */}
           {mainItems.map((item) => {
             const Icon = item.icon;
 
@@ -145,25 +150,36 @@ function Sidebar() {
                 title={collapsed ? item.label : ""}
                 onClick={() => setGestionOpen(false)}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all ${
+                  `group flex items-start gap-3 rounded-2xl px-4 py-3 transition-all ${
                     isActive ? "bg-[#2B503E]" : "hover:bg-[#0B3B35]"
                   } ${collapsed ? "justify-center" : ""}`
                 }
               >
-                <Icon size={20} className="shrink-0 text-white/90" />
+                {item.customIcon ? (
+                  <img
+                    src={item.customIcon}
+                    alt={item.label}
+                    className="h-5 w-5 shrink-0 object-contain opacity-90"
+                  />
+                ) : (
+                  <Icon size={20} className="shrink-0 text-white/90" />
+                )}
 
                 {!collapsed && (
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold leading-none truncate">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold leading-tight whitespace-normal">
                       {item.label}
                     </p>
-                    <span className="text-xs text-white/65">{item.sublabel}</span>
+                    <span className="text-xs text-white/65 leading-tight">
+                      {item.sublabel}
+                    </span>
                   </div>
                 )}
               </NavLink>
             );
           })}
 
+          {/* GESTIÓN */}
           <div
             className="relative"
             onMouseLeave={() => collapsed && setGestionOpen(false)}
@@ -195,6 +211,7 @@ function Sidebar() {
               )}
             </button>
 
+            {/* SUBMENU NORMAL */}
             {!collapsed && gestionOpen && (
               <div className="mt-2 ml-5 pl-4 border-l border-white/15 flex flex-col gap-1">
                 {gestionItems.map((item) => {
@@ -213,7 +230,15 @@ function Sidebar() {
                         }`
                       }
                     >
-                      <Icon size={15} />
+                      {item.customIcon ? (
+                        <img
+                          src={item.customIcon}
+                          alt={item.label}
+                          className="h-[15px] w-[15px] shrink-0 object-contain opacity-90"
+                        />
+                      ) : (
+                        <Icon size={15} />
+                      )}
                       <span>{item.label}</span>
                     </NavLink>
                   );
@@ -221,12 +246,9 @@ function Sidebar() {
               </div>
             )}
 
+            {/* SUBMENU COLLAPSED */}
             {collapsed && gestionOpen && (
-              <div
-                onMouseEnter={() => setGestionOpen(true)}
-                onMouseLeave={() => setGestionOpen(false)}
-                className="absolute left-[78px] top-0 z-50 w-64 rounded-2xl bg-[#F3F7F6] shadow-xl border border-[#D6E1DE] p-3"
-              >
+              <div className="fixed left-[95px] top-[335px] z-50 w-64 rounded-2xl bg-[#F3F7F6] shadow-xl border border-[#D6E1DE] p-3">
                 <div className="flex flex-col gap-1">
                   {gestionItems.map((item) => {
                     const Icon = item.icon;
@@ -244,7 +266,15 @@ function Sidebar() {
                           }`
                         }
                       >
-                        <Icon size={17} />
+                        {item.customIcon ? (
+                          <img
+                             src={collapsed ? item.collapsedIcon || item.customIcon : item.customIcon}
+                             alt={item.label}
+                            className="h-[17px] w-[17px] shrink-0 object-contain opacity-90"
+                          />
+                        ) : (
+                          <Icon size={17} />
+                        )}
                         <span>{item.label}</span>
                       </NavLink>
                     );
@@ -254,6 +284,7 @@ function Sidebar() {
             )}
           </div>
 
+          {/* BOTÓN CONTRAER */}
           <button
             type="button"
             onClick={toggleCollapsed}
@@ -263,9 +294,9 @@ function Sidebar() {
             }`}
           >
             {collapsed ? (
-              <ChevronRight size={20} className="shrink-0" />
+              <ChevronRight size={20} />
             ) : (
-              <ChevronLeft size={20} className="shrink-0" />
+              <ChevronLeft size={20} />
             )}
 
             {!collapsed && (
@@ -275,34 +306,37 @@ function Sidebar() {
         </nav>
       </div>
 
-      <div className="border-t border-white/10 px-4 py-4">
-        <div
-          className={`flex items-center ${
-            collapsed ? "justify-center" : "justify-between"
-          } gap-3`}
-        >
-          <div className="flex items-center gap-3 min-w-0">
-            <UserCircle2 size={30} className="shrink-0 text-white/90" />
+      {/* USER */}
+      <div className="border-t border-white/10 px-4 py-4 shrink-0 bg-[#062F2A]">
+  <div
+    className={`flex items-center ${
+      collapsed ? "justify-center" : "justify-between"
+    } gap-3`}
+  >
+    <div className="flex items-center gap-3 min-w-0">
+      <UserCircle2 size={30} className="shrink-0 text-white/90" />
 
-            {!collapsed && (
-              <div className="min-w-0">
-                <p className="text-sm font-semibold truncate">Erick Ulises Martínez</p>
-                <p className="text-xs text-white/65">Administrador</p>
-              </div>
-            )}
-          </div>
-
-          {!collapsed && (
-            <button
-              type="button"
-              className="p-2 rounded-lg hover:bg-[#0B3B35] transition"
-              title="Cerrar sesión"
-            >
-              <LogOut size={17} />
-            </button>
-          )}
+      {!collapsed && (
+        <div className="min-w-0">
+          <p className="text-sm font-semibold truncate">
+            Erick Ulises Martínez
+          </p>
+          <p className="text-xs text-white/65">Administrador</p>
         </div>
-      </div>
+      )}
+    </div>
+
+    {!collapsed && (
+      <button
+        type="button"
+        className="p-2 rounded-lg hover:bg-[#0B3B35] transition"
+        title="Cerrar sesión"
+      >
+        <LogOut size={17} />
+      </button>
+    )}
+  </div>
+</div>
     </aside>
   );
 }

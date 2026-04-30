@@ -12,6 +12,46 @@ function Topbar() {
       title: "Registro de Nidos",
       subtitle: "Registrar un nuevo nido",
     },
+     "/corrales-nidos": {
+      title: "Vista de Corrales",
+      subtitle: "Consulta los detalles de los nidos de un corral",
+    },
+     "/temperatura": {
+      title: "Temperaura",
+      subtitle: "Monitoreo de temperatura",
+    },
+     "/nacimientos": {
+      title: "Eclosion",
+      subtitle: "Nacimientos",
+    },
+    "/exhumacion": {
+      title: "Exhumacion",
+      subtitle: "Exhumacion",
+    },
+    "/reportes": {
+      title: "Reportes",
+      subtitle: "Reportes",
+    },
+    "/gestion-corrales": {
+      title: "Corrales",
+      subtitle: "Gestion de corrales",
+    },
+    "/gestion-nidos": {
+      title: "Gestion de nidos",
+      subtitle: "Gestion de nidos",
+    },
+    "/gestion-nacimientos": {
+      title: "Eclosion",
+      subtitle: "Gestion de Nacimientos",
+    },
+    "/gestion-exhumacion": {
+      title: "Exhumacion",
+      subtitle: "Gestion de Exhumacion",
+    },
+    "/usuarios": {
+      title: "Usuarios",
+      subtitle: "Gestion de Usuarios",
+    },
   };
 
   const current = titles[location.pathname] || {
