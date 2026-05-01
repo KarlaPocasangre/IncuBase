@@ -111,7 +111,9 @@ function Sidebar() {
           collapsed ? "w-[88px]" : "w-[260px]"
         }`}
       >
-      <div  className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div   className={`flex-1 min-h-0 ${
+    gestionOpen ? "overflow-y-auto" : "overflow-hidden"
+  } [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}>
         {/* HEADER */}
         <div className="h-[80px] border-b border-white/10 px-4 flex items-center">
           <div
@@ -137,7 +139,7 @@ function Sidebar() {
         </div>
 
         {/* MENU */}
-        <nav className="px-3 py-4 flex flex-col gap-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <nav className="px-4 py-2.5 flex flex-col gap-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {/* MAIN ITEMS */}
           {mainItems.map((item) => {
             const Icon = item.icon;
