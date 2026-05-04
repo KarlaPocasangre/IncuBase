@@ -1,33 +1,32 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import MainLayout from "../layouts/MainLayout";
-import PrivateRoute from "./PrivateRoute";
+import MainLayout from "../layouts/MainLayout.jsx";
+import PrivateRoute from "./PrivateRoute.jsx";
 
 /* AUTH */
-import Login from "../pages/auth/Login";
-import ForgotPassword from "../pages/auth/ForgotPassword";
-import VerifyCode from "../pages/auth/VerifyCode";
-import ResetPassword from "../pages/auth/ResetPassword";
+import Login from "../pages/auth/Login.jsx";
+import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
+import VerifyCode from "../pages/auth/VerifyCode.jsx";
+import ResetPassword from "../pages/auth/ResetPassword.jsx";
 
 /* SISTEMA */
-import DashboardPage from "../pages/dashboard/DashboardPage";
-import CorralesNidosPage from "../pages/corralesNidos/CorralesNidosPage";
-import GestionCorralesPage from "../pages/gestioncorrales/GestionCorralesPage";
-import RegistroNidosPage from "../pages/registronidos/RegistroNidosPage";
-import TemperaturaPage from "../pages/temperatura/TemperaturaPage";
-import NacimientosPage from "../pages/nacimientos/NacimientosPage";
-import ExhumacionPage from "../pages/exhumacion/ExhumacionPage";
-import ReportesPage from "../pages/reportes/ReportesPage";
-import UsuariosView from "../pages/usuarios/UsuariosView";
+import DashboardPage from "../pages/dashboard/DashboardAdminPage.jsx";
+import CorralesNidosPage from "../pages/corralesNidos/CorralesNidosPage.jsx";
+import GestionCorralesPage from "../pages/gestion/corrales/GestionCorralesPage.jsx";
+import RegistroNidosPage from "../pages/registro/nidos/RegistroNidosPage.jsx";
+import TemperaturaPage from "../pages/registro/temperatura/TemperaturaPage.jsx";
+import NacimientosPage from "../pages/registro/nacimientos/NacimientosPage.jsx";
+import ExhumacionPage from "../pages/registro/exhumacion/ExhumacionPage.jsx";
+import ReportesPage from "../pages/reportes/ReportesPage.jsx";
+import UsuariosView from "../pages/gestion/usuarios/UsuariosView.jsx";
 
-import GestionNidosPage from "../pages/gestionnidos/GestionNidosPage";
-import GestionNacimientosPage from "../pages/gestionnacimientos/GestionNacimientosPage";
-import GestionExhumacionPage from "../pages/gestionexhumacion/GestionExhumacionPage";
+import GestionNidosPage from "../pages/gestion/nidos/GestionNidosPage.jsx";
+import GestionNacimientosPage from "../pages/gestion/nacimientos/GestionNacimientosPage.jsx";
+import GestionExhumacionPage from "../pages/gestion/exhumacion/GestionExhumacionPage.jsx";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* PUBLICAS */}
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -52,13 +51,18 @@ function AppRouter() {
           <Route path="/reportes" element={<ReportesPage />} />
           <Route path="/usuarios" element={<UsuariosView />} />
           <Route path="/gestion-nidos" element={<GestionNidosPage />} />
-          <Route path="/gestion-nacimientos" element={<GestionNacimientosPage />} />
-          <Route path="/gestion-exhumacion" element={<GestionExhumacionPage />} />
+          <Route
+            path="/gestion-nacimientos"
+            element={<GestionNacimientosPage />}
+          />
+          <Route
+            path="/gestion-exhumacion"
+            element={<GestionExhumacionPage />}
+          />
         </Route>
 
         {/* SI NO EXISTE RUTA */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-
       </Routes>
     </BrowserRouter>
   );
