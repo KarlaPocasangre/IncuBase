@@ -1,5 +1,5 @@
-// ManagementFilters.jsx
-import { CalendarDays, RotateCcw, Search } from "lucide-react";
+import { CalendarDays, Search } from "lucide-react";
+import ClearButton from "../common/ClearButton";
 
 function ManagementFilters({ placeholder, filters }) {
   return (
@@ -19,6 +19,7 @@ function ManagementFilters({ placeholder, filters }) {
           index === 0 ? (
             <button
               key={filter}
+              type="button"
               className="flex h-12 items-center justify-between rounded-xl border border-[#D8E5DF] bg-white px-4 text-sm text-gray-700"
             >
               {filter}
@@ -35,10 +36,13 @@ function ManagementFilters({ placeholder, filters }) {
         )}
       </div>
 
-      <button className="mb-6 flex items-center gap-2 rounded-xl border border-[#D8E5DF] bg-[#F8FBFA] px-4 py-3 text-sm text-gray-500">
-        <RotateCcw className="h-4 w-4" />
+      {/* 🔥 BOTÓN REUTILIZABLE */}
+      <ClearButton
+        className="mb-6"
+        onClick={() => console.log("Limpiar filtros")}
+      >
         Limpiar Filtros
-      </button>
+      </ClearButton>
     </>
   );
 }
