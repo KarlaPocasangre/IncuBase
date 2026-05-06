@@ -15,6 +15,7 @@ import {
   ClipboardList,
   Egg,
   Users,
+  Fence,
 } from "lucide-react";
 
 import logo from "../../assets/logo-tortugaSVG.svg";
@@ -47,7 +48,7 @@ function Sidebar() {
       label: "Corrales y Nidos",
       sublabel: "Detalles",
       path: "/corrales-nidos",
-      icon: Map,
+      icon: Fence,
     },
     {
       label: "Temperatura",
@@ -331,28 +332,25 @@ function Sidebar() {
 
       {/* USER */}
       <div className="border-t border-white/10 px-4 py-4 shrink-0 bg-[#062F2A]">
-        {collapsed ? (
-          <button
-            type="button"
-            onClick={cerrarSesion}
-            className="mx-auto flex h-10 w-10 items-center justify-center rounded-full hover:bg-[#0B3B35] transition"
-            title="Cerrar sesión"
-          >
-            <LogOut size={20} />
-          </button>
-        ) : (
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <UserCircle2 size={30} className="shrink-0 text-white/90" />
+        <div
+          className={`flex items-center ${
+            collapsed ? "justify-center" : "justify-between"
+          } gap-3`}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <UserCircle2 size={30} className="shrink-0 text-white/90" />
 
+            {!collapsed && (
               <div className="min-w-0">
                 <p className="text-sm font-semibold truncate">
                   {nombreCompleto}
                 </p>
                 <p className="text-xs text-white/65">{rolUsuario}</p>
               </div>
-            </div>
+            )}
+          </div>
 
+          {!collapsed && (
             <button
               type="button"
               onClick={cerrarSesion}
@@ -361,8 +359,8 @@ function Sidebar() {
             >
               <LogOut size={17} />
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </aside>
   );
