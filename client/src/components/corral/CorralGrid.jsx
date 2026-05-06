@@ -26,13 +26,11 @@ export default function CorralGrid({ onSelect }) {
           ))}
         </div>
 
-        {/* GRID */}
         {filas.map((fila, filaIndex) => (
           <div
             key={fila}
             className="grid grid-cols-[20px_repeat(8,40px)] items-center gap-2"
           >
-            {/* letra fila */}
             <span className="text-xs text-[#6B7280]">{fila}</span>
 
             {columnas.map((col, colIndex) => {

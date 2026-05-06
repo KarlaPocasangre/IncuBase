@@ -36,7 +36,6 @@ function ManagementFilters({ placeholder, filters }) {
         )}
       </div>
 
-      {/* 🔥 BOTÓN REUTILIZABLE */}
       <ClearButton
         className="mb-6"
         onClick={() => console.log("Limpiar filtros")}

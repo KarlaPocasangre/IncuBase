@@ -17,7 +17,6 @@ export const corralesConfig = {
   searchPlaceholder: "Buscar por código de corral...",
   filters: ["Rango de fecha", "Tipo", "Estado"],
 
-  // 🔥 STATS (como Figma)
   stats: [
     {
       title: "Total de Corrales",
@@ -42,7 +41,6 @@ export const corralesConfig = {
     },
   ],
 
-  // 🔥 TABLA
   columns: [
     { header: "Código", key: "codigo" },
     { header: "Ubicación", key: "ubicacion" },
@@ -95,7 +93,6 @@ export const corralesConfig = {
     },
   ],
 
-  // 🔥 DATA (mock)
   data: [
     {
       codigo: "C2HJJ-09",

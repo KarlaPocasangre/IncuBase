@@ -4,8 +4,6 @@ import {
   LayoutDashboard,
   Map,
   Thermometer,
-  Baby,
-  Fish,
   FileSearch,
   Wrench,
   FileText,
@@ -133,11 +131,7 @@ function Sidebar() {
         collapsed ? "w-[88px]" : "w-[260px]"
       }`}
     >
-      <div
-        className={`flex-1 min-h-0 ${
-          gestionOpen ? "overflow-y-auto" : "overflow-hidden"
-        } [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
-      >
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* HEADER */}
         <div className="h-[80px] border-b border-white/10 px-4 flex items-center">
           <div
@@ -165,7 +159,7 @@ function Sidebar() {
         </div>
 
         {/* MENU */}
-        <nav className="px-4 py-2.5 flex flex-col gap-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <nav className="px-4 py-2.5 flex flex-col gap-1">
           {/* MAIN ITEMS */}
           {mainItems.map((item) => {
             const Icon = item.icon;
@@ -231,6 +225,7 @@ function Sidebar() {
                     </p>
                     <span className="text-xs text-white/65">Historial</span>
                   </div>
+
                   <ChevronDown
                     size={16}
                     className={`transition-transform ${
@@ -269,6 +264,7 @@ function Sidebar() {
                       ) : (
                         <Icon size={15} />
                       )}
+
                       <span>{item.label}</span>
                     </NavLink>
                   );
@@ -298,17 +294,14 @@ function Sidebar() {
                       >
                         {item.customIcon ? (
                           <img
-                            src={
-                              collapsed
-                                ? item.collapsedIcon || item.customIcon
-                                : item.customIcon
-                            }
+                            src={item.collapsedIcon || item.customIcon}
                             alt={item.label}
                             className="h-[17px] w-[17px] shrink-0 object-contain opacity-90"
                           />
                         ) : (
                           <Icon size={17} />
                         )}
+
                         <span>{item.label}</span>
                       </NavLink>
                     );
