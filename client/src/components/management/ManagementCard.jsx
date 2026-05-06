@@ -1,7 +1,12 @@
-// ManagementCard.jsx
 import { Plus, Wrench } from "lucide-react";
 
-function ManagementCard({ title, description, buttonText, children }) {
+function ManagementCard({
+  title,
+  description,
+  buttonText,
+  onButtonClick,
+  children,
+}) {
   return (
     <section className="rounded-2xl border border-[#D8E5DF] bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-start justify-between gap-4">
@@ -15,7 +20,11 @@ function ManagementCard({ title, description, buttonText, children }) {
         </div>
 
         {buttonText && (
-          <button className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#0B5631]">
+          <button
+            type="button"
+            onClick={onButtonClick}
+            className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#0B5631]"
+          >
             <Plus className="h-4 w-4" />
             {buttonText}
           </button>

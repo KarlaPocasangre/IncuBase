@@ -15,6 +15,7 @@ import {
   ClipboardList,
   Egg,
   Users,
+  Fence,
 } from "lucide-react";
 
 import logo from "../../assets/logo-tortugaSVG.svg";
@@ -42,7 +43,7 @@ function Sidebar() {
       label: "Corrales y Nidos",
       sublabel: "Detalles",
       path: "/corrales-nidos",
-      icon: Map,
+      icon: Fence,
     },
     {
       label: "Temperatura",

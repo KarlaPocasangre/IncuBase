@@ -1,4 +1,6 @@
-function ManagementTable({ columns, data }) {
+import { FileSearch, Pencil, XCircle } from "lucide-react";
+
+function ManagementTable({ columns, data, onEdit, onDetail }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[900px] border-collapse text-left">
@@ -25,9 +27,25 @@ function ManagementTable({ columns, data }) {
                     columnIndex === 0 ? "font-bold text-[#0B2B26]" : ""
                   }`}
                 >
-                  {column.render
-                    ? column.render(row[column.key], row)
-                    : row[column.key]}
+                  {column.key === "acciones" ? (
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => onEdit(row)}>
+                        <Pencil className="h-5 w-5 text-[#E6A11D]" />
+                      </button>
+
+                      <button type="button">
+                        <XCircle className="h-5 w-5 text-red-400" />
+                      </button>
+
+                      <button type="button" onClick={() => onDetail?.(row)}>
+                        <FileSearch className="h-5 w-5 text-blue-400" />
+                      </button>
+                    </div>
+                  ) : column.render ? (
+                    column.render(row[column.key], row)
+                  ) : (
+                    row[column.key]
+                  )}
                 </td>
               ))}
             </tr>

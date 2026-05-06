@@ -12,8 +12,7 @@ import {
 function DetailRow({ icon: Icon, label, value }) {
   return (
     <div className="flex items-start gap-3">
-      <Icon size={17} className="text-[#79B49E] shrink-0 mt-[2px]" />
-
+      <Icon size={17} className="mt-[2px] shrink-0 text-[#79B49E]" />
       <div className="flex gap-2 text-sm">
         <span className="font-semibold text-[#263D38]">{label}:</span>
         <span className="text-slate-500">{value || "—"}</span>
@@ -22,12 +21,12 @@ function DetailRow({ icon: Icon, label, value }) {
   );
 }
 
-function DetailCorralModal({ open, corral, onClose }) {
+function CorralDetailModal({ open, corral, onClose }) {
   if (!open || !corral) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4">
-      <div className="w-full max-w-[460px] rounded-xl bg-white p-6 shadow-xl">
+      <div className="w-full max-w-[460px] rounded-xl bg-[#F5FAF8] p-6 shadow-xl">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-base font-bold text-[#10231F]">
@@ -56,7 +55,7 @@ function DetailCorralModal({ open, corral, onClose }) {
             <DetailRow
               icon={CalendarDays}
               label="Fecha de instalación"
-              value={corral.fecha}
+              value={corral.fechaInstalacion}
             />
             <DetailRow icon={User} label="Creado por" value={corral.creadoPor} />
             <DetailRow
@@ -66,10 +65,10 @@ function DetailCorralModal({ open, corral, onClose }) {
             />
 
             <div className="flex items-start gap-3">
-              <Binoculars size={17} className="text-[#79B49E] shrink-0 mt-[2px]" />
+              <Binoculars size={17} className="mt-[2px] shrink-0 text-[#79B49E]" />
               <div className="text-sm">
                 <p className="font-semibold text-[#263D38]">Observaciones:</p>
-                <p className="mt-1 text-slate-500 leading-relaxed">
+                <p className="mt-1 leading-relaxed text-slate-500">
                   {corral.observaciones || "Sin observaciones registradas."}
                 </p>
               </div>
@@ -81,7 +80,7 @@ function DetailCorralModal({ open, corral, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg bg-[#00683D] px-5 py-2 text-sm font-semibold text-white hover:bg-[#6AA88F] transition"
+            className="rounded-lg bg-[#00683D] px-5 py-2 text-sm font-semibold text-white hover:bg-[#6AA88F]"
           >
             Aceptar
           </button>
@@ -91,4 +90,4 @@ function DetailCorralModal({ open, corral, onClose }) {
   );
 }
 
-export default DetailCorralModal;
+export default CorralDetailModal;
