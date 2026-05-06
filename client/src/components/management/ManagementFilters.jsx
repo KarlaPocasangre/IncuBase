@@ -37,6 +37,7 @@ function ManagementFilters({ placeholder, filters }) {
       </div>
 
       <ClearButton
+        variant="filters"
         className="mb-6"
         onClick={() => console.log("Limpiar filtros")}
       >

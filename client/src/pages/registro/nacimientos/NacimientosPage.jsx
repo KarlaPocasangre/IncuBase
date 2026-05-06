@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react"
-import RegistroNacimientoForm from "../../../components/nacimientos/RegistroNacimientoForm"
-import CalculosNacimientoCard from "../../../components/nacimientos/CalculosNacimientoCard"
+import { useMemo, useState } from "react";
+import CalculosNacimientoCard from "../../../components/nacimientos/CalculosNacimientoCard";
+import RegistroNacimientoForm from "../../../components/nacimientos/RegistroNacimientoForm";
 
 function NacimientosPage() {
-  const [form, setForm] = useState({
+  const initialForm = {
     nido: "",
     fechaEclosion: "",
     fechaLiberacion: "",
@@ -14,7 +14,9 @@ function NacimientosPage() {
     muertosFuera: "",
     condicionMarea: "",
     observaciones: "",
-  })
+  };
+
+  const [form, setForm] = useState(initialForm);
 
   const nidos = [
     {
@@ -45,29 +47,27 @@ function NacimientosPage() {
       especie: "Golfina",
       diasIncubacion: 54,
     },
-  ]
+  ];
 
-  const nidoSeleccionado = nidos.find((n) => n.id === form.nido)
+  const nidoSeleccionado = nidos.find((n) => n.id === form.nido);
 
   const calculos = useMemo(() => {
-    const vivosDentro = Number(form.vivosDentro) || 0
-    const vivosFuera = Number(form.vivosFuera) || 0
-    const muertosDentro = Number(form.muertosDentro) || 0
-    const muertosFuera = Number(form.muertosFuera) || 0
+    const vivosDentro = Number(form.vivosDentro) || 0;
+    const vivosFuera = Number(form.vivosFuera) || 0;
+    const muertosDentro = Number(form.muertosDentro) || 0;
+    const muertosFuera = Number(form.muertosFuera) || 0;
 
-    const totalVivos = vivosDentro + vivosFuera
-    const totalMuertos = muertosDentro + muertosFuera
-    const totalLiberados = totalVivos
-    const totalNacidos = totalVivos + totalMuertos
-    const huevos = nidoSeleccionado?.huevos || 0
+    const totalVivos = vivosDentro + vivosFuera;
+    const totalMuertos = muertosDentro + muertosFuera;
+    const totalLiberados = totalVivos;
+    const totalNacidos = totalVivos + totalMuertos;
+    const huevos = nidoSeleccionado?.huevos || 0;
 
     const tasaSupervivencia =
-      totalNacidos > 0
-        ? ((totalVivos / totalNacidos) * 100).toFixed(1)
-        : "0.0"
+      totalNacidos > 0 ? ((totalVivos / totalNacidos) * 100).toFixed(1) : "0.0";
 
     const tasaEclosion =
-      huevos > 0 ? ((totalNacidos / huevos) * 100).toFixed(1) : "0.0"
+      huevos > 0 ? ((totalNacidos / huevos) * 100).toFixed(1) : "0.0";
 
     return {
       totalVivos,
@@ -77,38 +77,28 @@ function NacimientosPage() {
       tasaSupervivencia,
       tasaEclosion,
       huevos,
-    }
-  }, [form, nidoSeleccionado])
+    };
+  }, [form, nidoSeleccionado]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const limpiarFormulario = () => {
-    setForm({
-      nido: "",
-      fechaEclosion: "",
-      fechaLiberacion: "",
-      responsableLiberacion: "",
-      vivosDentro: "",
-      vivosFuera: "",
-      muertosDentro: "",
-      muertosFuera: "",
-      condicionMarea: "",
-      observaciones: "",
-    })
-  }
+    setForm(initialForm);
+  };
 
   const guardar = (e) => {
-    e.preventDefault()
-    console.log("Datos nacimiento:", form)
-    alert("Registro guardado correctamente")
-  }
+    e?.preventDefault();
+
+    console.log("Datos nacimiento:", form);
+    alert("Registro guardado correctamente");
+  };
 
   return (
     <section className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_360px]">
@@ -126,7 +116,7 @@ function NacimientosPage() {
         onLimpiar={limpiarFormulario}
       />
     </section>
-  )
+  );
 }
 
-export default NacimientosPage
+export default NacimientosPage;

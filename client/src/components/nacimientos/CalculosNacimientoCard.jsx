@@ -1,5 +1,8 @@
-import { Calculator, Save, RotateCcw } from "lucide-react"
-import ResumenNidoCard from "./ResumenNidoCard"
+import { Calculator } from "lucide-react";
+import ResumenNidoCard from "./ResumenNidoCard";
+
+import SaveButton from "../common/SaveButton";
+import ClearButton from "../common/ClearButton";
 
 function CalculosNacimientoCard({
   calculos,
@@ -62,25 +65,13 @@ function CalculosNacimientoCard({
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={onGuardar}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#007A3D] text-sm font-bold text-white transition hover:bg-[#006B35]"
-      >
-        <Save size={19} />
-        Guardar Registro
-      </button>
+      <SaveButton onClick={onGuardar}>Guardar Registro</SaveButton>
 
-      <button
-        type="button"
-        onClick={onLimpiar}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-      >
-        <RotateCcw size={19} />
+      <ClearButton variant="form" className="w-full" onClick={onLimpiar}>
         Limpiar Formulario
-      </button>
+      </ClearButton>
     </aside>
-  )
+  );
 }
 
-export default CalculosNacimientoCard
+export default CalculosNacimientoCard;
