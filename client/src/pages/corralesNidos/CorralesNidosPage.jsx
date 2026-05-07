@@ -1,18 +1,7 @@
 import { useState } from "react";
-import {
-  Plus,
-  Search,
-  Egg,
-  Calendar,
-  Package,
-  ClockAlert,
-  Turtle,
-  Ban,
-  EggOff,
-  Fence,
-} from "lucide-react";
+import { Plus, Egg, ClockAlert, Turtle, EggOff, Fence } from "lucide-react";
 
-import NidoFormModal from "../../components/nidos/NidoFormModal";
+import CorralFormModal from "../../components/corrales/CorralFormModal";
 import NidoDetails from "../../components/nidos/NidoDetails";
 
 function CorralesNidosPage() {
@@ -88,28 +77,27 @@ function CorralesNidosPage() {
     proximo: "bg-orange-400 text-white",
     eclosionado: "bg-blue-400 text-white",
     exhumado: "bg-red-500 text-white",
-    vacio: "bg-[#E6ECE9] text-slate-400",
+    vacio: "bg-[#E6ECE9] text-transparent",
   };
 
   const stateIcons = {
-    ocupado: <Egg className="h-7 w-7" />,
-    proximo: <ClockAlert className="h-7 w-7" />,
-    eclosionado: <Turtle className="h-7 w-7" />,
-    exhumado: <EggOff className="h-7 w-7" />,
-    vacio: <Ban className="h-7 w-7" />,
+    ocupado: <Egg size={20} />,
+    proximo: <ClockAlert size={20} />,
+    eclosionado: <Turtle size={20} />,
+    exhumado: <EggOff size={20} />,
+    vacio: null,
   };
 
-  const handleSaveNido = () => {
+  const handleCloseModal = () => {
+    setAddOpen(false);
+  };
+
+  const handleSaveCorral = () => {
     setAddOpen(false);
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-[#10231F]">Corrales y Nidos</h1>
-        <p className="text-sm text-slate-500">Gestión de corrales y nidos</p>
-      </div>
-
       <div className="grid grid-cols-5 gap-5">
         <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
           <p className="text-sm text-slate-500">Total Corrales</p>
@@ -177,32 +165,11 @@ function CorralesNidosPage() {
             <button
               type="button"
               onClick={() => setAddOpen(true)}
-              className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0B5631]"
+              className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0B5631]"
             >
               <Plus className="h-4 w-4" />
-              Agregar Nido
+              Agregar Corral
             </button>
-          </div>
-
-          <div className="mb-5 flex items-center gap-3">
-            <div className="relative w-full">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-
-              <input
-                type="text"
-                placeholder="Buscar por código de nido..."
-                className="h-12 w-full rounded-xl border border-[#D7E4E1] bg-white pl-12 pr-4 text-sm text-slate-600 outline-none focus:border-[#79B49E] focus:ring-2 focus:ring-[#79B49E]/20"
-              />
-            </div>
-
-            <select className="h-12 rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none">
-              <option>Estado</option>
-              <option>Ocupado</option>
-              <option>Próximo a eclosión</option>
-              <option>Eclosionado</option>
-              <option>Exhumado</option>
-              <option>Vacío</option>
-            </select>
           </div>
 
           <div className="mb-10 flex flex-wrap gap-x-10 gap-y-4 text-sm text-slate-500">
@@ -289,11 +256,11 @@ function CorralesNidosPage() {
         <NidoDetails selectedNido={selectedNido} />
       </div>
 
-      <NidoFormModal
+      <CorralFormModal
         open={addOpen}
         mode="add"
-        onClose={() => setAddOpen(false)}
-        onSave={handleSaveNido}
+        onClose={handleCloseModal}
+        onSave={handleSaveCorral}
       />
     </div>
   );
