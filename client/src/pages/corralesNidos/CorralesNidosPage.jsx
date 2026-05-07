@@ -12,7 +12,7 @@ import {
   Fence,
 } from "lucide-react";
 
-import CorralFormModal from "../../components/modals/CorralFormModal";
+import CorralFormModal from "../../components/corrales/CorralFormModal";
 import NidoDetails from "../../components/nidos/NidoDetails";
 
 function CorralesNidosPage() {
@@ -109,25 +109,14 @@ function CorralesNidosPage() {
 
   const stateIcons = {
     ocupado: <Egg size={20} />,
-    proximo: <ClockAlert  size={20} />,
+    proximo: <ClockAlert size={20} />,
     eclosionado: <Turtle size={20} />,
-    exhumado: <EggOff  size={20} />,
+    exhumado: <EggOff size={20} />,
     vacio: null,
   };
 
   return (
     <div className="space-y-6">
-      {/* HEADER */}
-      <div>
-        <h1 className="text-[28px] font-bold text-[#10231F]">
-          Vista de Corrales
-        </h1>
-
-        <p className="text-sm text-slate-500">
-          Consulta los detalles de los nidos de un corral
-        </p>
-      </div>
-
       {/* STATS */}
       <div className="grid grid-cols-5 gap-5">
         <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
@@ -187,7 +176,6 @@ function CorralesNidosPage() {
         <section className="rounded-2xl border border-[#D7E4E1] bg-white p-6 shadow-sm">
           {/* TOP */}
           <div className="mb-8 flex items-start justify-between">
-
             <div>
               <div className="flex items-center gap-2">
                 <Fence className="h-5 w-5 text-[#0F6B3D]" />
@@ -263,8 +251,7 @@ function CorralesNidosPage() {
                       const estado = nidos[key] || "ocupado";
 
                       const isSelected =
-                        selectedNido.row === row &&
-                        selectedNido.col === col;
+                        selectedNido.row === row && selectedNido.col === col;
 
                       return (
                         <button
@@ -278,9 +265,7 @@ function CorralesNidosPage() {
                             })
                           }
                           className={`flex h-[58px] w-[58px] items-center justify-center rounded-md border-[5px] text-2xl font-bold shadow-sm transition hover:scale-105 ${
-                            isSelected
-                              ? "border-[#0F6B3D]"
-                              : "border-[#DDF3EC]"
+                            isSelected ? "border-[#0F6B3D]" : "border-[#DDF3EC]"
                           } ${stateClasses[estado]}`}
                         >
                           {stateIcons[estado]}

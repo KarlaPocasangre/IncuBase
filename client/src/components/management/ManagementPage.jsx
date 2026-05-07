@@ -3,8 +3,8 @@ import ManagementStats from "./ManagementStats";
 import ManagementCard from "./ManagementCard";
 import ManagementFilters from "./ManagementFilters";
 import ManagementTable from "./ManagementTable";
-import CorralFormModal from "../modals/CorralFormModal";
-import CorralDetailModal from "../modals/CorralDetailModal";
+import CorralFormModal from "../corrales/CorralFormModal";
+import CorralDetailModal from "../corrales/CorralDetailModal";
 
 function ManagementPage({ config }) {
   const [addOpen, setAddOpen] = useState(false);
@@ -26,16 +26,16 @@ function ManagementPage({ config }) {
   const handleEditSave = (updatedItem) => {
     setData((prev) =>
       prev.map((item) =>
-        item.codigo === updatedItem.codigo ? updatedItem : item
-      )
+        item.codigo === updatedItem.codigo ? updatedItem : item,
+      ),
     );
     setEditOpen(false);
   };
 
   const handleDetail = (item) => {
-  setSelectedItem(item);
-  setDetailOpen(true);
-};
+    setSelectedItem(item);
+    setDetailOpen(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -80,7 +80,6 @@ function ManagementPage({ config }) {
         corral={selectedItem}
         onClose={() => setDetailOpen(false)}
       />
-
     </div>
   );
 }
