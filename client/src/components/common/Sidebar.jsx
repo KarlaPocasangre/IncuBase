@@ -203,10 +203,7 @@ function Sidebar() {
           })}
 
           {/* GESTIÓN */}
-          <div
-            className="relative"
-            onMouseLeave={() => collapsed && setGestionOpen(false)}
-          >
+            <div className="relative">
             <button
               type="button"
               title={collapsed ? "Gestión" : ""}
