@@ -23,6 +23,7 @@ export const exhumacionConfig = {
   cardDescription: "Administra los nacimientos del sistema IncuBase",
   buttonText: "Registrar Exhumacion",
   buttonIcon: Plus,
+  buttonRedirectTo: "/exhumacion",
 
   searchPlaceholder: "Buscar por codigo de nido...",
   filters: ["Rango de fecha", "Depredacion", "Responsable"],

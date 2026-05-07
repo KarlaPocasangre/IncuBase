@@ -19,6 +19,7 @@ export const nacimientosConfig = {
   cardDescription: "Administra los nacimientos del sistema IncuBase",
   buttonText: "Registrar Nacimiento",
   buttonIcon: Plus,
+  buttonRedirectTo: "/nacimientos",
 
   searchPlaceholder: "Buscar por codigo de nido...",
   filters: ["Rango de fecha", "Marea", "Responsable"],

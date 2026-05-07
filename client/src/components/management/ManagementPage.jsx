@@ -1,17 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import ManagementStats from "./ManagementStats";
 import ManagementCard from "./ManagementCard";
 import ManagementFilters from "./ManagementFilters";
 import ManagementTable from "./ManagementTable";
-import CorralFormModal from "../corrales/CorralFormModal";
-import CorralDetailModal from "../corrales/CorralDetailModal";
 
 function ManagementPage({ config }) {
+  const navigate = useNavigate();
+
   const [addOpen, setAddOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [data, setData] = useState(config.data);
-  const [detailOpen, setDetailOpen] = useState(false);
+
+  const FormModal = config.FormModal;
+  const DetailModal = config.DetailModal;
 
   const handleAdd = (newItem) => {
     setData((prev) => [newItem, ...prev]);
@@ -25,16 +31,34 @@ function ManagementPage({ config }) {
 
   const handleEditSave = (updatedItem) => {
     setData((prev) =>
-      prev.map((item) =>
-        item.codigo === updatedItem.codigo ? updatedItem : item,
-      ),
+      prev.map((item) => {
+        const itemId = item.id || item.codigo || item.codigoNido || item.nido;
+        const updatedId =
+          updatedItem.id ||
+          updatedItem.codigo ||
+          updatedItem.codigoNido ||
+          updatedItem.nido;
+
+        return itemId === updatedId ? updatedItem : item;
+      }),
     );
+
     setEditOpen(false);
+    setSelectedItem(null);
   };
 
   const handleDetail = (item) => {
     setSelectedItem(item);
     setDetailOpen(true);
+  };
+
+  const handleMainButtonClick = () => {
+    if (config.buttonRedirectTo) {
+      navigate(config.buttonRedirectTo);
+      return;
+    }
+
+    setAddOpen(true);
   };
 
   return (
@@ -45,7 +69,8 @@ function ManagementPage({ config }) {
         title={config.cardTitle}
         description={config.cardDescription}
         buttonText={config.buttonText}
-        onButtonClick={() => setAddOpen(true)}
+        buttonIcon={config.buttonIcon}
+        onButtonClick={handleMainButtonClick}
       >
         <ManagementFilters
           placeholder={config.searchPlaceholder}
@@ -60,26 +85,51 @@ function ManagementPage({ config }) {
         />
       </ManagementCard>
 
-      <CorralFormModal
-        open={addOpen}
-        mode="add"
-        onClose={() => setAddOpen(false)}
-        onSave={handleAdd}
-      />
+      {FormModal && (
+        <FormModal
+          open={addOpen}
+          mode="add"
+          item={null}
+          corral={null}
+          nido={null}
+          exhumacion={null}
+          nacimiento={null}
+          onClose={() => setAddOpen(false)}
+          onSave={handleAdd}
+        />
+      )}
 
-      <CorralFormModal
-        open={editOpen}
-        mode="edit"
-        corral={selectedItem}
-        onClose={() => setEditOpen(false)}
-        onSave={handleEditSave}
-      />
+      {FormModal && (
+        <FormModal
+          open={editOpen}
+          mode="edit"
+          item={selectedItem}
+          corral={selectedItem}
+          nido={selectedItem}
+          exhumacion={selectedItem}
+          nacimiento={selectedItem}
+          onClose={() => {
+            setEditOpen(false);
+            setSelectedItem(null);
+          }}
+          onSave={handleEditSave}
+        />
+      )}
 
-      <CorralDetailModal
-        open={detailOpen}
-        corral={selectedItem}
-        onClose={() => setDetailOpen(false)}
-      />
+      {DetailModal && (
+        <DetailModal
+          open={detailOpen}
+          item={selectedItem}
+          corral={selectedItem}
+          nido={selectedItem}
+          exhumacion={selectedItem}
+          nacimiento={selectedItem}
+          onClose={() => {
+            setDetailOpen(false);
+            setSelectedItem(null);
+          }}
+        />
+      )}
     </div>
   );
 }

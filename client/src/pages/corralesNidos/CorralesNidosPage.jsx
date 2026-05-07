@@ -12,7 +12,7 @@ import {
   Fence,
 } from "lucide-react";
 
-import CorralFormModal from "../../components/corrales/CorralFormModal";
+import NidoFormModal from "../../components/nidos/NidoFormModal";
 import NidoDetails from "../../components/nidos/NidoDetails";
 
 function CorralesNidosPage() {
@@ -88,43 +88,34 @@ function CorralesNidosPage() {
     proximo: "bg-orange-400 text-white",
     eclosionado: "bg-blue-400 text-white",
     exhumado: "bg-red-500 text-white",
-    vacio: "bg-[#E6ECE9] text-transparent",
-  };
-
-  const stateLabels = {
-    ocupado: "Ocupado",
-    proximo: "Próximo a Eclosión",
-    eclosionado: "Eclosionado",
-    exhumado: "Exhumado",
-    vacio: "Vacío",
-  };
-
-  const stateBadges = {
-    ocupado: "bg-emerald-100 text-emerald-600",
-    proximo: "bg-orange-100 text-orange-500",
-    eclosionado: "bg-blue-100 text-blue-500",
-    exhumado: "bg-red-100 text-red-500",
-    vacio: "bg-gray-100 text-gray-500",
+    vacio: "bg-[#E6ECE9] text-slate-400",
   };
 
   const stateIcons = {
-    ocupado: <Egg size={20} />,
-    proximo: <ClockAlert size={20} />,
-    eclosionado: <Turtle size={20} />,
-    exhumado: <EggOff size={20} />,
-    vacio: null,
+    ocupado: <Egg className="h-7 w-7" />,
+    proximo: <ClockAlert className="h-7 w-7" />,
+    eclosionado: <Turtle className="h-7 w-7" />,
+    exhumado: <EggOff className="h-7 w-7" />,
+    vacio: <Ban className="h-7 w-7" />,
+  };
+
+  const handleSaveNido = () => {
+    setAddOpen(false);
   };
 
   return (
     <div className="space-y-6">
-      {/* STATS */}
+      <div>
+        <h1 className="text-2xl font-bold text-[#10231F]">Corrales y Nidos</h1>
+        <p className="text-sm text-slate-500">Gestión de corrales y nidos</p>
+      </div>
+
       <div className="grid grid-cols-5 gap-5">
         <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
           <p className="text-sm text-slate-500">Total Corrales</p>
 
           <div className="mt-2 flex items-center justify-between">
             <span className="text-3xl font-bold text-[#10231F]">384</span>
-
             <Fence className="text-[#7BBFA8]" />
           </div>
         </div>
@@ -134,7 +125,6 @@ function CorralesNidosPage() {
 
           <div className="mt-2 flex items-center justify-between">
             <span className="text-3xl font-bold text-[#10231F]">384</span>
-
             <Egg className="text-[#7BBFA8]" />
           </div>
         </div>
@@ -144,7 +134,6 @@ function CorralesNidosPage() {
 
           <div className="mt-2 flex items-center justify-between">
             <span className="text-3xl font-bold text-[#10231F]">102</span>
-
             <span className="h-3 w-3 rounded-full bg-emerald-500" />
           </div>
         </div>
@@ -154,7 +143,6 @@ function CorralesNidosPage() {
 
           <div className="mt-2 flex items-center justify-between">
             <span className="text-3xl font-bold text-[#10231F]">80</span>
-
             <span className="h-3 w-3 rounded-full bg-orange-400" />
           </div>
         </div>
@@ -164,17 +152,13 @@ function CorralesNidosPage() {
 
           <div className="mt-2 flex items-center justify-between">
             <span className="text-3xl font-bold text-[#10231F]">80</span>
-
             <span className="h-3 w-3 rounded-full bg-blue-400" />
           </div>
         </div>
       </div>
 
-      {/* CONTENIDO */}
       <div className="grid grid-cols-[1.2fr_0.8fr] gap-6">
-        {/* PANEL IZQUIERDO */}
         <section className="rounded-2xl border border-[#D7E4E1] bg-white p-6 shadow-sm">
-          {/* TOP */}
           <div className="mb-8 flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -196,11 +180,31 @@ function CorralesNidosPage() {
               className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0B5631]"
             >
               <Plus className="h-4 w-4" />
-              Agregar Corral
+              Agregar Nido
             </button>
           </div>
 
-          {/* LEYENDA */}
+          <div className="mb-5 flex items-center gap-3">
+            <div className="relative w-full">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+              <input
+                type="text"
+                placeholder="Buscar por código de nido..."
+                className="h-12 w-full rounded-xl border border-[#D7E4E1] bg-white pl-12 pr-4 text-sm text-slate-600 outline-none focus:border-[#79B49E] focus:ring-2 focus:ring-[#79B49E]/20"
+              />
+            </div>
+
+            <select className="h-12 rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none">
+              <option>Estado</option>
+              <option>Ocupado</option>
+              <option>Próximo a eclosión</option>
+              <option>Eclosionado</option>
+              <option>Exhumado</option>
+              <option>Vacío</option>
+            </select>
+          </div>
+
           <div className="mb-10 flex flex-wrap gap-x-10 gap-y-4 text-sm text-slate-500">
             <div className="flex items-center gap-2">
               <span className="h-4 w-4 bg-emerald-500" />
@@ -228,16 +232,13 @@ function CorralesNidosPage() {
             </div>
           </div>
 
-          {/* GRID */}
           <div className="mx-auto w-fit">
-            {/* COLUMNAS */}
             <div className="mb-4 ml-10 grid grid-cols-8 gap-3 text-center text-sm font-bold text-[#6B5D55]">
               {cols.map((col) => (
                 <span key={col}>{col}</span>
               ))}
             </div>
 
-            {/* FILAS */}
             <div className="space-y-3">
               {rows.map((row) => (
                 <div key={row} className="flex items-center gap-4">
@@ -278,7 +279,6 @@ function CorralesNidosPage() {
             </div>
           </div>
 
-          {/* COMBOBOX */}
           <div className="mt-8 flex justify-end">
             <select className="h-[48px] w-[190px] rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none">
               <option>Corral BCU67-8C</option>
@@ -286,16 +286,14 @@ function CorralesNidosPage() {
           </div>
         </section>
 
-        {/* PANEL DERECHO */}
         <NidoDetails selectedNido={selectedNido} />
       </div>
 
-      {/* MODAL */}
-      <CorralFormModal
+      <NidoFormModal
         open={addOpen}
         mode="add"
         onClose={() => setAddOpen(false)}
-        onSave={() => setAddOpen(false)}
+        onSave={handleSaveNido}
       />
     </div>
   );

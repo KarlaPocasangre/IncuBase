@@ -1,10 +1,4 @@
-import {
-  Search,
-  Egg,
-  CalendarDays,
-  Thermometer,
-  Package,
-} from "lucide-react";
+import { Search, Egg, CalendarDays, Thermometer, Package } from "lucide-react";
 
 function getStatusLabel(estado) {
   if (estado === "proximo") return "Próximo a Eclosión";
@@ -40,13 +34,9 @@ function NidoDetails({ selectedNido }) {
     <section className="rounded-2xl border border-[#CFE0DC] bg-white p-6 shadow-sm">
       {/* HEADER */}
       <div>
-        <h2 className="text-lg font-bold text-[#10231F]">
-          Detalles del nido
-        </h2>
+        <h2 className="text-lg font-bold text-[#10231F]">Detalles del nido</h2>
 
-        <p className="text-sm text-slate-500">
-          Selecciona un nido
-        </p>
+        <p className="text-sm text-slate-500">Selecciona un nido</p>
       </div>
 
       {/* SEARCH */}
@@ -66,8 +56,7 @@ function NidoDetails({ selectedNido }) {
           <Egg className="h-14 w-14 text-slate-400" />
 
           <p className="mt-5 max-w-[260px] text-sm text-slate-500">
-            Selecciona un nido de la cuadrícula para ver
-            sus detalles
+            Selecciona un nido de la cuadrícula para ver sus detalles
           </p>
         </div>
       ) : (
@@ -76,16 +65,14 @@ function NidoDetails({ selectedNido }) {
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <span
               className={`rounded-lg px-3 py-1 text-sm font-bold ${getStatusClass(
-                selectedNido.estado
+                selectedNido.estado,
               )}`}
             >
               {getStatusLabel(selectedNido.estado)}
             </span>
 
             <span className="rounded-lg border border-[#CFE0DC] bg-white px-4 py-1 text-sm text-[#10231F]">
-              {selectedNido.estado === "exhumado"
-                ? "Carey"
-                : "Baule"}
+              {selectedNido.estado === "exhumado" ? "Carey" : "Baule"}
             </span>
 
             <span className="rounded-lg border border-[#CFE0DC] bg-white px-4 py-1 text-sm text-[#10231F]">
@@ -106,7 +93,6 @@ function NidoDetails({ selectedNido }) {
                 03/10/2026 18:00
               </p>
             </div>
-
           ) : selectedNido.estado === "eclosionado" ? (
             <>
               <div className="mt-5 rounded-xl bg-[#EEF5F2] px-5 py-5">
@@ -149,7 +135,6 @@ function NidoDetails({ selectedNido }) {
                 className="mt-5 flex h-11 w-full items-center justify-center gap-3 rounded-xl bg-[#087A45] text-sm font-bold text-white hover:bg-[#06643A]"
               >
                 <Package className="h-5 w-5" />
-
                 Registrar Exhumacion
               </button>
             </>
@@ -162,14 +147,10 @@ function NidoDetails({ selectedNido }) {
                   <div className="flex items-center gap-3 text-slate-500">
                     <Egg className="h-5 w-5" />
 
-                    <span className="text-sm">
-                      Huevos
-                    </span>
+                    <span className="text-sm">Huevos</span>
                   </div>
 
-                  <span className="text-sm font-bold text-[#10231F]">
-                    121
-                  </span>
+                  <span className="text-sm font-bold text-[#10231F]">121</span>
                 </div>
 
                 {/* DIAS */}
@@ -177,14 +158,10 @@ function NidoDetails({ selectedNido }) {
                   <div className="flex items-center gap-3 text-slate-500">
                     <CalendarDays className="h-5 w-5" />
 
-                    <span className="text-sm">
-                      Días Incubando
-                    </span>
+                    <span className="text-sm">Días Incubando</span>
                   </div>
 
-                  <span className="text-sm font-bold text-[#10231F]">
-                    29
-                  </span>
+                  <span className="text-sm font-bold text-[#10231F]">29</span>
                 </div>
 
                 {/* TEMPERATURA */}
@@ -192,9 +169,7 @@ function NidoDetails({ selectedNido }) {
                   <div className="flex items-center gap-3 text-slate-500">
                     <Thermometer className="h-5 w-5" />
 
-                    <span className="text-sm">
-                      Temperatura
-                    </span>
+                    <span className="text-sm">Temperatura</span>
                   </div>
 
                   <span className="text-sm font-bold text-[#10231F]">
@@ -209,7 +184,6 @@ function NidoDetails({ selectedNido }) {
                 className="mt-4 flex h-9 w-full items-center justify-center gap-3 rounded-lg border border-[#CFE0DC] bg-[#F8FCFA] text-sm font-medium text-[#10231F] hover:bg-[#EEF5F2]"
               >
                 <Thermometer className="h-5 w-5" />
-
                 Registrar Temperatura
               </button>
             </>
@@ -222,14 +196,10 @@ function NidoDetails({ selectedNido }) {
                   <div className="flex items-center gap-3 text-slate-500">
                     <Egg className="h-5 w-5" />
 
-                    <span className="text-sm">
-                      Huevos
-                    </span>
+                    <span className="text-sm">Huevos</span>
                   </div>
 
-                  <span className="text-sm font-bold text-[#10231F]">
-                    121
-                  </span>
+                  <span className="text-sm font-bold text-[#10231F]">121</span>
                 </div>
 
                 {/* DIAS */}
@@ -237,14 +207,10 @@ function NidoDetails({ selectedNido }) {
                   <div className="flex items-center gap-3 text-slate-500">
                     <CalendarDays className="h-5 w-5" />
 
-                    <span className="text-sm">
-                      Días Incubando
-                    </span>
+                    <span className="text-sm">Días Incubando</span>
                   </div>
 
-                  <span className="text-sm font-bold text-[#10231F]">
-                    29
-                  </span>
+                  <span className="text-sm font-bold text-[#10231F]">29</span>
                 </div>
 
                 {/* TEMPERATURA */}
@@ -252,9 +218,7 @@ function NidoDetails({ selectedNido }) {
                   <div className="flex items-center gap-3 text-slate-500">
                     <Thermometer className="h-5 w-5" />
 
-                    <span className="text-sm">
-                      Temperatura
-                    </span>
+                    <span className="text-sm">Temperatura</span>
                   </div>
 
                   <span className="text-sm font-bold text-[#10231F]">
@@ -269,7 +233,6 @@ function NidoDetails({ selectedNido }) {
                 className="mt-4 flex h-9 w-full items-center justify-center gap-3 rounded-lg border border-[#CFE0DC] bg-[#F8FCFA] text-sm font-medium text-[#10231F] hover:bg-[#EEF5F2]"
               >
                 <Thermometer className="h-5 w-5" />
-
                 Registrar Temperatura
               </button>
 
@@ -279,7 +242,6 @@ function NidoDetails({ selectedNido }) {
                 className="mt-3 flex h-10 w-full items-center justify-center gap-3 rounded-lg bg-[#087A45] text-sm font-bold text-white hover:bg-[#06643A]"
               >
                 <Egg className="h-5 w-5" />
-
                 Registrar Nacimiento
               </button>
             </>

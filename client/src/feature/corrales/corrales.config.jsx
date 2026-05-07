@@ -1,4 +1,7 @@
-import { CalendarPlus, Fence, FileSearch, Pencil, XCircle } from "lucide-react";
+import { CalendarPlus, Fence } from "lucide-react";
+
+import CorralFormModal from "../../components/corrales/CorralFormModal";
+import CorralDetailModal from "../../components/corrales/CorralDetailModal";
 
 const statusStyles = {
   Activo: "text-emerald-500",
@@ -16,6 +19,9 @@ export const corralesConfig = {
 
   searchPlaceholder: "Buscar por código de corral...",
   filters: ["Rango de fecha", "Tipo", "Estado"],
+
+  FormModal: CorralFormModal,
+  DetailModal: CorralDetailModal,
 
   stats: [
     {
@@ -75,21 +81,6 @@ export const corralesConfig = {
     {
       header: "Acciones",
       key: "acciones",
-      render: () => (
-        <div className="flex items-center gap-3">
-          <button type="button">
-            <Pencil className="h-5 w-5 text-[#E6A11D]" />
-          </button>
-
-          <button type="button">
-            <XCircle className="h-5 w-5 text-red-400" />
-          </button>
-
-          <button type="button">
-            <FileSearch className="h-5 w-5 text-blue-400" />
-          </button>
-        </div>
-      ),
     },
   ],
 
@@ -100,27 +91,39 @@ export const corralesConfig = {
       tipo: "Corral Abierto",
       estado: "Activo",
       fechaInstalacion: "2023-10-02 15:04",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2023-10-02 15:04",
+      observaciones: "Corral ubicado en zona norte.",
     },
     {
-      codigo: "C2HJJ-09",
+      codigo: "C2HJJ-10",
       ubicacion: "Zona Sur",
       tipo: "Corral Cerrado",
       estado: "Cerrado",
       fechaInstalacion: "2023-10-02 15:04",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2023-10-02 15:04",
+      observaciones: "Corral cerrado temporalmente.",
     },
     {
-      codigo: "C2HJJ-09",
+      codigo: "C2HJJ-11",
       ubicacion: "Zona Centro",
       tipo: "Corral Abierto",
       estado: "Activo",
       fechaInstalacion: "2005-01-01 11:45",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2005-01-01 11:45",
+      observaciones: "Sin observaciones registradas.",
     },
     {
-      codigo: "C2HJJ-09",
+      codigo: "C2HJJ-12",
       ubicacion: "Zona Este",
       tipo: "Corral Cerrado",
       estado: "Mantenimiento",
       fechaInstalacion: "2026-11-01 21:00",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2026-11-01 21:00",
+      observaciones: "Corral en mantenimiento.",
     },
   ],
 };
