@@ -1,174 +1,171 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Mail, Lock, Eye, EyeOff } from "lucide-react"
-import AuthLayout from "../../layouts/AuthLayout"
-import AuthCard from "../../components/auth/AuthCard"
-import NoticeModal from "../../components/modals/NoticeModal"
-import TermsModal from "../../components/modals/TermsModal"
-import PrivacyModal from "../../components/modals/PrivacyModal"
-import { loginRequest } from "../../services/auth.service"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import AuthLayout from "../../layouts/AuthLayout";
+import AuthCard from "../../components/auth/AuthCard";
+import NoticeModal from "../../components/legal/NoticeModal";
+import TermsModal from "../../components/legal/TermsModal";
+import PrivacyModal from "../../components/legal/PrivacyModal";
+import { loginRequest } from "../../services/auth.service";
 
 function Login() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [touched, setTouched] = useState({})
-  const [errorGeneral, setErrorGeneral] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [errorGeneral, setErrorGeneral] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [mostrarAviso, setMostrarAviso] = useState(false)
-  const [mostrarTerminos, setMostrarTerminos] = useState(false)
-  const [mostrarPrivacidad, setMostrarPrivacidad] = useState(false)
+  const [mostrarAviso, setMostrarAviso] = useState(false);
+  const [mostrarTerminos, setMostrarTerminos] = useState(false);
+  const [mostrarPrivacidad, setMostrarPrivacidad] = useState(false);
 
   const [checks, setChecks] = useState({
     aviso: false,
     terminos: false,
     privacidad: false,
-  })
+  });
 
-  const [pendingToken, setPendingToken] = useState("")
-  const [pendingUser, setPendingUser] = useState(null)
+  const [pendingToken, setPendingToken] = useState("");
+  const [pendingUser, setPendingUser] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const validar = () => {
-    const nuevosErrores = {}
+    const nuevosErrores = {};
 
     if (!email.trim()) {
-      nuevosErrores.email = "El correo es obligatorio"
+      nuevosErrores.email = "El correo es obligatorio";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      nuevosErrores.email = "Correo inválido"
+      nuevosErrores.email = "Correo inválido";
     }
 
     if (!password.trim()) {
-      nuevosErrores.password = "La contraseña es obligatoria"
+      nuevosErrores.password = "La contraseña es obligatoria";
     }
 
-    return nuevosErrores
-  }
+    return nuevosErrores;
+  };
 
   const handleBlur = (field) => {
-    setTouched((prev) => ({ ...prev, [field]: true }))
-    setErrors(validar())
-  }
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    setErrors(validar());
+  };
 
   const toggleCheck = (key) => {
     setChecks((prev) => {
       if (key === "aviso") {
-        const newValue = !prev.aviso
+        const newValue = !prev.aviso;
 
         return {
           aviso: newValue,
           terminos: newValue,
           privacidad: newValue,
-        }
+        };
       }
 
       const updated = {
         ...prev,
         [key]: !prev[key],
-      }
+      };
 
-      updated.aviso = updated.terminos && updated.privacidad
+      updated.aviso = updated.terminos && updated.privacidad;
 
-      return updated
-    })
-  }
+      return updated;
+    });
+  };
 
   const marcarTerminosAceptados = () => {
     setChecks((prev) => {
       const updated = {
         ...prev,
         terminos: true,
-      }
+      };
 
-      updated.aviso = updated.terminos && updated.privacidad
-      return updated
-    })
-  }
+      updated.aviso = updated.terminos && updated.privacidad;
+      return updated;
+    });
+  };
 
   const marcarPrivacidadAceptada = () => {
     setChecks((prev) => {
       const updated = {
         ...prev,
         privacidad: true,
-      }
+      };
 
-      updated.aviso = updated.terminos && updated.privacidad
-      return updated
-    })
-  }
+      updated.aviso = updated.terminos && updated.privacidad;
+      return updated;
+    });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setErrorGeneral("")
+    e.preventDefault();
+    setErrorGeneral("");
 
-    const nuevosErrores = validar()
-    setErrors(nuevosErrores)
+    const nuevosErrores = validar();
+    setErrors(nuevosErrores);
     setTouched({
       email: true,
       password: true,
-    })
+    });
 
-    if (Object.keys(nuevosErrores).length > 0) return
+    if (Object.keys(nuevosErrores).length > 0) return;
 
     try {
-      setLoading(true)
+      setLoading(true);
 
-      const response = await loginRequest({ email, password })
-      const data = response.data
+      const response = await loginRequest({ email, password });
+      const data = response.data;
 
-      setPendingToken(data.token)
-      setPendingUser(data.usuario)
+      setPendingToken(data.token);
+      setPendingUser(data.usuario);
 
       setChecks({
         aviso: false,
         terminos: false,
         privacidad: false,
-      })
+      });
 
-      setMostrarAviso(true)
+      setMostrarAviso(true);
     } catch (error) {
       if (error.response?.data?.mensaje) {
-        setErrorGeneral(error.response.data.mensaje)
+        setErrorGeneral(error.response.data.mensaje);
       } else {
-        setErrorGeneral("No se pudo conectar con el servidor")
+        setErrorGeneral("No se pudo conectar con el servidor");
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleConfirmarAviso = () => {
-    localStorage.setItem("token", pendingToken)
-    localStorage.setItem("usuario", JSON.stringify(pendingUser))
-    setMostrarAviso(false)
-    navigate("/")
-  }
+    localStorage.setItem("token", pendingToken);
+    localStorage.setItem("usuario", JSON.stringify(pendingUser));
+    setMostrarAviso(false);
+    navigate("/");
+  };
 
   const getInputClasses = (field) => {
     const base =
-      "h-[40px] w-full rounded-[6px] border bg-[#ECEFF1] pl-10 pr-10 text-[12px] text-slate-700 outline-none transition placeholder:text-slate-400"
+      "h-[40px] w-full rounded-[6px] border bg-[#ECEFF1] pl-10 pr-10 text-[12px] text-slate-700 outline-none transition placeholder:text-slate-400";
 
     if (!touched[field]) {
-      return `${base} border-[#cfd8dc] focus:border-[#17bb9a]`
+      return `${base} border-[#cfd8dc] focus:border-[#17bb9a]`;
     }
 
     if (errors[field]) {
-      return `${base} border-red-400 focus:border-red-500`
+      return `${base} border-red-400 focus:border-red-500`;
     }
 
-    return `${base} border-[#17bb9a] focus:border-[#17bb9a]`
-  }
+    return `${base} border-[#17bb9a] focus:border-[#17bb9a]`;
+  };
 
   return (
     <>
       <AuthLayout>
-        <AuthCard
-          title="INICIAR SESIÓN"
-          subtitle="Accede Al Sistema IncuBase"
-        >
+        <AuthCard title="INICIAR SESIÓN" subtitle="Accede Al Sistema IncuBase">
           <form
             className="flex w-full max-w-[320px] flex-col"
             onSubmit={handleSubmit}
@@ -186,8 +183,8 @@ function Login() {
                   placeholder="ejemplo@correo.com"
                   value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value)
-                    setErrorGeneral("")
+                    setEmail(e.target.value);
+                    setErrorGeneral("");
                   }}
                   onBlur={() => handleBlur("email")}
                   className={getInputClasses("email")}
@@ -212,8 +209,8 @@ function Login() {
                   placeholder="••••••••••••••"
                   value={password}
                   onChange={(e) => {
-                    setPassword(e.target.value)
-                    setErrorGeneral("")
+                    setPassword(e.target.value);
+                    setErrorGeneral("");
                   }}
                   onBlur={() => handleBlur("password")}
                   className={getInputClasses("password")}
@@ -233,7 +230,9 @@ function Login() {
               </div>
 
               {touched.password && errors.password && (
-                <p className="mt-1 text-[10px] text-red-300">{errors.password}</p>
+                <p className="mt-1 text-[10px] text-red-300">
+                  {errors.password}
+                </p>
               )}
             </div>
 
@@ -302,7 +301,7 @@ function Login() {
         />
       )}
     </>
-  )
+  );
 }
 
-export default Login
+export default Login;
