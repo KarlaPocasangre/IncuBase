@@ -1,22 +1,18 @@
-import { useState } from "react";
-
 const filas = ["A", "B", "C", "D", "E", "F"];
 const columnas = [1, 2, 3, 4, 5, 6, 7, 8];
 
-export default function CorralGrid({ onSelect }) {
-  const [selected, setSelected] = useState(null);
-
+export default function CorralGrid({ selected, onSelect }) {
   const handleClick = (fila, col) => {
     const celda = { fila, col };
-    setSelected(celda);
 
-    if (onSelect) onSelect(celda);
+    if (onSelect) {
+      onSelect(celda);
+    }
   };
 
   return (
     <div className="flex justify-center">
       <div className="space-y-2">
-        {/* HEADER COLUMNAS */}
         <div className="grid grid-cols-[20px_repeat(8,40px)] gap-2 text-xs text-[#6B7280]">
           <div></div>
           {columnas.map((col) => (
@@ -42,6 +38,7 @@ export default function CorralGrid({ onSelect }) {
               return (
                 <button
                   key={col}
+                  type="button"
                   onClick={() => handleClick(fila, col)}
                   className={`
                     h-10 w-10 rounded-md border transition
@@ -49,14 +46,14 @@ export default function CorralGrid({ onSelect }) {
 
                     ${
                       esClaro
-                        ? "bg-[#F1F6F5] border-[#CADCD8]"
-                        : "bg-[#CAE4DF] border-[#CADCD8]"
+                        ? "border-[#CADCD8] bg-[#F1F6F5]"
+                        : "border-[#CADCD8] bg-[#CAE4DF]"
                     }
 
                     ${
                       isSelected
-                        ? "ring-2 ring-[#007A4D] scale-105"
-                        : "hover:bg-[#BFD8D2] hover:scale-105"
+                        ? "scale-105 ring-2 ring-[#007A4D]"
+                        : "hover:scale-105 hover:bg-[#BFD8D2]"
                     }
                   `}
                 />

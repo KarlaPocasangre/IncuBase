@@ -1,24 +1,18 @@
-import { CalendarDays } from "lucide-react"
-import { useRef } from "react"
+import { CalendarDays } from "lucide-react";
+import { useRef } from "react";
 
-function DateTimeInput({
-  label,
-  name,
-  value,
-  onChange,
-  required = false,
-}) {
-  const inputRef = useRef(null)
+function DateTimeInput({ label, name, value, onChange, required = false }) {
+  const inputRef = useRef(null);
 
   const abrirCalendario = () => {
     if (inputRef.current) {
-      inputRef.current.showPicker()
+      inputRef.current.showPicker();
     }
-  }
+  };
 
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-slate-800">
+      <label className="mb-2 block text-sm font-semibold text-[#111827]">
         {label}
       </label>
 
@@ -30,19 +24,19 @@ function DateTimeInput({
           value={value}
           onChange={onChange}
           required={required}
-          className="h-10 w-full rounded-lg border border-slate-200 bg-white px-4 pr-10 text-sm text-slate-700 shadow-sm outline-none transition focus:border-[#00796B] focus:ring-2 focus:ring-[#00796B]/15"
+          className="h-[45px] w-full rounded-lg border border-[#D7E4E0] bg-white px-4 pr-10 text-sm text-[#111827] shadow-sm outline-none transition focus:border-[#7BB9A0] focus:ring-4 focus:ring-[#7BB9A0]/20"
         />
 
         <button
           type="button"
           onClick={abrirCalendario}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[#00796B]"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] transition hover:text-[#007A4D]"
         >
           <CalendarDays size={17} />
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export default DateTimeInput
+export default DateTimeInput;
