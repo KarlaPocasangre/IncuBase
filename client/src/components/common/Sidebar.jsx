@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  Map,
   Thermometer,
   FileSearch,
   Wrench,
@@ -21,6 +20,8 @@ import {
 import logo from "../../assets/logo-tortugaSVG.svg";
 import turtleIcon from "../../assets/turtleWhite.svg";
 import turtleCollapsedIcon from "../../assets/turtle2SVG.svg";
+
+import { showLogoutConfirm } from "../../utils/alerts";
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -120,7 +121,11 @@ function Sidebar() {
     setGestionOpen((prev) => !prev);
   };
 
-  const cerrarSesion = () => {
+  const cerrarSesion = async () => {
+    const result = await showLogoutConfirm();
+
+    if (!result.isConfirmed) return;
+
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
     navigate("/login", { replace: true });
@@ -133,7 +138,6 @@ function Sidebar() {
       }`}
     >
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        {/* HEADER */}
         <div className="h-[80px] border-b border-white/10 px-4 flex items-center">
           <div
             className={`flex items-center w-full ${
@@ -159,9 +163,7 @@ function Sidebar() {
           </div>
         </div>
 
-        {/* MENU */}
         <nav className="px-4 py-2.5 flex flex-col gap-1">
-          {/* MAIN ITEMS */}
           {mainItems.map((item) => {
             const Icon = item.icon;
 
@@ -202,8 +204,7 @@ function Sidebar() {
             );
           })}
 
-          {/* GESTIÓN */}
-            <div className="relative">
+          <div className="relative">
             <button
               type="button"
               title={collapsed ? "Gestión" : ""}
@@ -234,7 +235,6 @@ function Sidebar() {
               )}
             </button>
 
-            {/* SUBMENU NORMAL */}
             {!collapsed && gestionOpen && (
               <div className="mt-2 ml-5 pl-4 border-l border-white/15 flex flex-col gap-1">
                 {gestionItems.map((item) => {
@@ -270,7 +270,6 @@ function Sidebar() {
               </div>
             )}
 
-            {/* SUBMENU COLLAPSED */}
             {collapsed && gestionOpen && (
               <div className="fixed left-[95px] top-[335px] z-50 w-64 rounded-2xl bg-[#F3F7F6] shadow-xl border border-[#D6E1DE] p-3">
                 <div className="flex flex-col gap-1">
@@ -309,7 +308,6 @@ function Sidebar() {
             )}
           </div>
 
-          {/* BOTÓN CONTRAER */}
           <button
             type="button"
             onClick={toggleCollapsed}
@@ -327,27 +325,29 @@ function Sidebar() {
         </nav>
       </div>
 
-      {/* USER */}
       <div className="border-t border-white/10 px-4 py-4 shrink-0 bg-[#062F2A]">
-        <div
-          className={`flex items-center ${
-            collapsed ? "justify-center" : "justify-between"
-          } gap-3`}
-        >
-          <div className="flex items-center gap-3 min-w-0">
-            <UserCircle2 size={30} className="shrink-0 text-white/90" />
+        {collapsed ? (
+          <button
+            type="button"
+            onClick={cerrarSesion}
+            className="flex w-full items-center justify-center rounded-2xl p-3 text-white/90 transition hover:bg-[#0B3B35] hover:text-white"
+            title="Cerrar sesión"
+          >
+            <LogOut size={24} />
+          </button>
+        ) : (
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <UserCircle2 size={30} className="shrink-0 text-white/90" />
 
-            {!collapsed && (
               <div className="min-w-0">
                 <p className="text-sm font-semibold truncate">
                   {nombreCompleto}
                 </p>
                 <p className="text-xs text-white/65">{rolUsuario}</p>
               </div>
-            )}
-          </div>
+            </div>
 
-          {!collapsed && (
             <button
               type="button"
               onClick={cerrarSesion}
@@ -356,8 +356,8 @@ function Sidebar() {
             >
               <LogOut size={17} />
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </aside>
   );
