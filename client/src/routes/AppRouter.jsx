@@ -7,6 +7,7 @@ import Login from "../pages/auth/Login.jsx";
 import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
 import VerifyCode from "../pages/auth/VerifyCode.jsx";
 import ResetPassword from "../pages/auth/ResetPassword.jsx";
+import RoleDashboard from "./RoleDashboard.jsx";
 
 /* SISTEMA */
 import DashboardPage from "../pages/dashboard/DashboardAdminPage.jsx";
@@ -52,7 +53,7 @@ function AppRouter() {
             </PrivateRoute>
           }
         >
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/" element={<RoleDashboard />} />
           <Route path="/corrales-nidos" element={<CorralesNidosPage />} />
           <Route path="/gestion-corrales" element={<GestionCorralesPage />} />
           <Route path="/registro-nidos" element={<RegistroNidosPage />} />

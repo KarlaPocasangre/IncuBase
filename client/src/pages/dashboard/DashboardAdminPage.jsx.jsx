@@ -1,7 +1,7 @@
 function DashboardPage() {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1>Dashboard Administrador</h1>
       <p>Bienvenido a IncuBase</p>
     </div>
   );
