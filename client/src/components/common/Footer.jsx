@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo-tortugaSVG.svg";
 
 import PrivacyModal from "../legal/PrivacyModal";
@@ -11,7 +12,7 @@ function Footer() {
   return (
     <>
       <footer className="bg-white border-t border-[#D6E1DE] px-10 py-5">
-        <div className="flex items-start justify-between gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1.6fr_0.8fr_0.8fr_0.8fr]">
           <div className="flex items-start gap-3">
             <img
               src={logo}
@@ -50,6 +51,19 @@ function Footer() {
             >
               Términos y Condiciones
             </button>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2">
+              Información
+            </h4>
+
+            <Link
+              to="/guia-incubase"
+              className="block text-xs text-gray-500 underline transition-colors hover:text-[#163832]"
+            >
+              Guía IncuBase
+            </Link>
           </div>
 
           <div>
