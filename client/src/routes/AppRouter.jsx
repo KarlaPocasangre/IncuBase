@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 
@@ -23,6 +23,12 @@ import GestionNidosPage from "../pages/gestion/nidos/GestionNidosPage.jsx";
 import GestionNacimientosPage from "../pages/gestion/nacimientos/GestionNacimientosPage.jsx";
 import GestionExhumacionPage from "../pages/gestion/exhumacion/GestionExhumacionPage.jsx";
 
+/* ERRORES */
+import NotFound from "../pages/errors/NotFound.jsx";
+import Forbidden from "../pages/errors/Forbidden.jsx";
+import Maintenance from "../pages/errors/Maintenance.jsx";
+import ServerError from "../pages/errors/ServerError.jsx";
+
 function AppRouter() {
   return (
     <BrowserRouter>
@@ -32,6 +38,11 @@ function AppRouter() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* ERRORES */}
+        <Route path="/403" element={<Forbidden />} />
+        <Route path="/maintenance" element={<Maintenance />} />
+        <Route path="/500" element={<ServerError />} />
 
         {/* PRIVADAS */}
         <Route
@@ -51,18 +62,20 @@ function AppRouter() {
           <Route path="/reportes" element={<ReportesPage />} />
           <Route path="/usuarios" element={<UsuariosView />} />
           <Route path="/gestion-nidos" element={<GestionNidosPage />} />
+
           <Route
             path="/gestion-nacimientos"
             element={<GestionNacimientosPage />}
           />
+
           <Route
             path="/gestion-exhumacion"
             element={<GestionExhumacionPage />}
           />
         </Route>
 
-        {/* SI NO EXISTE RUTA */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* RUTA NO ENCONTRADA */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
