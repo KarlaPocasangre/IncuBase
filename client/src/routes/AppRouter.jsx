@@ -60,6 +60,9 @@ function AppRouter() {
           <Route path="/temperatura" element={<TemperaturaPage />} />
           <Route path="/nacimientos" element={<NacimientosPage />} />
           <Route path="/exhumacion" element={<ExhumacionPage />} />
+          <Route path="/reportes" element={<ReportesPage />} />
+          <Route path="/alertas" element={<AlertasPage />} />
+          <Route path="/guia-incubase" element={<GuiaIncubasePage />} />
         </Route>
 
         {/* PRIVADAS SOLO ADMINISTRADOR */}
@@ -71,11 +74,8 @@ function AppRouter() {
           }
         >
           <Route path="/gestion-corrales" element={<GestionCorralesPage />} />
-          <Route path="/reportes" element={<ReportesPage />} />
           <Route path="/usuarios" element={<UsuariosView />} />
           <Route path="/gestion-nidos" element={<GestionNidosPage />} />
-          <Route path="/guia-incubase" element={<GuiaIncubasePage />} />
-          <Route path="/alertas" element={<AlertasPage />} />
 
           <Route
             path="/gestion-nacimientos"

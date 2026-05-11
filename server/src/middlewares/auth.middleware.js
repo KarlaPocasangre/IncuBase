@@ -17,6 +17,9 @@ const verificarToken = (req, res, next) => {
 
     req.usuario = decoded
 
+    req.usuario = decoded;
+    console.log("Usuario decodificado:", decoded)
+
     next()
   } catch (error) {
     return res.status(401).json({

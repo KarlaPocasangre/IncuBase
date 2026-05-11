@@ -45,6 +45,7 @@ function Sidebar() {
     : "Usuario";
 
   const rolUsuario = usuario?.rol || "Sin rol";
+  const esAdministrador = rolUsuario === "Administrador";
 
   const mainItems = [
     {
@@ -96,6 +97,7 @@ function Sidebar() {
       sublabel: "Detalles",
       path: "/reportes",
       icon: FileText,
+      roles: ["Administrador", "Técnico", "Tecnico"],
     },
   ];
 
@@ -180,10 +182,12 @@ function Sidebar() {
         </div>
 
         <nav className="px-4 py-2.5 flex flex-col gap-1">
-          {mainItems.map((item) => {
-            const Icon = item.icon;
+          {mainItems
+            .filter((item) => !item.roles || item.roles.includes(rolUsuario))
+            .map((item) => {
+              const Icon = item.icon;
 
-            return (
+              return (
               <NavLink
                 key={item.path}
                 to={item.path}
@@ -219,7 +223,8 @@ function Sidebar() {
               </NavLink>
             );
           })}
-
+          
+          {esAdministrador && (
           <div className="relative">
             <button
               type="button"
@@ -323,6 +328,7 @@ function Sidebar() {
               </div>
             )}
           </div>
+          )}
 
           <button
             type="button"
