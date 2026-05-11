@@ -1,7 +1,7 @@
 import { CalendarDays } from "lucide-react";
 import { useRef } from "react";
 
-function DateTimeInput({ label, name, value, onChange, required = false }) {
+function DateInput({ label, name, value, onChange, required = false }) {
   const inputRef = useRef(null);
 
   const abrirCalendario = () => {
@@ -19,7 +19,7 @@ function DateTimeInput({ label, name, value, onChange, required = false }) {
       <div className="relative">
         <input
           ref={inputRef}
-          type="datetime-local"
+          type="date"
           name={name}
           value={value}
           onChange={onChange}
@@ -31,6 +31,7 @@ function DateTimeInput({ label, name, value, onChange, required = false }) {
           type="button"
           onClick={abrirCalendario}
           className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] transition hover:text-[#007A4D]"
+          aria-label="Abrir calendario"
         >
           <CalendarDays size={17} />
         </button>
@@ -39,4 +40,4 @@ function DateTimeInput({ label, name, value, onChange, required = false }) {
   );
 }
 
-export default DateTimeInput;
+export default DateInput;

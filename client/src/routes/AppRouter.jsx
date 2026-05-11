@@ -18,6 +18,8 @@ import NacimientosPage from "../pages/registro/nacimientos/NacimientosPage.jsx";
 import ExhumacionPage from "../pages/registro/exhumacion/ExhumacionPage.jsx";
 import ReportesPage from "../pages/reportes/ReportesPage.jsx";
 import UsuariosView from "../pages/gestion/usuarios/UsuariosView.jsx";
+import GuiaIncubasePage from "../pages/informacion/GuiaIncubasePage.jsx";
+import AlertasPage from "../pages/alertas/AlertasPage.jsx";
 
 import GestionNidosPage from "../pages/gestion/nidos/GestionNidosPage.jsx";
 import GestionNacimientosPage from "../pages/gestion/nacimientos/GestionNacimientosPage.jsx";
@@ -72,6 +74,8 @@ function AppRouter() {
           <Route path="/reportes" element={<ReportesPage />} />
           <Route path="/usuarios" element={<UsuariosView />} />
           <Route path="/gestion-nidos" element={<GestionNidosPage />} />
+          <Route path="/guia-incubase" element={<GuiaIncubasePage />} />
+          <Route path="/alertas" element={<AlertasPage />} />
 
           <Route
             path="/gestion-nacimientos"

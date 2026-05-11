@@ -15,6 +15,7 @@ import {
   Egg,
   Users,
   Fence,
+  Bell,
 } from "lucide-react";
 
 import logo from "../../assets/logo-tortugaSVG.svg";
@@ -53,6 +54,12 @@ function Sidebar() {
       icon: LayoutDashboard,
     },
     {
+      label: "Alertas",
+      sublabel: "Seguimiento",
+      path: "/alertas",
+      icon: Bell,
+    },
+    {
       label: "Corrales y Nidos",
       sublabel: "Detalles",
       path: "/corrales-nidos",
@@ -64,6 +71,7 @@ function Sidebar() {
       path: "/temperatura",
       icon: Thermometer,
     },
+
     {
       label: "Registro de Nidos",
       sublabel: "Nidos",
@@ -82,6 +90,7 @@ function Sidebar() {
       path: "/exhumacion",
       icon: FileSearch,
     },
+
     {
       label: "Reportes",
       sublabel: "Detalles",
