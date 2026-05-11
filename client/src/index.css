@@ -14,7 +14,113 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   display: none;
 }
 
+@import "tailwindcss";
+
+.scroll-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   display: none;
+}
+
+/* ============================= */
+/* Inputs globales IncuBase */
+/* ============================= */
+
+.input-base {
+  height: 45px;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #d7e4e0;
+  background-color: #ffffff;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+  color: #111827;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-base:hover {
+  border-color: #7bb9a0;
+}
+
+.input-base:focus {
+  border-color: #7bb9a0;
+  box-shadow: 0 0 0 4px rgba(123, 185, 160, 0.2);
+}
+
+.input-base:disabled {
+  cursor: not-allowed;
+  background-color: #f9fafb;
+  color: #9ca3af;
+}
+
+.input-icon-left {
+  padding-left: 2.75rem;
+}
+
+.select-base {
+  height: 45px;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #d7e4e0;
+  background-color: #ffffff;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+  color: #111827;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.select-base:hover {
+  border-color: #7bb9a0;
+}
+
+.select-base:focus {
+  border-color: #7bb9a0;
+  box-shadow: 0 0 0 4px rgba(123, 185, 160, 0.2);
+}
+
+.select-base:disabled {
+  cursor: not-allowed;
+  background-color: #f9fafb;
+  color: #9ca3af;
+}
+
+.textarea-base {
+  width: 100%;
+  resize: none;
+  border-radius: 0.5rem;
+  border: 1px solid #d7e4e0;
+  background-color: #ffffff;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #111827;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.textarea-base:hover {
+  border-color: #7bb9a0;
+}
+
+.textarea-base:focus {
+  border-color: #7bb9a0;
+  box-shadow: 0 0 0 4px rgba(123, 185, 160, 0.2);
+}
+
+.textarea-base::placeholder {
+  color: #9ca3af;
 }

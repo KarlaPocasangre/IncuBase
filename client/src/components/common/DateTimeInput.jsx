@@ -24,7 +24,7 @@ function DateTimeInput({ label, name, value, onChange, required = false }) {
           value={value}
           onChange={onChange}
           required={required}
-          className="h-[45px] w-full rounded-lg border border-[#D7E4E0] bg-white px-4 pr-10 text-sm text-[#111827] shadow-sm outline-none transition focus:border-[#7BB9A0] focus:ring-4 focus:ring-[#7BB9A0]/20"
+          className="input-base pr-10"
         />
 
         <button

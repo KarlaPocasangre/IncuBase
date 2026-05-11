@@ -1,8 +1,5 @@
-import { Search, Heart, Skull, Waves } from "lucide-react"
-import DateTimeInput from "../common/DateTimeInput"
-
-const inputClass =
-  "h-10 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#00796B] focus:ring-2 focus:ring-[#00796B]/15"
+import { Search, Heart, Skull, Waves } from "lucide-react";
+import DateTimeInput from "../common/DateTimeInput";
 
 function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
   return (
@@ -32,7 +29,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
             name="nido"
             value={form.nido}
             onChange={onChange}
-            className={inputClass}
+            className="select-base"
             required
           >
             <option value="">Seleccione el nido</option>
@@ -67,7 +64,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
             value={form.responsableLiberacion}
             onChange={onChange}
             placeholder="ej: Karla Martínez"
-            className={inputClass}
+            className="input-base"
             required
           />
         </Field>
@@ -92,7 +89,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
               value={form.vivosDentro}
               onChange={onChange}
               placeholder="ej: 95"
-              className={inputClass}
+              className="input-base"
             />
           </Field>
 
@@ -104,7 +101,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
               value={form.vivosFuera}
               onChange={onChange}
               placeholder="ej: 5"
-              className={inputClass}
+              className="input-base"
             />
           </Field>
         </div>
@@ -129,7 +126,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
               value={form.muertosDentro}
               onChange={onChange}
               placeholder="ej: 5"
-              className={inputClass}
+              className="input-base"
             />
           </Field>
 
@@ -141,7 +138,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
               value={form.muertosFuera}
               onChange={onChange}
               placeholder="ej: 0"
-              className={inputClass}
+              className="input-base"
             />
           </Field>
         </div>
@@ -163,7 +160,7 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
               name="condicionMarea"
               value={form.condicionMarea}
               onChange={onChange}
-              className={inputClass}
+              className="select-base"
             >
               <option value="">Seleccione la condición</option>
               <option value="Marea alta">Marea alta</option>
@@ -182,24 +179,24 @@ function RegistroNacimientoForm({ form, nidos, onChange, onSubmit }) {
             value={form.observaciones}
             onChange={onChange}
             placeholder="Agregue notas relevantes sobre el proceso de eclosión, incidencias durante la liberación."
-            className="min-h-[62px] w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#00796B] focus:ring-2 focus:ring-[#00796B]/15"
+            className="textarea-base min-h-[80px]"
           />
         </Field>
       </div>
     </form>
-  )
+  );
 }
 
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-slate-800">
+      <span className="mb-2 block text-sm font-semibold text-[#111827]">
         {label}
       </span>
 
       {children}
     </label>
-  )
+  );
 }
 
-export default RegistroNacimientoForm
+export default RegistroNacimientoForm;
