@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Bell,
   CalendarClock,
@@ -43,6 +43,8 @@ const alerts = [
 
 function Topbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [openAlerts, setOpenAlerts] = useState(false);
 
   const storedUsuario = localStorage.getItem("usuario");
@@ -72,6 +74,11 @@ function Topbar() {
 
   const titles = {
     "/": getHomeTitleByRole(),
+
+    "/alertas": {
+      title: "Alertas",
+      subtitle: "Gestión y seguimiento de alertas del sistema",
+    },
 
     "/registro-nidos": {
       title: "Registro de Nidos",
@@ -122,6 +129,11 @@ function Topbar() {
   const current = titles[location.pathname] || {
     title: "IncuBase",
     subtitle: "Sistema de gestión",
+  };
+
+  const handleGoToAlerts = () => {
+    setOpenAlerts(false);
+    navigate("/alertas");
   };
 
   return (
@@ -177,6 +189,7 @@ function Topbar() {
                   <button
                     key={alert.id}
                     type="button"
+                    onClick={handleGoToAlerts}
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-[#F4F8F6]"
                   >
                     <span className={`h-2.5 w-2.5 rounded-full ${alert.dot}`} />
@@ -214,6 +227,7 @@ function Topbar() {
             <div className="border-t border-[#E5ECE9] px-4 py-3">
               <button
                 type="button"
+                onClick={handleGoToAlerts}
                 className="w-full rounded-xl bg-[#EEF7F3] px-4 py-2 text-sm font-semibold text-[#006C3A] transition hover:bg-[#DFF0E9]"
               >
                 Ver todas las alertas
