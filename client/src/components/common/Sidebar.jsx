@@ -47,6 +47,12 @@ function Sidebar() {
       icon: LayoutDashboard,
     },
     {
+      label: "Alertas",
+      sublabel: "Seguimiento",
+      path: "/alertas",
+      icon: Bell,
+    },
+    {
       label: "Corrales y Nidos",
       sublabel: "Detalles",
       path: "/corrales-nidos",
@@ -83,12 +89,6 @@ function Sidebar() {
       sublabel: "Detalles",
       path: "/reportes",
       icon: FileText,
-    },
-    {
-      label: "Alertas",
-      subtitle: "Seguimiento",
-      path: "/alertas",
-      icon: Bell,
     },
   ];
 
