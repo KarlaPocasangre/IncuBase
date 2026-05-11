@@ -6,7 +6,7 @@ import AuthCard from "../../components/auth/AuthCard";
 import NoticeModal from "../../components/legal/NoticeModal";
 import TermsModal from "../../components/legal/TermsModal";
 import PrivacyModal from "../../components/legal/PrivacyModal";
-import { loginRequest } from "../../services/auth.service";
+import { loginRequest,perfilRequest  } from "../../services/auth.service";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -140,11 +140,26 @@ function Login() {
     }
   };
 
-  const handleConfirmarAviso = () => {
-    localStorage.setItem("token", pendingToken);
-    localStorage.setItem("usuario", JSON.stringify(pendingUser));
-    setMostrarAviso(false);
-    navigate("/");
+  const handleConfirmarAviso = async () => {
+    try {
+      localStorage.setItem("token", pendingToken);
+
+      const response = await perfilRequest();
+      const usuarioPerfil = response.data.usuario;
+
+      localStorage.setItem("usuario", JSON.stringify(usuarioPerfil));
+
+      setMostrarAviso(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Error cargando perfil:", error);
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+
+      setErrorGeneral("No se pudo cargar el perfil del usuario");
+      setMostrarAviso(false);
+    }
   };
 
   const getInputClasses = (field) => {

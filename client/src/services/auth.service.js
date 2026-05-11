@@ -1,4 +1,4 @@
-import { httpPost } from "./http";
+import { httpGet, httpPost } from "./http";
 
 export function loginRequest(data) {
   return httpPost("/api/auth/login", data);
@@ -14,4 +14,8 @@ export function verifyCodeRequest(data) {
 
 export function resetPasswordRequest(data) {
   return httpPost("/api/auth/reset-password", data);
+}
+
+export function perfilRequest() {
+  return httpGet("/api/auth/perfil");
 }

@@ -2,16 +2,27 @@ import { Navigate } from "react-router-dom";
 
 function PrivateRoute({ children, allowedRoles }) {
   const token = localStorage.getItem("token");
-  const storedUsuario = localStorage.getItem("usuario");
+  const usuarioGuardado = localStorage.getItem("usuario");
 
-  const usuario = storedUsuario ? JSON.parse(storedUsuario) : null;
+  let usuario = null;
+
+  try {
+    usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  } catch (error) {
+    console.error("Error leyendo usuario desde localStorage:", error);
+    localStorage.removeItem("usuario");
+  }
 
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(usuario?.rol)) {
-    return <Navigate to="/403" replace />;
+  if (allowedRoles && allowedRoles.length > 0) {
+    const rolUsuario = usuario?.rol;
+
+    if (!rolUsuario || !allowedRoles.includes(rolUsuario)) {
+      return <Navigate to="/403" replace />;
+    }
   }
 
   return children;

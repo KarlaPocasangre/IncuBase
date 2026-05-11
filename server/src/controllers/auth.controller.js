@@ -328,4 +328,53 @@ const resetPassword = async (req, res) => {
   }
 }
 
-module.exports = { login, forgotPassword, verifyCode, resetPassword }
+const perfil = async (req, res) => {
+  try {
+    const idUsuario = Number(req.usuario.id_usuario)
+
+    const usuario = await prisma.usuario.findUnique({
+      where: {
+        id_usuario: idUsuario
+      },
+      include: {
+        rol: true,
+        estado_usuario: true
+      }
+    })
+
+    if (!usuario) {
+      return res.status(404).json({
+        success: false,
+        mensaje: 'Usuario no encontrado'
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      mensaje: 'Perfil obtenido correctamente',
+      usuario: {
+        id_usuario: String(usuario.id_usuario),
+        email: usuario.email,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        rol: usuario.rol.nombre_rol,
+        estado: usuario.estado_usuario.nombre
+      }
+    })
+  } catch (error) {
+    console.error('Error en perfil:', error)
+
+    return res.status(500).json({
+      success: false,
+      mensaje: 'Error interno del servidor'
+    })
+  }
+}
+
+module.exports = {
+  login,
+  forgotPassword,
+  verifyCode,
+  resetPassword,
+  perfil
+}

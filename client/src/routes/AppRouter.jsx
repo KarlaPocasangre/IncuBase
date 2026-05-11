@@ -10,7 +10,6 @@ import ResetPassword from "../pages/auth/ResetPassword.jsx";
 import RoleDashboard from "./RoleDashboard.jsx";
 
 /* SISTEMA */
-import DashboardPage from "../pages/dashboard/DashboardAdminPage.jsx";
 import CorralesNidosPage from "../pages/corralesNidos/CorralesNidosPage.jsx";
 import GestionCorralesPage from "../pages/gestion/corrales/GestionCorralesPage.jsx";
 import RegistroNidosPage from "../pages/registro/nidos/RegistroNidosPage.jsx";
@@ -45,7 +44,7 @@ function AppRouter() {
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/500" element={<ServerError />} />
 
-        {/* PRIVADAS */}
+        {/* PRIVADAS GENERALES */}
         <Route
           element={
             <PrivateRoute>
@@ -55,11 +54,21 @@ function AppRouter() {
         >
           <Route path="/" element={<RoleDashboard />} />
           <Route path="/corrales-nidos" element={<CorralesNidosPage />} />
-          <Route path="/gestion-corrales" element={<GestionCorralesPage />} />
           <Route path="/registro-nidos" element={<RegistroNidosPage />} />
           <Route path="/temperatura" element={<TemperaturaPage />} />
           <Route path="/nacimientos" element={<NacimientosPage />} />
           <Route path="/exhumacion" element={<ExhumacionPage />} />
+        </Route>
+
+        {/* PRIVADAS SOLO ADMINISTRADOR */}
+        <Route
+          element={
+            <PrivateRoute allowedRoles={["Administrador"]}>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route path="/gestion-corrales" element={<GestionCorralesPage />} />
           <Route path="/reportes" element={<ReportesPage />} />
           <Route path="/usuarios" element={<UsuariosView />} />
           <Route path="/gestion-nidos" element={<GestionNidosPage />} />

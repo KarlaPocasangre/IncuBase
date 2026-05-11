@@ -1,24 +1,20 @@
 const BASE_URL = "http://localhost:4000";
 
-export async function httpGet(endpoint) {
-  const res = await fetch(`${BASE_URL}${endpoint}`);
+function getHeaders() {
+  const token = localStorage.getItem("token");
 
-  if (!res.ok) {
-    throw new Error("Error en la petición");
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
-  return res.json();
+  return headers;
 }
 
-export async function httpPost(endpoint, data) {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
+async function handleResponse(res) {
   const result = await res.json();
 
   if (!res.ok) {
@@ -30,4 +26,23 @@ export async function httpPost(endpoint, data) {
   }
 
   return { data: result };
+}
+
+export async function httpGet(endpoint) {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+
+  return handleResponse(res);
+}
+
+export async function httpPost(endpoint, data) {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+
+  return handleResponse(res);
 }

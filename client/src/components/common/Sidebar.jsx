@@ -30,7 +30,14 @@ function Sidebar() {
   const navigate = useNavigate();
 
   const usuarioGuardado = localStorage.getItem("usuario");
-  const usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  let usuario = null;
+
+    try {
+      usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+    } catch (error) {
+      console.error("Error leyendo usuario desde localStorage:", error);
+      localStorage.removeItem("usuario");
+    }
 
   const nombreCompleto = usuario
     ? `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim()
