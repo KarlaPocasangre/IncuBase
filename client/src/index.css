@@ -9,25 +9,17 @@
   display: none;
 }
 
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+/* Ocultar iconos nativos de fecha */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   display: none;
 }
 
-@import "tailwindcss";
-
-.scroll-hidden {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.scroll-hidden::-webkit-scrollbar {
-  display: none;
-}
-
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  opacity: 0;
-  display: none;
+input[type="date"],
+input[type="datetime-local"] {
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 /* ============================= */
@@ -64,10 +56,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   color: #9ca3af;
 }
 
-.input-icon-left {
-  padding-left: 2.75rem;
-}
-
 .select-base {
   height: 45px;
   width: 100%;
@@ -96,6 +84,12 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   cursor: not-allowed;
   background-color: #f9fafb;
   color: #9ca3af;
+}
+
+/* Importante: va después de input-base y select-base */
+.input-base.input-icon-left,
+.select-base.input-icon-left {
+  padding-left: 2.75rem;
 }
 
 .textarea-base {
