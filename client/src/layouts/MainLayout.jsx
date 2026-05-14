@@ -8,13 +8,16 @@ function MainLayout() {
     <div className="flex h-screen overflow-hidden bg-[#EEF3F0]">
       <Sidebar />
 
-      <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
+      <div className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
         <Topbar />
 
-        <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-6">
-          <Outlet />
+        <main className="incubase-scroll flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
+          <div className="p-6">
+            <Outlet />
+          </div>
+
+          <Footer />
         </main>
-        <Footer />
       </div>
     </div>
   );
