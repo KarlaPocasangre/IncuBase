@@ -1,137 +1,68 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+const filteredData = useMemo(() => {
+  const searchableKeys =
+    config.searchKeys ||
+    config.columns
+      ?.filter((column) => column.key !== "acciones")
+      .map((column) => column.key) ||
+    [];
 
-import ManagementStats from "./ManagementStats";
-import ManagementCard from "./ManagementCard";
-import ManagementFilters from "./ManagementFilters";
-import ManagementTable from "./ManagementTable";
+  const search = normalizeText(searchValue.trim());
 
-function ManagementPage({ config }) {
-  const navigate = useNavigate();
+  const filtered = data.filter((item) => {
+    const matchesSearch =
+      !search ||
+      searchableKeys.some((key) => normalizeText(item[key]).includes(search));
 
-  const [addOpen, setAddOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [detailOpen, setDetailOpen] = useState(false);
+    const matchesFilters = Object.entries(filterValues).every(
+      ([key, value]) => {
+        if (!value) return true;
 
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [data, setData] = useState(config.data);
+        if (typeof value === "object") {
+          const hasFrom = Boolean(value.from);
+          const hasTo = Boolean(value.to);
 
-  const FormModal = config.FormModal;
-  const DetailModal = config.DetailModal;
+          if (!hasFrom && !hasTo) return true;
 
-  const handleAdd = (newItem) => {
-    setData((prev) => [newItem, ...prev]);
-    setAddOpen(false);
-  };
+          const itemDate = new Date(item[key]);
+          if (Number.isNaN(itemDate.getTime())) return false;
 
-  const handleEdit = (item) => {
-    setSelectedItem(item);
-    setEditOpen(true);
-  };
+          const fromDate = hasFrom ? new Date(`${value.from}T00:00:00`) : null;
+          const toDate = hasTo ? new Date(`${value.to}T23:59:59`) : null;
 
-  const handleEditSave = (updatedItem) => {
-    setData((prev) =>
-      prev.map((item) => {
-        const itemId = item.id || item.codigo || item.codigoNido || item.nido;
-        const updatedId =
-          updatedItem.id ||
-          updatedItem.codigo ||
-          updatedItem.codigoNido ||
-          updatedItem.nido;
+          if (fromDate && itemDate < fromDate) return false;
+          if (toDate && itemDate > toDate) return false;
 
-        return itemId === updatedId ? updatedItem : item;
-      }),
+          return true;
+        }
+
+        return normalizeText(item[key]).includes(normalizeText(value));
+      },
     );
 
-    setEditOpen(false);
-    setSelectedItem(null);
-  };
+    return matchesSearch && matchesFilters;
+  });
 
-  const handleDetail = (item) => {
-    setSelectedItem(item);
-    setDetailOpen(true);
-  };
+  if (!sortConfig?.key) return filtered;
 
-  const handleMainButtonClick = () => {
-    if (config.buttonRedirectTo) {
-      navigate(config.buttonRedirectTo);
-      return;
+  return [...filtered].sort((a, b) => {
+    const aValue = getComparableValue(a[sortConfig.key], sortConfig.type);
+    const bValue = getComparableValue(b[sortConfig.key], sortConfig.type);
+
+    if (aValue < bValue) {
+      return sortConfig.direction === "asc" ? -1 : 1;
     }
 
-    setAddOpen(true);
-  };
+    if (aValue > bValue) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
 
-  return (
-    <div className="space-y-6">
-      <ManagementStats stats={config.stats} />
-
-      <ManagementCard
-        title={config.cardTitle}
-        description={config.cardDescription}
-        buttonText={config.buttonText}
-        buttonIcon={config.buttonIcon}
-        onButtonClick={handleMainButtonClick}
-      >
-        <ManagementFilters
-          placeholder={config.searchPlaceholder}
-          filters={config.filters}
-        />
-
-        <ManagementTable
-          columns={config.columns}
-          data={data}
-          onEdit={handleEdit}
-          onDetail={handleDetail}
-        />
-      </ManagementCard>
-
-      {FormModal && (
-        <FormModal
-          open={addOpen}
-          mode="add"
-          item={null}
-          corral={null}
-          nido={null}
-          exhumacion={null}
-          nacimiento={null}
-          onClose={() => setAddOpen(false)}
-          onSave={handleAdd}
-        />
-      )}
-
-      {FormModal && (
-        <FormModal
-          open={editOpen}
-          mode="edit"
-          item={selectedItem}
-          corral={selectedItem}
-          nido={selectedItem}
-          exhumacion={selectedItem}
-          nacimiento={selectedItem}
-          onClose={() => {
-            setEditOpen(false);
-            setSelectedItem(null);
-          }}
-          onSave={handleEditSave}
-        />
-      )}
-
-      {DetailModal && (
-        <DetailModal
-          open={detailOpen}
-          item={selectedItem}
-          corral={selectedItem}
-          nido={selectedItem}
-          exhumacion={selectedItem}
-          nacimiento={selectedItem}
-          onClose={() => {
-            setDetailOpen(false);
-            setSelectedItem(null);
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-export default ManagementPage;
+    return 0;
+  });
+}, [
+  data,
+  searchValue,
+  filterValues,
+  sortConfig,
+  config.searchKeys,
+  config.columns,
+]);

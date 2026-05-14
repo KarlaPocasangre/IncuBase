@@ -1,34 +1,42 @@
 import {
-  CalendarPlus,
-  Circle,
+  CalendarDays,
+  ChartNoAxesColumnIncreasing,
   FileSearch,
   Pencil,
   Plus,
-  Search,
   Skull,
-  ChartNoAxesColumnIncreasing,
   Turtle,
-  Wrench,
+  XCircle,
 } from "lucide-react";
 
 export const nacimientosConfig = {
-  pageTitle: "Eclosion",
-  pageSubtitle: "Gestion de Nacimientos",
+  pageTitle: "Eclosión",
+  pageSubtitle: "Gestión de Nacimientos",
 
-  cardTitle: "Gestion de Nacimientos",
+  cardTitle: "Gestión de Nacimientos",
   cardDescription: "Administra los nacimientos del sistema IncuBase",
+  cardIcon: Turtle,
+  cardIconColor: "text-[#0F7A4F]",
+
   buttonText: "Registrar Nacimiento",
   buttonIcon: Plus,
   buttonRedirectTo: "/nacimientos",
 
-  searchPlaceholder: "Buscar por codigo de nido...",
-  filters: ["Rango de fecha", "Marea", "Responsable"],
+  searchPlaceholder: "Buscar por código de nido...",
+
+  searchKeys: ["nido", "marea", "fechaEclosion", "responsable"],
+
+  defaultSort: {
+    key: "nido",
+    direction: "asc",
+    type: "text",
+  },
 
   stats: [
     {
       title: "Eclosiones",
       value: 200,
-      icon: Circle,
+      icon: Turtle,
       iconColor: "text-[#7BB9A0]",
     },
     {
@@ -51,78 +59,119 @@ export const nacimientosConfig = {
     },
   ],
 
-  columns: [
+  filters: [
     {
-      header: "Nido",
-      key: "nido",
-    },
-    {
-      header: "Vivos",
-      key: "vivos",
-    },
-    {
-      header: "Muertos",
-      key: "muertos",
-    },
-    {
-      header: "Marea",
-      key: "marea",
-    },
-    {
-      header: "Fecha de Eclosion",
+      type: "date",
       key: "fechaEclosion",
-      renderHeader: () => (
-        <span className="flex items-center gap-2">
-          Fecha de Eclosion
-          <CalendarPlus className="h-5 w-5 text-[#52645E]" />
-        </span>
-      ),
+      label: "Rango de fecha",
+      icon: CalendarDays,
     },
     {
-      header: "Responsable",
+      type: "select",
+      key: "marea",
+      label: "Marea",
+      options: ["Marea Alta", "Marea Media", "Marea Baja"],
+    },
+    {
+      type: "select",
       key: "responsable",
-    },
-    {
-      header: "Acciones",
-      key: "acciones",
-      render: () => (
-        <div className="flex items-center gap-5">
-          <button
-            type="button"
-            className="rounded-md p-1 transition hover:bg-[#E6A11D]/10"
-          >
-            <Pencil className="h-5 w-5 text-[#E6A11D]" />
-          </button>
-
-          <button
-            type="button"
-            className="rounded-md p-1 transition hover:bg-blue-100"
-          >
-            <FileSearch className="h-5 w-5 text-blue-400" />
-          </button>
-        </div>
-      ),
+      label: "Responsable",
+      options: ["José Gilverto", "Ana Cáceres", "Mario Tesorero", "Juan Ramón"],
     },
   ],
 
+  columns: [
+    {
+      key: "nido",
+      header: "Nido",
+      sortable: true,
+      sortType: "text",
+      defaultSortDirection: "asc",
+    },
+    {
+      key: "vivos",
+      header: "Vivos",
+      sortable: true,
+      sortType: "number",
+      defaultSortDirection: "desc",
+    },
+    {
+      key: "muertos",
+      header: "Muertos",
+      sortable: true,
+      sortType: "number",
+      defaultSortDirection: "desc",
+    },
+    {
+      key: "marea",
+      header: "Marea",
+    },
+    {
+      key: "fechaEclosion",
+      header: "Fecha de Eclosión",
+      sortable: true,
+      sortType: "date",
+      defaultSortDirection: "asc",
+    },
+    {
+      key: "responsable",
+      header: "Responsable",
+    },
+    {
+      key: "acciones",
+      header: "Acciones",
+    },
+  ],
+
+  actions: [
+    {
+      key: "edit",
+      label: "Editar",
+      icon: Pencil,
+      color: "text-[#E6A11D]",
+      hover: "hover:bg-orange-50",
+    },
+    {
+      key: "delete",
+      label: "Eliminar",
+      icon: XCircle,
+      color: "text-red-400",
+      hover: "hover:bg-red-50",
+    },
+    {
+      key: "detail",
+      label: "Ver detalle",
+      icon: FileSearch,
+      color: "text-blue-400",
+      hover: "hover:bg-blue-50",
+    },
+  ],
+
+  emptyTitle: "No hay nacimientos registrados",
+  emptyDescription:
+    "Registra un nacimiento para visualizar la información de eclosión.",
+
   data: [
     {
+      id: 1,
       nido: "C2HJJ-09",
       vivos: 80,
       muertos: 23,
       marea: "Marea Alta",
       fechaEclosion: "2023-10-02 15:04",
-      responsable: "Jose Gilverto",
+      responsable: "José Gilverto",
     },
     {
+      id: 2,
       nido: "C2HJJ-09",
       vivos: 100,
       muertos: 23,
       marea: "Marea Alta",
       fechaEclosion: "2023-10-02 15:04",
-      responsable: "Ana Caceres",
+      responsable: "Ana Cáceres",
     },
     {
+      id: 3,
       nido: "C2HJJ-09",
       vivos: 23,
       muertos: 43,
@@ -131,12 +180,13 @@ export const nacimientosConfig = {
       responsable: "Mario Tesorero",
     },
     {
+      id: 4,
       nido: "C2HJJ-09",
       vivos: 23,
       muertos: 32,
       marea: "Marea Baja",
       fechaEclosion: "2026-11-01 21:00",
-      responsable: "Juan Ramon",
+      responsable: "Juan Ramón",
     },
   ],
 };

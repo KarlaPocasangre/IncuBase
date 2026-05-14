@@ -1,4 +1,14 @@
-import { Egg, Timer, ClockAlert, FileCheck, CalendarDays } from "lucide-react";
+import {
+  CalendarDays,
+  ClockAlert,
+  Egg,
+  FileCheck,
+  FileSearch,
+  Pencil,
+  Plus,
+  Timer,
+  XCircle,
+} from "lucide-react";
 
 const estadoStyles = {
   Registrado: "text-blue-500",
@@ -15,11 +25,22 @@ export const nidosConfig = {
   cardTitle: "Gestión de Nidos",
   cardDescription:
     "Administra y consulta los nidos registrados en el sistema IncuBase",
+  cardIcon: Egg,
+  cardIconColor: "text-[#0F7A4F]",
 
   buttonText: "Agregar Nido",
+  buttonIcon: Plus,
   buttonRedirectTo: "/registro-nidos",
 
   searchPlaceholder: "Buscar por código de nido...",
+
+  searchKeys: ["codigoNido", "especie", "ubicacion", "estado", "registradoPor"],
+
+  defaultSort: {
+    key: "codigoNido",
+    direction: "asc",
+    type: "text",
+  },
 
   stats: [
     {
@@ -48,12 +69,46 @@ export const nidosConfig = {
     },
   ],
 
-  filters: ["Rango de fecha", "Especie", "Estado", "Corral"],
+  filters: [
+    {
+      type: "date",
+      key: "fechaSiembra",
+      label: "Rango de fecha",
+      icon: CalendarDays,
+    },
+    {
+      type: "select",
+      key: "especie",
+      label: "Especie",
+      options: ["Golfina", "Carey", "Baula", "Prieta"],
+    },
+    {
+      type: "select",
+      key: "estado",
+      label: "Estado",
+      options: [
+        "Registrado",
+        "En incubación",
+        "Próximo a eclosión",
+        "Eclosionado",
+        "Exhumado",
+      ],
+    },
+    {
+      type: "select",
+      key: "corral",
+      label: "Corral",
+      options: ["C2HJJ-09", "C2HJJ-10", "C2HJJ-11", "C2HJJ-12"],
+    },
+  ],
 
   columns: [
     {
       key: "codigoNido",
       header: "Código",
+      sortable: true,
+      sortType: "text",
+      defaultSortDirection: "asc",
     },
     {
       key: "especie",
@@ -66,6 +121,9 @@ export const nidosConfig = {
     {
       key: "cantidadHuevos",
       header: "Huevos",
+      sortable: true,
+      sortType: "number",
+      defaultSortDirection: "asc",
     },
     {
       key: "estado",
@@ -83,12 +141,10 @@ export const nidosConfig = {
     },
     {
       key: "fechaSiembra",
-      header: (
-        <div className="flex items-center gap-2">
-          Fecha de siembra
-          <CalendarDays className="h-4 w-4 text-gray-500" />
-        </div>
-      ),
+      header: "Fecha de siembra",
+      sortable: true,
+      sortType: "date",
+      defaultSortDirection: "asc",
     },
     {
       key: "registradoPor",
@@ -100,12 +156,41 @@ export const nidosConfig = {
     },
   ],
 
+  actions: [
+    {
+      key: "edit",
+      label: "Editar",
+      icon: Pencil,
+      color: "text-[#E6A11D]",
+      hover: "hover:bg-orange-50",
+    },
+    {
+      key: "delete",
+      label: "Eliminar",
+      icon: XCircle,
+      color: "text-red-400",
+      hover: "hover:bg-red-50",
+    },
+    {
+      key: "detail",
+      label: "Ver detalle",
+      icon: FileSearch,
+      color: "text-blue-400",
+      hover: "hover:bg-blue-50",
+    },
+  ],
+
+  emptyTitle: "No hay nidos registrados",
+  emptyDescription:
+    "Agrega un nuevo nido para comenzar el seguimiento dentro del sistema.",
+
   data: [
     {
       id: 1,
       codigoNido: "NID-001",
       especie: "Golfina",
       ubicacion: "C2HJJ-09 / A-03",
+      corral: "C2HJJ-09",
       cantidadHuevos: 85,
       estado: "En incubación",
       fechaSiembra: "2026-05-01 14:30",
@@ -116,30 +201,11 @@ export const nidosConfig = {
       codigoNido: "NID-002",
       especie: "Carey",
       ubicacion: "C2HJJ-10 / B-01",
+      corral: "C2HJJ-10",
       cantidadHuevos: 92,
       estado: "Próximo a eclosión",
       fechaSiembra: "2026-04-20 08:15",
       registradoPor: "Ana Cáceres",
-    },
-    {
-      id: 3,
-      codigoNido: "NID-003",
-      especie: "Baula",
-      ubicacion: "C2HJJ-11 / C-04",
-      cantidadHuevos: 70,
-      estado: "Eclosionado",
-      fechaSiembra: "2026-03-18 17:00",
-      registradoPor: "Mario Tesorero",
-    },
-    {
-      id: 4,
-      codigoNido: "NID-004",
-      especie: "Prieta",
-      ubicacion: "C2HJJ-12 / D-02",
-      cantidadHuevos: 78,
-      estado: "Exhumado",
-      fechaSiembra: "2026-02-12 09:45",
-      registradoPor: "Juan Ramón",
     },
   ],
 };

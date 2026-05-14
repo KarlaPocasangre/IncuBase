@@ -1,54 +1,63 @@
 import {
-  CalendarPlus,
-  Circle,
   FileSearch,
   Pencil,
-  Plus,
-  ShieldUser,
-  UserRoundCog,
-  UserRoundX,
-  UsersRound,
+  ShieldCheck,
+  UserCog,
+  UserRoundPlus,
+  Users,
+  XCircle,
 } from "lucide-react";
 
-const rolStyles = {
-  Administrador: "bg-red-50 text-red-500 border border-red-400",
-  Tecnico: "bg-blue-50 text-blue-500 border border-blue-400",
+const roleStyles = {
+  Administrador: "border-red-300 bg-red-50 text-red-500",
+  Tecnico: "border-blue-300 bg-blue-50 text-blue-500",
+  Técnico: "border-blue-300 bg-blue-50 text-blue-500",
 };
 
 const estadoStyles = {
   Activo: "text-emerald-500",
-  Inactivo: "text-[#52645E]",
+  Inactivo: "text-slate-500",
 };
 
 export const usuariosConfig = {
   pageTitle: "Usuarios",
-  pageSubtitle: "Gestion de Usuarios",
+  pageSubtitle: "Gestión de Usuarios",
 
-  cardTitle: "Gestion de Usuarios",
+  cardTitle: "Gestión de Usuarios",
   cardDescription: "Administra los usuarios del sistema IncuBase",
+  cardIcon: UserCog,
+  cardIconColor: "text-[#0F7A4F]",
+
   buttonText: "Agregar Usuario",
-  buttonIcon: Plus,
+  buttonIcon: UserRoundPlus,
 
   searchPlaceholder: "Buscar por nombre o correo...",
-  filters: ["Roles", "Estado"],
+
+  searchKeys: ["nombreCompleto", "email"],
+
+  defaultSort: {
+    key: "nombreCompleto",
+    direction: "asc",
+    type: "text",
+  },
 
   stats: [
     {
       title: "Total de Usuarios",
       value: 110,
-      icon: UsersRound,
+      icon: Users,
       iconColor: "text-[#7BB9A0]",
     },
     {
       title: "Administradores",
       value: 8,
-      icon: ShieldUser,
+      icon: ShieldCheck,
       iconColor: "text-red-300",
     },
     {
-      title: "Tecnicos de Campo",
+      title: "Técnicos de Campo",
       value: 102,
-      icon: UserRoundCog,
+      icon: UserRoundPlus,
       iconColor: "text-blue-300",
     },
     {
@@ -58,43 +67,56 @@ export const usuariosConfig = {
     },
   ],
 
+  filters: [
+    {
+      type: "select",
+      key: "rol",
+      label: "Roles",
+      options: ["Administrador", "Tecnico"],
+    },
+    {
+      type: "select",
+      key: "estado",
+      label: "Estado",
+      options: ["Activo", "Inactivo"],
+    },
+  ],
+
   columns: [
     {
+      key: "nombreCompleto",
       header: "Usuario",
-      key: "usuario",
-      renderHeader: () => (
-        <span className="flex items-center gap-2">
-          Usuario
-          <span className="text-[#52645E]">A↟</span>
-        </span>
-      ),
+      sortable: true,
+      sortType: "text",
+      defaultSortDirection: "asc",
       render: (_, row) => (
         <div>
-          <p className="font-semibold text-[#111827]">{row.nombre}</p>
-          <p className="text-sm text-[#6B7280] underline">{row.correo}</p>
+          <p className="font-bold text-[#0B2B26]">{row.nombreCompleto}</p>
+          <p className="text-sm font-semibold text-slate-500 underline">
+            {row.email}
+          </p>
         </div>
       ),
     },
     {
-      header: "Rol",
       key: "rol",
+      header: "Rol",
       render: (value) => (
         <span
-          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium ${
-            rolStyles[value] || "bg-gray-100 text-gray-500"
+          className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold ${
+            roleStyles[value] || "border-slate-300 bg-slate-50 text-slate-500"
           }`}
         >
-          <UserRoundCog className="h-4 w-4" />
           {value}
         </span>
       ),
     },
     {
-      header: "Estado",
       key: "estado",
+      header: "Estado",
       render: (value) => (
         <span
-          className={`flex items-center gap-3 font-semibold ${
+          className={`inline-flex items-center gap-2 font-semibold ${
             estadoStyles[value] || "text-gray-500"
           }`}
         >
@@ -104,60 +126,74 @@ export const usuariosConfig = {
       ),
     },
     {
-      header: "Fecha de creacion",
       key: "fechaCreacion",
-      renderHeader: () => (
-        <span className="flex items-center gap-2">
-          Fecha de creacion
-          <CalendarPlus className="h-5 w-5 text-[#52645E]" />
-        </span>
-      ),
+      header: "Fecha de creación",
+      sortable: true,
+      sortType: "date",
+      defaultSortDirection: "asc",
     },
     {
-      header: "Acciones",
       key: "acciones",
-      render: () => (
-        <div className="flex items-center gap-5">
-          <button
-            type="button"
-            className="rounded-md p-1 hover:bg-[#E6A11D]/10"
-          >
-            <Pencil className="h-5 w-5 text-[#E6A11D]" />
-          </button>
-
-          <button type="button" className="rounded-md p-1 hover:bg-red-100">
-            <UserRoundX className="h-5 w-5 text-red-400" />
-          </button>
-        </div>
-      ),
+      header: "Acciones",
     },
   ],
 
+  actions: [
+    {
+      key: "edit",
+      label: "Editar",
+      icon: Pencil,
+      color: "text-[#E6A11D]",
+      hover: "hover:bg-orange-50",
+    },
+    {
+      key: "delete",
+      label: "Eliminar",
+      icon: XCircle,
+      color: "text-red-400",
+      hover: "hover:bg-red-50",
+    },
+    {
+      key: "detail",
+      label: "Ver detalle",
+      icon: FileSearch,
+      color: "text-blue-400",
+      hover: "hover:bg-blue-50",
+    },
+  ],
+
+  emptyTitle: "No hay usuarios registrados",
+  emptyDescription: "Agrega usuarios para administrar los accesos del sistema.",
+
   data: [
     {
-      nombre: "Karla Pocasangre",
-      correo: "karla29hernandez89@gmail.com",
+      id: 1,
+      nombreCompleto: "Karla Pocasangre",
+      email: "karla29hernandez89@gmail.com",
       rol: "Administrador",
       estado: "Activo",
       fechaCreacion: "2023-06-01 18:43",
     },
     {
-      nombre: "Josue Sanchez",
-      correo: "josue.chanchez.23@gmail.com",
+      id: 2,
+      nombreCompleto: "Josue Sanchez",
+      email: "josue.chanchez.23@gmail.com",
       rol: "Tecnico",
       estado: "Activo",
       fechaCreacion: "2023-10-02 15:04",
     },
     {
-      nombre: "Carlos Martinez",
-      correo: "carlitouwu.89.23@gmail.com",
+      id: 3,
+      nombreCompleto: "Carlos Martinez",
+      email: "carlitouwu.89.23@gmail.com",
       rol: "Tecnico",
       estado: "Inactivo",
       fechaCreacion: "2005-01-01 11:45",
     },
     {
-      nombre: "Mario Castro",
-      correo: "castro.marios.21345@gmail.com",
+      id: 4,
+      nombreCompleto: "Mario Castro",
+      email: "castro.marios.21345@gmail.com",
       rol: "Tecnico",
       estado: "Activo",
       fechaCreacion: "2026-11-01 21:00",

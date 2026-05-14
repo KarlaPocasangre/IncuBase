@@ -11,8 +11,8 @@ function MainLayout() {
       <div className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
         <Topbar />
 
-        <main className="incubase-scroll flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
-          <div className="p-6">
+        <main className="incubase-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
+          <div className="flex-1 p-6">
             <Outlet />
           </div>
 
