@@ -168,11 +168,7 @@ function Sidebar() {
           }`}
         >
           <img
-            src={
-              collapsed
-                ? item.collapsedIcon || item.customIcon
-                : item.customIcon
-            }
+            src={item.customIcon}
             alt={item.label}
             className="h-5 w-5 object-contain"
           />
@@ -211,7 +207,6 @@ function Sidebar() {
         collapsed ? "w-[88px]" : "w-[280px]"
       }`}
     >
-      {/* HEADER */}
       <div className="flex h-[82px] shrink-0 items-center border-b border-white/10 px-4">
         <div
           className={`flex w-full items-center ${
@@ -256,7 +251,6 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* BOTÓN FLOTANTE PARA EXPANDIR */}
       {collapsed && (
         <button
           type="button"
@@ -268,7 +262,6 @@ function Sidebar() {
         </button>
       )}
 
-      {/* CONTENIDO */}
       <div className="flex-1 overflow-y-auto overflow-x-visible px-3 py-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <nav className="flex flex-col gap-5">
           {sections.map((section, sectionIndex) => (
@@ -341,7 +334,6 @@ function Sidebar() {
             </div>
           ))}
 
-          {/* SECCIÓN ADMINISTRACIÓN */}
           <div className="flex flex-col gap-1.5">
             {!collapsed ? (
               <div className="px-3 pt-1">
@@ -401,7 +393,9 @@ function Sidebar() {
                       <NavLink
                         key={item.path}
                         to={item.path}
-                        onClick={() => setGestionOpen(false)}
+                        onClick={() => {
+                          if (collapsed) setGestionOpen(false);
+                        }}
                         className={({ isActive }) =>
                           `flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-all ${
                             isActive
@@ -410,17 +404,25 @@ function Sidebar() {
                           }`
                         }
                       >
-                        {item.customIcon ? (
-                          <img
-                            src={item.customIcon}
-                            alt={item.label}
-                            className="h-[15px] w-[15px] shrink-0 object-contain"
-                          />
-                        ) : (
-                          <Icon size={15} />
-                        )}
+                        {({ isActive }) => (
+                          <>
+                            {item.customIcon ? (
+                              <img
+                                src={
+                                  isActive
+                                    ? item.collapsedIcon || item.customIcon
+                                    : item.customIcon
+                                }
+                                alt={item.label}
+                                className="h-[15px] w-[15px] shrink-0 object-contain"
+                              />
+                            ) : (
+                              <Icon size={15} />
+                            )}
 
-                        <span className="truncate">{item.label}</span>
+                            <span className="truncate">{item.label}</span>
+                          </>
+                        )}
                       </NavLink>
                     );
                   })}
@@ -477,7 +479,6 @@ function Sidebar() {
         </nav>
       </div>
 
-      {/* FOOTER */}
       <div className="shrink-0 border-t border-white/10 bg-[#043D35] px-4 py-4">
         {collapsed ? (
           <button
