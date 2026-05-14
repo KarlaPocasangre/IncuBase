@@ -4,6 +4,7 @@ function ManagementCard({
   title,
   description,
   buttonText,
+  buttonIcon: ButtonIcon = Plus,
   onButtonClick,
   children,
 }) {
@@ -25,7 +26,7 @@ function ManagementCard({
             onClick={onButtonClick}
             className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#0B5631]"
           >
-            <Plus className="h-4 w-4" />
+            <ButtonIcon className="h-4 w-4" />
             {buttonText}
           </button>
         )}
