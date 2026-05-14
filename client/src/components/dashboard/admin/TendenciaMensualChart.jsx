@@ -45,110 +45,117 @@ function TendenciaMensualChart() {
       badge="Últimos 6 meses"
       className="min-h-[380px]"
     >
-      <div className="h-[290px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={tendenciaMensual}
-            margin={{
-              top: 10,
-              right: 18,
-              left: -18,
-              bottom: 0,
-            }}
+      <div className="w-full min-w-0">
+        <div className="h-[290px] w-full min-w-0">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={300}
+            minHeight={250}
           >
-            <defs>
-              <linearGradient id="nidosGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0F7A4F" stopOpacity={0.24} />
-                <stop offset="95%" stopColor="#0F7A4F" stopOpacity={0.02} />
-              </linearGradient>
-
-              <linearGradient
-                id="eclosionesGradient"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.02} />
-              </linearGradient>
-
-              <linearGradient
-                id="exhumacionesGradient"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.18} />
-                <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.02} />
-              </linearGradient>
-            </defs>
-
-            <CartesianGrid strokeDasharray="3 3" stroke="#E3EFEB" />
-
-            <XAxis
-              dataKey="mes"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#64748B", fontSize: 11 }}
-            />
-
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#64748B", fontSize: 11 }}
-            />
-
-            <Tooltip content={<CustomTooltip />} />
-
-            <Legend
-              iconType="circle"
-              wrapperStyle={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#334155",
-                paddingTop: 12,
+            <AreaChart
+              data={tendenciaMensual}
+              margin={{
+                top: 10,
+                right: 18,
+                left: -18,
+                bottom: 0,
               }}
-            />
+            >
+              <defs>
+                <linearGradient id="nidosGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0F7A4F" stopOpacity={0.24} />
+                  <stop offset="95%" stopColor="#0F7A4F" stopOpacity={0.02} />
+                </linearGradient>
 
-            <Area
-              type="monotone"
-              dataKey="nidos"
-              name="Nidos"
-              stroke="#0F7A4F"
-              strokeWidth={3}
-              fill="url(#nidosGradient)"
-              isAnimationActive={true}
-              animationDuration={950}
-              animationEasing="ease-out"
-            />
+                <linearGradient
+                  id="eclosionesGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.02} />
+                </linearGradient>
 
-            <Area
-              type="monotone"
-              dataKey="eclosiones"
-              name="Eclosiones"
-              stroke="#3B82F6"
-              strokeWidth={3}
-              fill="url(#eclosionesGradient)"
-              isAnimationActive={true}
-              animationDuration={950}
-              animationEasing="ease-out"
-            />
+                <linearGradient
+                  id="exhumacionesGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.18} />
+                  <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
 
-            <Area
-              type="monotone"
-              dataKey="exhumaciones"
-              name="Exhumaciones"
-              stroke="#F59E0B"
-              strokeWidth={3}
-              fill="url(#exhumacionesGradient)"
-              isAnimationActive={true}
-              animationDuration={950}
-              animationEasing="ease-out"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E3EFEB" />
+
+              <XAxis
+                dataKey="mes"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#64748B", fontSize: 11 }}
+              />
+
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#64748B", fontSize: 11 }}
+              />
+
+              <Tooltip content={<CustomTooltip />} />
+
+              <Legend
+                iconType="circle"
+                wrapperStyle={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#334155",
+                  paddingTop: 12,
+                }}
+              />
+
+              <Area
+                type="monotone"
+                dataKey="nidos"
+                name="Nidos"
+                stroke="#0F7A4F"
+                strokeWidth={3}
+                fill="url(#nidosGradient)"
+                isAnimationActive
+                animationDuration={950}
+                animationEasing="ease-out"
+              />
+
+              <Area
+                type="monotone"
+                dataKey="eclosiones"
+                name="Eclosiones"
+                stroke="#3B82F6"
+                strokeWidth={3}
+                fill="url(#eclosionesGradient)"
+                isAnimationActive
+                animationDuration={950}
+                animationEasing="ease-out"
+              />
+
+              <Area
+                type="monotone"
+                dataKey="exhumaciones"
+                name="Exhumaciones"
+                stroke="#F59E0B"
+                strokeWidth={3}
+                fill="url(#exhumacionesGradient)"
+                isAnimationActive
+                animationDuration={950}
+                animationEasing="ease-out"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </AdminChartCard>
   );

@@ -50,67 +50,74 @@ function ResultadosEspeciesChart() {
       badge={`${totalNidos} nidos`}
       className="min-h-[380px]"
     >
-      <div className="h-[290px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={resultadosPorEspecie}
-            margin={{
-              top: 12,
-              right: 16,
-              left: -18,
-              bottom: 0,
-            }}
+      <div className="w-full min-w-0">
+        <div className="h-[290px] w-full min-w-0">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={300}
+            minHeight={250}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#E3EFEB" />
-
-            <XAxis
-              dataKey="especie"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#334155", fontSize: 11, fontWeight: 600 }}
-            />
-
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#64748B", fontSize: 11 }}
-            />
-
-            <Tooltip content={<CustomTooltip />} />
-
-            <Legend
-              iconType="circle"
-              wrapperStyle={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#334155",
-                paddingTop: 12,
+            <BarChart
+              data={resultadosPorEspecie}
+              margin={{
+                top: 12,
+                right: 16,
+                left: -18,
+                bottom: 0,
               }}
-            />
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#E3EFEB" />
 
-            <Bar
-              dataKey="nidos"
-              name="Nidos"
-              fill="#0F7A4F"
-              radius={[10, 10, 0, 0]}
-              barSize={24}
-              isAnimationActive={true}
-              animationDuration={900}
-              animationEasing="ease-out"
-            />
+              <XAxis
+                dataKey="especie"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#334155", fontSize: 11, fontWeight: 600 }}
+              />
 
-            <Bar
-              dataKey="eclosiones"
-              name="Eclosiones"
-              fill="#3B82F6"
-              radius={[10, 10, 0, 0]}
-              barSize={24}
-              isAnimationActive={true}
-              animationDuration={900}
-              animationEasing="ease-out"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#64748B", fontSize: 11 }}
+              />
+
+              <Tooltip content={<CustomTooltip />} />
+
+              <Legend
+                iconType="circle"
+                wrapperStyle={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#334155",
+                  paddingTop: 12,
+                }}
+              />
+
+              <Bar
+                dataKey="nidos"
+                name="Nidos"
+                fill="#0F7A4F"
+                radius={[10, 10, 0, 0]}
+                barSize={24}
+                isAnimationActive
+                animationDuration={900}
+                animationEasing="ease-out"
+              />
+
+              <Bar
+                dataKey="eclosiones"
+                name="Eclosiones"
+                fill="#3B82F6"
+                radius={[10, 10, 0, 0]}
+                barSize={24}
+                isAnimationActive
+                animationDuration={900}
+                animationEasing="ease-out"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </AdminChartCard>
   );

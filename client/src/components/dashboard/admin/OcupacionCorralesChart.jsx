@@ -57,75 +57,88 @@ function OcupacionCorralesChart() {
       badge={`${promedio}% promedio`}
       className="min-h-[380px]"
     >
-      <div className="h-[290px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={ocupacionCorrales}
-            layout="vertical"
-            margin={{
-              top: 8,
-              right: 30,
-              left: 28,
-              bottom: 8,
-            }}
+      <div className="w-full min-w-0">
+        <div className="h-[290px] w-full min-w-0">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={300}
+            minHeight={250}
           >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              horizontal={false}
-              stroke="#E3EFEB"
-            />
-
-            <XAxis
-              type="number"
-              domain={[0, 100]}
-              tickFormatter={(value) => `${value}%`}
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#64748B", fontSize: 11 }}
-            />
-
-            <YAxis
-              dataKey="corral"
-              type="category"
-              axisLine={false}
-              tickLine={false}
-              width={105}
-              tick={{ fill: "#334155", fontSize: 11, fontWeight: 600 }}
-            />
-
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F1F8F5" }} />
-
-            <Bar
-              dataKey="ocupacion"
-              radius={[0, 10, 10, 0]}
-              barSize={24}
-              isAnimationActive={true}
-              animationDuration={900}
-              animationEasing="ease-out"
+            <BarChart
+              data={ocupacionCorrales}
+              layout="vertical"
+              margin={{
+                top: 8,
+                right: 30,
+                left: 28,
+                bottom: 8,
+              }}
             >
-              {ocupacionCorrales.map((entry) => (
-                <Cell key={entry.corral} fill={getBarColor(entry.ocupacion)} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                horizontal={false}
+                stroke="#E3EFEB"
+              />
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-500">
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#0F7A4F]" />
-          Disponible
-        </span>
+              <XAxis
+                type="number"
+                domain={[0, 100]}
+                tickFormatter={(value) => `${value}%`}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#64748B", fontSize: 11 }}
+              />
 
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
-          Alta ocupación
-        </span>
+              <YAxis
+                dataKey="corral"
+                type="category"
+                axisLine={false}
+                tickLine={false}
+                width={105}
+                tick={{ fill: "#334155", fontSize: 11, fontWeight: 600 }}
+              />
 
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
-          Capacidad crítica
-        </span>
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: "#F1F8F5" }}
+              />
+
+              <Bar
+                dataKey="ocupacion"
+                radius={[0, 10, 10, 0]}
+                barSize={24}
+                isAnimationActive
+                animationDuration={900}
+                animationEasing="ease-out"
+              >
+                {ocupacionCorrales.map((entry) => (
+                  <Cell
+                    key={entry.corral}
+                    fill={getBarColor(entry.ocupacion)}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-500">
+          <span className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#0F7A4F]" />
+            Disponible
+          </span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
+            Alta ocupación
+          </span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
+            Capacidad crítica
+          </span>
+        </div>
       </div>
     </AdminChartCard>
   );

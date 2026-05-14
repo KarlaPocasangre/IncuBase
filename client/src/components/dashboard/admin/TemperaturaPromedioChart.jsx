@@ -50,93 +50,100 @@ function TemperaturaPromedioChart() {
       badge={`${promedioGeneral} °C prom.`}
       className="min-h-[380px]"
     >
-      <div className="h-[290px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={temperaturaPromedio}
-            margin={{
-              top: 12,
-              right: 18,
-              left: -18,
-              bottom: 0,
-            }}
+      <div className="w-full min-w-0">
+        <div className="h-[290px] w-full min-w-0">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={300}
+            minHeight={250}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#E3EFEB" />
-
-            <XAxis
-              dataKey="dia"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#334155", fontSize: 11, fontWeight: 600 }}
-            />
-
-            <YAxis
-              domain={[26, 36]}
-              tickFormatter={(value) => `${value}°`}
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#64748B", fontSize: 11 }}
-            />
-
-            <Tooltip content={<CustomTooltip />} />
-
-            <Legend
-              iconType="circle"
-              wrapperStyle={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#334155",
-                paddingTop: 12,
+            <LineChart
+              data={temperaturaPromedio}
+              margin={{
+                top: 12,
+                right: 18,
+                left: -18,
+                bottom: 0,
               }}
-            />
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#E3EFEB" />
 
-            <Line
-              type="monotone"
-              dataKey="promedio"
-              name="Promedio"
-              stroke="#0F7A4F"
-              strokeWidth={3}
-              dot={{
-                r: 4,
-                strokeWidth: 2,
-                fill: "#FFFFFF",
-                stroke: "#0F7A4F",
-              }}
-              activeDot={{
-                r: 6,
-                strokeWidth: 2,
-                fill: "#0F7A4F",
-                stroke: "#FFFFFF",
-              }}
-              isAnimationActive={true}
-              animationDuration={950}
-              animationEasing="ease-out"
-            />
+              <XAxis
+                dataKey="dia"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#334155", fontSize: 11, fontWeight: 600 }}
+              />
 
-            <Line
-              type="monotone"
-              dataKey="max"
-              name="Máxima"
-              stroke="#F97316"
-              strokeWidth={3}
-              dot={{
-                r: 4,
-                strokeWidth: 2,
-                fill: "#FFFFFF",
-                stroke: "#F97316",
-              }}
-              activeDot={{
-                r: 6,
-                strokeWidth: 2,
-                fill: "#F97316",
-                stroke: "#FFFFFF",
-              }}
-              isAnimationActive={true}
-              animationDuration={950}
-              animationEasing="ease-out"
-            />
-          </LineChart>
-        </ResponsiveContainer>
+              <YAxis
+                domain={[26, 36]}
+                tickFormatter={(value) => `${value}°`}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#64748B", fontSize: 11 }}
+              />
+
+              <Tooltip content={<CustomTooltip />} />
+
+              <Legend
+                iconType="circle"
+                wrapperStyle={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#334155",
+                  paddingTop: 12,
+                }}
+              />
+
+              <Line
+                type="monotone"
+                dataKey="promedio"
+                name="Promedio"
+                stroke="#0F7A4F"
+                strokeWidth={3}
+                dot={{
+                  r: 4,
+                  strokeWidth: 2,
+                  fill: "#FFFFFF",
+                  stroke: "#0F7A4F",
+                }}
+                activeDot={{
+                  r: 6,
+                  strokeWidth: 2,
+                  fill: "#0F7A4F",
+                  stroke: "#FFFFFF",
+                }}
+                isAnimationActive
+                animationDuration={950}
+                animationEasing="ease-out"
+              />
+
+              <Line
+                type="monotone"
+                dataKey="max"
+                name="Máxima"
+                stroke="#F97316"
+                strokeWidth={3}
+                dot={{
+                  r: 4,
+                  strokeWidth: 2,
+                  fill: "#FFFFFF",
+                  stroke: "#F97316",
+                }}
+                activeDot={{
+                  r: 6,
+                  strokeWidth: 2,
+                  fill: "#F97316",
+                  stroke: "#FFFFFF",
+                }}
+                isAnimationActive
+                animationDuration={950}
+                animationEasing="ease-out"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </AdminChartCard>
   );

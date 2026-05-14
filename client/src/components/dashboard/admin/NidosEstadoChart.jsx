@@ -44,8 +44,13 @@ function NidosEstadoChart() {
       badge={`${nidosPorEstado.length} estados`}
       className="min-h-[360px]"
     >
-      <div className="h-[275px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-[275px] w-full min-w-0">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          minWidth={300}
+          minHeight={240}
+        >
           <BarChart
             data={nidosPorEstado}
             layout="vertical"
@@ -84,7 +89,7 @@ function NidosEstadoChart() {
               dataKey="total"
               radius={[0, 10, 10, 0]}
               barSize={24}
-              isAnimationActive={true}
+              isAnimationActive
               animationDuration={900}
               animationEasing="ease-out"
             >

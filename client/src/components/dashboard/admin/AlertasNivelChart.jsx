@@ -1,11 +1,4 @@
-import {
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { AlertTriangle } from "lucide-react";
 
 import AdminChartCard from "./AdminChartCard";
@@ -26,35 +19,6 @@ function CustomTooltip({ active, payload }) {
   );
 }
 
-function CustomLegend({ payload }) {
-  if (!payload?.length) return null;
-
-  return (
-    <div className="mt-3 grid grid-cols-2 gap-2">
-      {payload.map((entry) => (
-        <div
-          key={entry.value}
-          className="flex items-center justify-between rounded-xl border border-[#DDEBE7] bg-[#F8FCFA] px-3 py-2"
-        >
-          <div className="flex items-center gap-2">
-            <span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: entry.color }}
-            />
-            <span className="text-[12px] font-semibold text-[#334155]">
-              {entry.value}
-            </span>
-          </div>
-
-          <span className="text-[12px] font-bold text-[#0B2F2A]">
-            {entry.payload.total}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function AlertasNivelChart() {
   const totalAlertas = alertasPorNivel.reduce(
     (acc, item) => acc + item.total,
@@ -69,44 +33,68 @@ function AlertasNivelChart() {
       badge={`${totalAlertas} alertas`}
       className="min-h-[360px]"
     >
-      <div className="relative h-[275px]">
-        <div className="pointer-events-none absolute left-1/2 top-[42%] z-10 -translate-x-1/2 -translate-y-1/2 text-center">
-          <p className="text-[26px] font-extrabold text-[#0B2F2A]">
-            {totalAlertas}
-          </p>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-            Alertas
-          </p>
+      <div className="w-full min-w-0">
+        <div className="relative h-[220px] w-full min-w-0">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center">
+            <p className="text-[26px] font-extrabold text-[#0B2F2A]">
+              {totalAlertas}
+            </p>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Alertas
+            </p>
+          </div>
+
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={220}
+            minHeight={220}
+          >
+            <PieChart>
+              <Tooltip content={<CustomTooltip />} />
+
+              <Pie
+                data={alertasPorNivel}
+                dataKey="total"
+                nameKey="nivel"
+                innerRadius={62}
+                outerRadius={92}
+                paddingAngle={4}
+                cornerRadius={8}
+                isAnimationActive
+                animationDuration={900}
+                animationEasing="ease-out"
+              >
+                {alertasPorNivel.map((entry) => (
+                  <Cell key={entry.nivel} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
         </div>
 
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Tooltip content={<CustomTooltip />} />
-
-            <Pie
-              data={alertasPorNivel}
-              dataKey="total"
-              nameKey="nivel"
-              innerRadius={62}
-              outerRadius={92}
-              paddingAngle={4}
-              cornerRadius={8}
-              isAnimationActive={true}
-              animationDuration={900}
-              animationEasing="ease-out"
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {alertasPorNivel.map((item) => (
+            <div
+              key={item.nivel}
+              className="flex items-center justify-between rounded-xl border border-[#DDEBE7] bg-[#F8FCFA] px-3 py-2"
             >
-              {alertasPorNivel.map((entry) => (
-                <Cell key={entry.nivel} fill={entry.color} />
-              ))}
-            </Pie>
+              <div className="flex items-center gap-2">
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-[12px] font-semibold text-[#334155]">
+                  {item.nivel}
+                </span>
+              </div>
 
-            <Legend
-              verticalAlign="bottom"
-              align="center"
-              content={<CustomLegend />}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+              <span className="text-[12px] font-bold text-[#0B2F2A]">
+                {item.total}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </AdminChartCard>
   );
