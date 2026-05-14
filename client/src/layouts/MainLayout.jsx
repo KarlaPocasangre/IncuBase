@@ -11,11 +11,9 @@ function MainLayout() {
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
         <Topbar />
 
-        {/* CONTENIDO */}
         <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-6">
           <Outlet />
         </main>
-
         <Footer />
       </div>
     </div>
