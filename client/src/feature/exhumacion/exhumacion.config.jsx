@@ -1,45 +1,71 @@
 import {
-  CalendarPlus,
+  AlertTriangle,
+  CalendarDays,
   ChartNoAxesColumnIncreasing,
   ClipboardCheck,
   FileSearch,
   Pencil,
   Plus,
   Skull,
-  TriangleAlert,
+  XCircle,
 } from "lucide-react";
 
+import ExhumacionFormModal from "../../components/exhumacion/ExhumacionFormModal";
+import ExhumacionDetailModal from "../../components/exhumacion/ExhumacionDetailModal";
+
 const depredacionStyles = {
-  "Sin depredacion": "bg-emerald-100 text-emerald-500",
-  Perro: "bg-red-50 text-red-500 border border-red-400",
-  Cangrejo: "bg-red-50 text-red-500 border border-red-400",
+  "Sin depredación": "border-emerald-100 bg-emerald-100 text-emerald-600",
+  Perro: "border-red-300 bg-red-50 text-red-500",
+  Cangrejo: "border-red-300 bg-red-50 text-red-500",
+  Hormigas: "border-red-300 bg-red-50 text-red-500",
+  Larvas: "border-red-300 bg-red-50 text-red-500",
+  Aves: "border-red-300 bg-red-50 text-red-500",
 };
 
 export const exhumacionConfig = {
-  pageTitle: "Exhumacion",
-  pageSubtitle: "Gestion de Exhumaciones",
+  pageTitle: "Exhumación",
+  pageSubtitle: "Gestión de Exhumación",
 
-  cardTitle: "Gestion de Exhumacion",
-  cardDescription: "Administra los nacimientos del sistema IncuBase",
-  buttonText: "Registrar Exhumacion",
+  cardTitle: "Gestión de Exhumación",
+  cardDescription:
+    "Administra las exhumaciones registradas en el sistema IncuBase",
+  cardIcon: ClipboardCheck,
+  cardIconColor: "text-[#0F7A4F]",
+
+  buttonText: "Registrar Exhumación",
   buttonIcon: Plus,
   buttonRedirectTo: "/exhumacion",
 
-  searchPlaceholder: "Buscar por codigo de nido...",
-  filters: ["Rango de fecha", "Depredacion", "Responsable"],
+  FormModal: ExhumacionFormModal,
+  DetailModal: ExhumacionDetailModal,
+
+  searchPlaceholder: "Buscar por código de nido...",
+
+  searchKeys: [
+    "nido",
+    "fechaExhumacion",
+    "depredacion",
+    "tipoDepredador",
+    "responsable",
+  ],
+
+  defaultSort: {
+    key: "nido",
+    direction: "asc",
+    type: "text",
+  },
 
   stats: [
     {
       title: "Total de Exhumaciones",
       value: 200,
       icon: ClipboardCheck,
-      iconColor: "text-blue-500",
+      iconColor: "text-blue-400",
     },
     {
       title: "Exhumaciones con Depredación",
       value: 80,
-      subtitle: "40% del total",
-      icon: TriangleAlert,
+      icon: AlertTriangle,
       iconColor: "text-red-400",
     },
     {
@@ -51,100 +77,205 @@ export const exhumacionConfig = {
     {
       title: "Mortalidad en Nidos",
       value: 120,
-      subtitle: "30% del total",
       icon: Skull,
       iconColor: "text-red-400",
     },
   ],
 
-  columns: [
-    { header: "Nido", key: "nido" },
-
+  filters: [
     {
-      header: "Fecha de Exhumación",
+      type: "date",
       key: "fechaExhumacion",
+      label: "Rango de fecha",
+      icon: CalendarDays,
     },
-
-    { header: "Eclosionados", key: "eclosionados" },
-    { header: "No Eclosionados", key: "noEclosionados" },
-
     {
-      header: "Embriones muertos",
-      key: "embrionesMuertos",
-    },
-
-    {
-      header: "Depredacion",
+      type: "select",
       key: "depredacion",
+      label: "Depredación",
+      options: [
+        "Sin depredación",
+        "Perro",
+        "Cangrejo",
+        "Hormigas",
+        "Larvas",
+        "Aves",
+      ],
+    },
+    {
+      type: "select",
+      key: "responsable",
+      label: "Responsable",
+      options: ["José Gilverto", "Ana Cáceres", "Mario Tesorero", "Juan Ramón"],
+    },
+  ],
+
+  columns: [
+    {
+      key: "nido",
+      header: "Nido",
+      sortable: true,
+      sortType: "text",
+      defaultSortDirection: "asc",
+    },
+    {
+      key: "fechaExhumacion",
+      header: "Fecha de Exhumación",
+      sortable: true,
+      sortType: "date",
+      defaultSortDirection: "asc",
+    },
+    {
+      key: "eclosionados",
+      header: "Eclosionados",
+      sortable: true,
+      sortType: "number",
+      defaultSortDirection: "desc",
+    },
+    {
+      key: "noEclosionados",
+      header: "No Eclosionados",
+      sortable: true,
+      sortType: "number",
+      defaultSortDirection: "desc",
+    },
+    {
+      key: "embrionesMuertos",
+      header: "Embriones muertos",
+      sortable: true,
+      sortType: "number",
+      defaultSortDirection: "desc",
+    },
+    {
+      key: "depredacion",
+      header: "Depredación",
       render: (value) => (
         <span
-          className={`inline-flex rounded-full px-4 py-1 text-sm font-medium ${
-            depredacionStyles[value] || "bg-gray-100 text-gray-500"
+          className={`inline-flex rounded-full border px-4 py-1 text-sm font-semibold ${
+            depredacionStyles[value] ||
+            "border-slate-300 bg-slate-50 text-slate-500"
           }`}
         >
           {value}
         </span>
       ),
     },
-
-    { header: "Responsable", key: "responsable" },
-
     {
-      header: "Acciones",
+      key: "responsable",
+      header: "Responsable",
+    },
+    {
       key: "acciones",
-      render: () => (
-        <div className="flex items-center gap-5">
-          <button
-            type="button"
-            className="rounded-md p-1 hover:bg-[#E6A11D]/10"
-          >
-            <Pencil className="h-5 w-5 text-[#E6A11D]" />
-          </button>
-
-          <button type="button" className="rounded-md p-1 hover:bg-blue-100">
-            <FileSearch className="h-5 w-5 text-blue-400" />
-          </button>
-        </div>
-      ),
+      header: "Acciones",
     },
   ],
 
+  actions: [
+    {
+      key: "edit",
+      label: "Editar",
+      icon: Pencil,
+      color: "text-[#E6A11D]",
+      hover: "hover:bg-orange-50",
+    },
+    {
+      key: "delete",
+      label: "Eliminar",
+      icon: XCircle,
+      color: "text-red-400",
+      hover: "hover:bg-red-50",
+    },
+    {
+      key: "detail",
+      label: "Ver detalle",
+      icon: FileSearch,
+      color: "text-blue-400",
+      hover: "hover:bg-blue-50",
+    },
+  ],
+
+  emptyTitle: "No hay exhumaciones registradas",
+  emptyDescription:
+    "Registra una exhumación para visualizar los resultados del nido.",
+
   data: [
     {
+      id: 1,
       nido: "C2HJJ-09",
       fechaExhumacion: "2023-10-02 15:04",
+      responsable: "José Gilverto",
+
       eclosionados: 80,
-      noEclosionados: 0,
+      huevosSinEmbrion: 0,
       embrionesMuertos: 0,
-      depredacion: "Sin depredacion",
-      responsable: "Jose Gilverto",
+      noEclosionados: 0,
+      neonatosMuertosEnNido: 0,
+
+      evidenciaDepredacion: false,
+      tipoDepredador: "Sin depredación",
+      depredacion: "Sin depredación",
+
+      fechaRegistro: "2023-10-02 16:00",
+      observaciones: "Nido exhumado sin evidencia de depredación.",
     },
     {
-      nido: "C2HJJ-09",
+      id: 2,
+      nido: "C2HJJ-10",
       fechaExhumacion: "2023-10-02 15:04",
+      responsable: "Ana Cáceres",
+
       eclosionados: 100,
-      noEclosionados: 23,
+      huevosSinEmbrion: 12,
       embrionesMuertos: 23,
+      noEclosionados: 23,
+      neonatosMuertosEnNido: 8,
+
+      evidenciaDepredacion: true,
+      tipoDepredador: "Perro",
       depredacion: "Perro",
-      responsable: "Ana Caceres",
+
+      fechaRegistro: "2023-10-02 16:30",
+      observaciones:
+        "Se encontró evidencia de depredación alrededor del nido durante la exhumación.",
     },
     {
-      nido: "C2HJJ-09",
+      id: 3,
+      nido: "C2HJJ-11",
       fechaExhumacion: "2005-01-01 11:45",
-      eclosionados: 23,
-      noEclosionados: 5,
-      embrionesMuertos: 5,
-      depredacion: "Cangrejo",
       responsable: "Mario Tesorero",
+
+      eclosionados: 23,
+      huevosSinEmbrion: 4,
+      embrionesMuertos: 5,
+      noEclosionados: 5,
+      neonatosMuertosEnNido: 2,
+
+      evidenciaDepredacion: true,
+      tipoDepredador: "Cangrejo",
+      depredacion: "Cangrejo",
+
+      fechaRegistro: "2005-01-01 12:20",
+      observaciones:
+        "Se identificaron rastros de cangrejo cerca del área del nido.",
     },
     {
-      nido: "C2HJJ-09",
+      id: 4,
+      nido: "C2HJJ-12",
       fechaExhumacion: "2026-11-01 21:00",
+      responsable: "Juan Ramón",
+
       eclosionados: 23,
-      noEclosionados: 0,
+      huevosSinEmbrion: 0,
       embrionesMuertos: 0,
-      depredacion: "Sin depredacion",
-      responsable: "Juan Ramon",
+      noEclosionados: 0,
+      neonatosMuertosEnNido: 0,
+
+      evidenciaDepredacion: false,
+      tipoDepredador: "Sin depredación",
+      depredacion: "Sin depredación",
+
+      fechaRegistro: "2026-11-01 22:01",
+      observaciones: "Nido encontrado con exceso de humedad por marea alta.",
     },
   ],
 };
