@@ -40,11 +40,20 @@ function Sidebar() {
     localStorage.removeItem("usuario");
   }
 
+  const normalizarRol = (rol) =>
+    rol
+      ?.trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
   const nombreCompleto = usuario
     ? `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim()
     : "Usuario";
 
-  const rolUsuario = usuario?.rol || "Sin rol";
+  const rolUsuarioOriginal = usuario?.rol?.trim() || "Sin rol";
+  const rolUsuario = normalizarRol(usuario?.rol) || "Sin rol";
+
+  const esAdministrador = rolUsuario === "Administrador";
 
   const sections = [
     {
@@ -55,12 +64,14 @@ function Sidebar() {
           sublabel: "Inicio",
           path: "/",
           icon: LayoutDashboard,
+          roles: ["Administrador", "Tecnico"],
         },
         {
           label: "Alertas",
           sublabel: "Seguimiento",
           path: "/alertas",
           icon: Bell,
+          roles: ["Administrador", "Tecnico"],
         },
       ],
     },
@@ -72,12 +83,14 @@ function Sidebar() {
           sublabel: "Consulta",
           path: "/corrales-nidos",
           icon: Fence,
+          roles: ["Administrador", "Tecnico"],
         },
         {
           label: "Temperatura",
           sublabel: "Monitoreo",
           path: "/temperatura",
           icon: Thermometer,
+          roles: ["Administrador", "Tecnico"],
         },
       ],
     },
@@ -89,6 +102,7 @@ function Sidebar() {
           sublabel: "Nidos",
           path: "/registro-nidos",
           icon: Egg,
+          roles: ["Administrador", "Tecnico"],
         },
         {
           label: "Registro de Nacimientos",
@@ -96,12 +110,14 @@ function Sidebar() {
           path: "/nacimientos",
           customIcon: turtleIcon,
           collapsedIcon: turtleCollapsedIcon,
+          roles: ["Administrador", "Tecnico"],
         },
         {
           label: "Registro de Exhumación",
           sublabel: "Exhumación",
           path: "/exhumacion",
           icon: FileSearch,
+          roles: ["Administrador", "Tecnico"],
         },
       ],
     },
@@ -113,10 +129,20 @@ function Sidebar() {
           sublabel: "Documentos",
           path: "/reportes",
           icon: FileText,
+          roles: ["Administrador", "Tecnico"],
         },
       ],
     },
   ];
+
+  const sectionsPermitidas = sections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(
+        (item) => !item.roles || item.roles.includes(rolUsuario)
+      ),
+    }))
+    .filter((section) => section.items.length > 0);
 
   const gestionItems = [
     {
@@ -271,7 +297,7 @@ function Sidebar() {
 
       <div className="flex-1 overflow-y-auto overflow-x-visible px-3 py-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <nav className="flex flex-col gap-5">
-          {sections.map((section, sectionIndex) => (
+          {sectionsPermitidas.map((section, sectionIndex) => (
             <div key={section.title} className="flex flex-col gap-1.5">
               {!collapsed ? (
                 <div className="px-3">
@@ -341,113 +367,59 @@ function Sidebar() {
             </div>
           ))}
 
-          <div className="flex flex-col gap-1.5">
-            {!collapsed ? (
-              <div className="px-3 pt-1">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
-                  Administración
-                </p>
-              </div>
-            ) : (
-              <div className="mx-2 my-1 border-t border-white/10" />
-            )}
-
-            <div className="relative">
-              <button
-                type="button"
-                title={collapsed ? "Gestión" : ""}
-                onClick={() => setGestionOpen((prev) => !prev)}
-                onMouseEnter={() => collapsed && setGestionOpen(true)}
-                className={`group relative flex w-full items-center rounded-2xl transition-all duration-200 ${
-                  collapsed ? "justify-center px-2 py-1.5" : "gap-3 px-3 py-2"
-                } ${gestionOpen ? "bg-[#0E5A4F]" : "hover:bg-[#075047]"}`}
-              >
-                {renderGestionIcon(gestionOpen)}
-
-                {!collapsed && (
-                  <>
-                    <div className="min-w-0 flex-1 text-left">
-                      <p className="truncate text-sm font-semibold leading-tight text-white/90">
-                        Gestión
-                      </p>
-                      <span className="block truncate text-xs leading-tight text-white/50">
-                        Administración
-                      </span>
-                    </div>
-
-                    <ChevronDown
-                      size={16}
-                      className={`text-white/65 transition-transform ${
-                        gestionOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </>
-                )}
-
-                {collapsed && (
-                  <span className="pointer-events-none absolute left-[74px] z-50 hidden whitespace-nowrap rounded-xl bg-[#102E29] px-3 py-2 text-xs font-semibold text-white shadow-xl group-hover:block">
-                    Gestión
-                  </span>
-                )}
-              </button>
-
-              {!collapsed && gestionOpen && (
-                <div className="mt-2 ml-5 flex flex-col gap-1 border-l border-white/15 pl-4">
-                  {gestionItems.map((item) => {
-                    const Icon = item.icon;
-
-                    return (
-                      <NavLink
-                        key={item.path}
-                        to={item.path}
-                        onClick={() => {
-                          if (collapsed) setGestionOpen(false);
-                        }}
-                        className={({ isActive }) =>
-                          `flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-all ${
-                            isActive
-                              ? "bg-[#B9F3D4] text-[#063B34]"
-                              : "text-white/70 hover:bg-[#075047] hover:text-white"
-                          }`
-                        }
-                      >
-                        {({ isActive }) => (
-                          <>
-                            {item.customIcon ? (
-                              <img
-                                src={
-                                  isActive
-                                    ? item.collapsedIcon || item.customIcon
-                                    : item.customIcon
-                                }
-                                alt={item.label}
-                                className="h-[15px] w-[15px] shrink-0 object-contain"
-                              />
-                            ) : (
-                              <Icon size={15} />
-                            )}
-
-                            <span className="truncate">{item.label}</span>
-                          </>
-                        )}
-                      </NavLink>
-                    );
-                  })}
+          {esAdministrador && (
+            <div className="flex flex-col gap-1.5">
+              {!collapsed ? (
+                <div className="px-3 pt-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
+                    Administración
+                  </p>
                 </div>
+              ) : (
+                <div className="mx-2 my-1 border-t border-white/10" />
               )}
 
-              {collapsed && gestionOpen && (
-                <div
-                  onMouseLeave={() => setGestionOpen(false)}
-                  className="fixed left-[98px] top-[482px] z-50 w-[255px] rounded-3xl border border-[#CFE0DA] bg-[#F5FAF8] p-3 shadow-[0_18px_45px_rgba(7,38,32,0.18)]"
+              <div className="relative">
+                <button
+                  type="button"
+                  title={collapsed ? "Gestión" : ""}
+                  onClick={() => setGestionOpen((prev) => !prev)}
+                  onMouseEnter={() => collapsed && setGestionOpen(true)}
+                  className={`group relative flex w-full items-center rounded-2xl transition-all duration-200 ${
+                    collapsed ? "justify-center px-2 py-1.5" : "gap-3 px-3 py-2"
+                  } ${gestionOpen ? "bg-[#0E5A4F]" : "hover:bg-[#075047]"}`}
                 >
-                  <div className="mb-2 px-2">
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6D837C]">
-                      Administración
-                    </p>
-                  </div>
+                  {renderGestionIcon(gestionOpen)}
 
-                  <div className="flex flex-col gap-1">
+                  {!collapsed && (
+                    <>
+                      <div className="min-w-0 flex-1 text-left">
+                        <p className="truncate text-sm font-semibold leading-tight text-white/90">
+                          Gestión
+                        </p>
+                        <span className="block truncate text-xs leading-tight text-white/50">
+                          Administración
+                        </span>
+                      </div>
+
+                      <ChevronDown
+                        size={16}
+                        className={`text-white/65 transition-transform ${
+                          gestionOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </>
+                  )}
+
+                  {collapsed && (
+                    <span className="pointer-events-none absolute left-[74px] z-50 hidden whitespace-nowrap rounded-xl bg-[#102E29] px-3 py-2 text-xs font-semibold text-white shadow-xl group-hover:block">
+                      Gestión
+                    </span>
+                  )}
+                </button>
+
+                {!collapsed && gestionOpen && (
+                  <div className="mt-2 ml-5 flex flex-col gap-1 border-l border-white/15 pl-4">
                     {gestionItems.map((item) => {
                       const Icon = item.icon;
 
@@ -455,34 +427,90 @@ function Sidebar() {
                         <NavLink
                           key={item.path}
                           to={item.path}
-                          onClick={() => setGestionOpen(false)}
+                          onClick={() => {
+                            if (collapsed) setGestionOpen(false);
+                          }}
                           className={({ isActive }) =>
-                            `flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition-all ${
+                            `flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-all ${
                               isActive
-                                ? "bg-[#C9DDD8] text-[#063B34]"
-                                : "text-[#21433F] hover:bg-[#E4EFEB]"
+                                ? "bg-[#B9F3D4] text-[#063B34]"
+                                : "text-white/70 hover:bg-[#075047] hover:text-white"
                             }`
                           }
                         >
-                          {item.customIcon ? (
-                            <img
-                              src={item.collapsedIcon || item.customIcon}
-                              alt={item.label}
-                              className="h-[17px] w-[17px] shrink-0 object-contain"
-                            />
-                          ) : (
-                            <Icon size={17} />
-                          )}
+                          {({ isActive }) => (
+                            <>
+                              {item.customIcon ? (
+                                <img
+                                  src={
+                                    isActive
+                                      ? item.collapsedIcon || item.customIcon
+                                      : item.customIcon
+                                  }
+                                  alt={item.label}
+                                  className="h-[15px] w-[15px] shrink-0 object-contain"
+                                />
+                              ) : (
+                                <Icon size={15} />
+                              )}
 
-                          <span>{item.label}</span>
+                              <span className="truncate">{item.label}</span>
+                            </>
+                          )}
                         </NavLink>
                       );
                     })}
                   </div>
-                </div>
-              )}
+                )}
+
+                {collapsed && gestionOpen && (
+                  <div
+                    onMouseLeave={() => setGestionOpen(false)}
+                    className="fixed left-[98px] top-[482px] z-50 w-[255px] rounded-3xl border border-[#CFE0DA] bg-[#F5FAF8] p-3 shadow-[0_18px_45px_rgba(7,38,32,0.18)]"
+                  >
+                    <div className="mb-2 px-2">
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6D837C]">
+                        Administración
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      {gestionItems.map((item) => {
+                        const Icon = item.icon;
+
+                        return (
+                          <NavLink
+                            key={item.path}
+                            to={item.path}
+                            onClick={() => setGestionOpen(false)}
+                            className={({ isActive }) =>
+                              `flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition-all ${
+                                isActive
+                                  ? "bg-[#C9DDD8] text-[#063B34]"
+                                  : "text-[#21433F] hover:bg-[#E4EFEB]"
+                              }`
+                            }
+                          >
+                            {item.customIcon ? (
+                              <img
+                                src={item.collapsedIcon || item.customIcon}
+                                alt={item.label}
+                                className="h-[17px] w-[17px] shrink-0 object-contain"
+                              />
+                            ) : (
+                              <Icon size={17} />
+                            )}
+
+                            <span>{item.label}</span>
+                          </NavLink>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </nav>
       </div>
 
@@ -507,7 +535,9 @@ function Sidebar() {
                 <p className="truncate text-sm font-semibold text-white">
                   {nombreCompleto}
                 </p>
-                <p className="truncate text-xs text-white/55">{rolUsuario}</p>
+                <p className="truncate text-xs text-white/55">
+                  {rolUsuarioOriginal}
+                </p>
               </div>
 
               <button
