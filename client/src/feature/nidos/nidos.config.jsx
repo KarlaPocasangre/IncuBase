@@ -10,6 +10,9 @@ import {
   XCircle,
 } from "lucide-react";
 
+import NidoFormModal from "../../components/nidos/NidoFormModal";
+import NidoDetailModal from "../../components/nidos/NidoDetailModal";
+
 const estadoStyles = {
   Registrado: "text-blue-500",
   "En incubación": "text-emerald-500",
@@ -32,9 +35,20 @@ export const nidosConfig = {
   buttonIcon: Plus,
   buttonRedirectTo: "/registro-nidos",
 
+  FormModal: NidoFormModal,
+  DetailModal: NidoDetailModal,
+
   searchPlaceholder: "Buscar por código de nido...",
 
-  searchKeys: ["codigoNido", "especie", "ubicacion", "estado", "registradoPor"],
+  searchKeys: [
+    "codigoNido",
+    "especie",
+    "ubicacion",
+    "corral",
+    "sector",
+    "estado",
+    "registradoPor",
+  ],
 
   defaultSort: {
     key: "codigoNido",
@@ -191,10 +205,18 @@ export const nidosConfig = {
       especie: "Golfina",
       ubicacion: "C2HJJ-09 / A-03",
       corral: "C2HJJ-09",
+      sector: "A-03",
       cantidadHuevos: 85,
       estado: "En incubación",
+      fechaDesove: "2026-05-01 12:20",
       fechaSiembra: "2026-05-01 14:30",
+      profundidadNido: 45,
+      largoCaparazon: 62.5,
+      anchoCaparazon: 58.2,
+      procedenciaExacta:
+        "Zona media de la playa, cerca del punto de monitoreo norte.",
       registradoPor: "José Gilverto",
+      observaciones: "Nido trasladado sin incidentes.",
     },
     {
       id: 2,
@@ -202,10 +224,57 @@ export const nidosConfig = {
       especie: "Carey",
       ubicacion: "C2HJJ-10 / B-01",
       corral: "C2HJJ-10",
+      sector: "B-01",
       cantidadHuevos: 92,
       estado: "Próximo a eclosión",
+      fechaDesove: "2026-04-20 06:50",
       fechaSiembra: "2026-04-20 08:15",
+      profundidadNido: 48,
+      largoCaparazon: 68.4,
+      anchoCaparazon: 61.7,
+      procedenciaExacta:
+        "Zona sur de la playa, a pocos metros del límite de marea alta.",
       registradoPor: "Ana Cáceres",
+      observaciones:
+        "Nido con seguimiento prioritario por cercanía a eclosión.",
+    },
+    {
+      id: 3,
+      codigoNido: "NID-003",
+      especie: "Baula",
+      ubicacion: "C2HJJ-11 / C-04",
+      corral: "C2HJJ-11",
+      sector: "C-04",
+      cantidadHuevos: 70,
+      estado: "Eclosionado",
+      fechaDesove: "2026-03-18 15:35",
+      fechaSiembra: "2026-03-18 17:00",
+      profundidadNido: 52,
+      largoCaparazon: 110.2,
+      anchoCaparazon: 78.6,
+      procedenciaExacta:
+        "Zona centro de la playa, sector de monitoreo cercano al acceso principal.",
+      registradoPor: "Mario Tesorero",
+      observaciones: "Nido eclosionado correctamente.",
+    },
+    {
+      id: 4,
+      codigoNido: "NID-004",
+      especie: "Prieta",
+      ubicacion: "C2HJJ-12 / D-02",
+      corral: "C2HJJ-12",
+      sector: "D-02",
+      cantidadHuevos: 78,
+      estado: "Exhumado",
+      fechaDesove: "2026-02-12 08:10",
+      fechaSiembra: "2026-02-12 09:45",
+      profundidadNido: 43,
+      largoCaparazon: 72.8,
+      anchoCaparazon: 65.3,
+      procedenciaExacta:
+        "Zona este de la playa, cerca del área de vegetación costera.",
+      registradoPor: "Juan Ramón",
+      observaciones: "Nido exhumado y registrado en el sistema.",
     },
   ],
 };

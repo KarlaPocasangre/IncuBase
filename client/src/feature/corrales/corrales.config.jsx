@@ -8,6 +8,9 @@ import {
   XCircle,
 } from "lucide-react";
 
+import CorralFormModal from "../../components/corrales/CorralFormModal";
+import CorralDetailModal from "../../components/corrales/CorralDetailModal";
+
 const estadoStyles = {
   Activo: "text-emerald-500",
   Cerrado: "text-red-500",
@@ -26,6 +29,9 @@ export const corralesConfig = {
 
   buttonText: "Agregar Corral",
   buttonIcon: Plus,
+
+  FormModal: CorralFormModal,
+  DetailModal: CorralDetailModal,
 
   searchPlaceholder: "Buscar por código de corral...",
 
@@ -161,6 +167,8 @@ export const corralesConfig = {
       tipo: "Corral Abierto",
       estado: "Activo",
       fechaInstalacion: "2023-10-02 15:04",
+      creadoPor: "Karla Pocasangre",
+      observaciones: "Corral operativo y disponible para registro de nidos.",
     },
     {
       id: 2,
@@ -169,6 +177,8 @@ export const corralesConfig = {
       tipo: "Corral Cerrado",
       estado: "Cerrado",
       fechaInstalacion: "2023-10-02 15:04",
+      creadoPor: "Josue Sanchez",
+      observaciones: "Corral cerrado temporalmente.",
     },
     {
       id: 3,
@@ -177,6 +187,8 @@ export const corralesConfig = {
       tipo: "Corral Abierto",
       estado: "Activo",
       fechaInstalacion: "2005-01-01 11:45",
+      creadoPor: "Carlos Martinez",
+      observaciones: "Corral activo para monitoreo.",
     },
     {
       id: 4,
@@ -185,6 +197,8 @@ export const corralesConfig = {
       tipo: "Corral Cerrado",
       estado: "En mantenimiento",
       fechaInstalacion: "2026-11-01 21:00",
+      creadoPor: "Mario Castro",
+      observaciones: "Corral en revisión por mantenimiento.",
     },
   ],
 };

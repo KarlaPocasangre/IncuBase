@@ -9,6 +9,9 @@ import {
   XCircle,
 } from "lucide-react";
 
+import NacimientoFormModal from "../../components/nacimientos/NacimientoFormModal";
+import NacimientoDetailModal from "../../components/nacimientos/NacimientoDetailModal";
+
 export const nacimientosConfig = {
   pageTitle: "Eclosión",
   pageSubtitle: "Gestión de Nacimientos",
@@ -22,9 +25,18 @@ export const nacimientosConfig = {
   buttonIcon: Plus,
   buttonRedirectTo: "/nacimientos",
 
+  FormModal: NacimientoFormModal,
+  DetailModal: NacimientoDetailModal,
+
   searchPlaceholder: "Buscar por código de nido...",
 
-  searchKeys: ["nido", "marea", "fechaEclosion", "responsable"],
+  searchKeys: [
+    "nido",
+    "marea",
+    "fechaEclosion",
+    "responsable",
+    "responsableLiberacion",
+  ],
 
   defaultSort: {
     key: "nido",
@@ -159,34 +171,81 @@ export const nacimientosConfig = {
       muertos: 23,
       marea: "Marea Alta",
       fechaEclosion: "2023-10-02 15:04",
+      fechaLiberacion: "2023-10-02 18:30",
       responsable: "José Gilverto",
+      responsableLiberacion: "José Gilverto",
+
+      vivosFueraArena: 48,
+      muertosFueraArena: 12,
+      vivosDentroArena: 32,
+      muertosDentroArena: 11,
+
+      registradoPor: "Mario Saul Martinez",
+      fechaRegistro: "2023-10-02 18:45",
+      observaciones: "Nacimiento registrado sin incidentes.",
     },
     {
       id: 2,
-      nido: "C2HJJ-09",
+      nido: "C2HJJ-10",
       vivos: 100,
       muertos: 23,
       marea: "Marea Alta",
       fechaEclosion: "2023-10-02 15:04",
+      fechaLiberacion: "2023-10-02 19:00",
       responsable: "Ana Cáceres",
+      responsableLiberacion: "Ana Cáceres",
+
+      vivosFueraArena: 60,
+      muertosFueraArena: 10,
+      vivosDentroArena: 40,
+      muertosDentroArena: 13,
+
+      registradoPor: "Mario Saul Martinez",
+      fechaRegistro: "2023-10-02 19:20",
+      observaciones:
+        "Se registró una buena cantidad de neonatos vivos durante la liberación.",
     },
     {
       id: 3,
-      nido: "C2HJJ-09",
+      nido: "C2HJJ-11",
       vivos: 23,
       muertos: 43,
       marea: "Marea Baja",
       fechaEclosion: "2005-01-01 11:45",
+      fechaLiberacion: "2005-01-01 14:30",
       responsable: "Mario Tesorero",
+      responsableLiberacion: "Mario Tesorero",
+
+      vivosFueraArena: 15,
+      muertosFueraArena: 20,
+      vivosDentroArena: 8,
+      muertosDentroArena: 23,
+
+      registradoPor: "Carlos Martinez",
+      fechaRegistro: "2005-01-01 15:00",
+      observaciones:
+        "Se reportó alta mortalidad dentro del nido. Requiere revisión posterior.",
     },
     {
       id: 4,
-      nido: "C2HJJ-09",
+      nido: "C2HJJ-12",
       vivos: 23,
       muertos: 32,
       marea: "Marea Baja",
       fechaEclosion: "2026-11-01 21:00",
+      fechaLiberacion: "2026-11-01 22:01",
       responsable: "Juan Ramón",
+      responsableLiberacion: "Juan Ramón",
+
+      vivosFueraArena: 12,
+      muertosFueraArena: 20,
+      vivosDentroArena: 11,
+      muertosDentroArena: 12,
+
+      registradoPor: "Mario Saul Martinez",
+      fechaRegistro: "2026-11-01 22:20",
+      observaciones:
+        "Liberación realizada en condiciones controladas durante marea baja.",
     },
   ],
 };

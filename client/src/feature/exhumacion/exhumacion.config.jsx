@@ -10,6 +10,9 @@ import {
   XCircle,
 } from "lucide-react";
 
+import ExhumacionFormModal from "../../components/exhumacion/ExhumacionFormModal";
+import ExhumacionDetailModal from "../../components/exhumacion/ExhumacionDetailModal";
+
 const depredacionStyles = {
   "Sin depredación": "border-emerald-100 bg-emerald-100 text-emerald-600",
   Perro: "border-red-300 bg-red-50 text-red-500",
@@ -33,9 +36,18 @@ export const exhumacionConfig = {
   buttonIcon: Plus,
   buttonRedirectTo: "/exhumacion",
 
+  FormModal: ExhumacionFormModal,
+  DetailModal: ExhumacionDetailModal,
+
   searchPlaceholder: "Buscar por código de nido...",
 
-  searchKeys: ["nido", "fechaExhumacion", "depredacion", "responsable"],
+  searchKeys: [
+    "nido",
+    "fechaExhumacion",
+    "depredacion",
+    "tipoDepredador",
+    "responsable",
+  ],
 
   defaultSort: {
     key: "nido",
@@ -191,41 +203,79 @@ export const exhumacionConfig = {
       id: 1,
       nido: "C2HJJ-09",
       fechaExhumacion: "2023-10-02 15:04",
-      eclosionados: 80,
-      noEclosionados: 0,
-      embrionesMuertos: 0,
-      depredacion: "Sin depredación",
       responsable: "José Gilverto",
+
+      eclosionados: 80,
+      huevosSinEmbrion: 0,
+      embrionesMuertos: 0,
+      noEclosionados: 0,
+      neonatosMuertosEnNido: 0,
+
+      evidenciaDepredacion: false,
+      tipoDepredador: "Sin depredación",
+      depredacion: "Sin depredación",
+
+      fechaRegistro: "2023-10-02 16:00",
+      observaciones: "Nido exhumado sin evidencia de depredación.",
     },
     {
       id: 2,
-      nido: "C2HJJ-09",
+      nido: "C2HJJ-10",
       fechaExhumacion: "2023-10-02 15:04",
-      eclosionados: 100,
-      noEclosionados: 23,
-      embrionesMuertos: 23,
-      depredacion: "Perro",
       responsable: "Ana Cáceres",
+
+      eclosionados: 100,
+      huevosSinEmbrion: 12,
+      embrionesMuertos: 23,
+      noEclosionados: 23,
+      neonatosMuertosEnNido: 8,
+
+      evidenciaDepredacion: true,
+      tipoDepredador: "Perro",
+      depredacion: "Perro",
+
+      fechaRegistro: "2023-10-02 16:30",
+      observaciones:
+        "Se encontró evidencia de depredación alrededor del nido durante la exhumación.",
     },
     {
       id: 3,
-      nido: "C2HJJ-09",
+      nido: "C2HJJ-11",
       fechaExhumacion: "2005-01-01 11:45",
-      eclosionados: 23,
-      noEclosionados: 5,
-      embrionesMuertos: 5,
-      depredacion: "Cangrejo",
       responsable: "Mario Tesorero",
+
+      eclosionados: 23,
+      huevosSinEmbrion: 4,
+      embrionesMuertos: 5,
+      noEclosionados: 5,
+      neonatosMuertosEnNido: 2,
+
+      evidenciaDepredacion: true,
+      tipoDepredador: "Cangrejo",
+      depredacion: "Cangrejo",
+
+      fechaRegistro: "2005-01-01 12:20",
+      observaciones:
+        "Se identificaron rastros de cangrejo cerca del área del nido.",
     },
     {
       id: 4,
-      nido: "C2HJJ-09",
+      nido: "C2HJJ-12",
       fechaExhumacion: "2026-11-01 21:00",
-      eclosionados: 23,
-      noEclosionados: 0,
-      embrionesMuertos: 0,
-      depredacion: "Sin depredación",
       responsable: "Juan Ramón",
+
+      eclosionados: 23,
+      huevosSinEmbrion: 0,
+      embrionesMuertos: 0,
+      noEclosionados: 0,
+      neonatosMuertosEnNido: 0,
+
+      evidenciaDepredacion: false,
+      tipoDepredador: "Sin depredación",
+      depredacion: "Sin depredación",
+
+      fechaRegistro: "2026-11-01 22:01",
+      observaciones: "Nido encontrado con exceso de humedad por marea alta.",
     },
   ],
 };

@@ -4,9 +4,12 @@ import {
   ShieldCheck,
   UserCog,
   UserRoundPlus,
+  UserRoundX,
   Users,
-  XCircle,
 } from "lucide-react";
+
+import UsuarioFormModal from "../../components/usuarios/UsuarioFormModal";
+import UsuarioDetailModal from "../../components/usuarios/UsuarioDetailModal";
 
 const roleStyles = {
   Administrador: "border-red-300 bg-red-50 text-red-500",
@@ -31,9 +34,12 @@ export const usuariosConfig = {
   buttonText: "Agregar Usuario",
   buttonIcon: UserRoundPlus,
 
+  FormModal: UsuarioFormModal,
+  DetailModal: UsuarioDetailModal,
+
   searchPlaceholder: "Buscar por nombre o correo...",
 
-  searchKeys: ["nombreCompleto", "email"],
+  searchKeys: ["nombreCompleto", "email", "telefono", "rol", "estado"],
 
   defaultSort: {
     key: "nombreCompleto",
@@ -148,8 +154,8 @@ export const usuariosConfig = {
     },
     {
       key: "delete",
-      label: "Eliminar",
-      icon: XCircle,
+      label: "Desactivar usuario",
+      icon: UserRoundX,
       color: "text-red-400",
       hover: "hover:bg-red-50",
     },
@@ -168,35 +174,51 @@ export const usuariosConfig = {
   data: [
     {
       id: 1,
+      nombres: "Karla",
+      apellidos: "Pocasangre",
       nombreCompleto: "Karla Pocasangre",
       email: "karla29hernandez89@gmail.com",
+      telefono: "6117-9198",
       rol: "Administrador",
       estado: "Activo",
       fechaCreacion: "2023-06-01 18:43",
+      fechaActualizacion: "2026-05-14 16:20",
     },
     {
       id: 2,
+      nombres: "Josue",
+      apellidos: "Sanchez",
       nombreCompleto: "Josue Sanchez",
       email: "josue.chanchez.23@gmail.com",
+      telefono: "7123-4567",
       rol: "Tecnico",
       estado: "Activo",
       fechaCreacion: "2023-10-02 15:04",
+      fechaActualizacion: "2026-05-10 09:15",
     },
     {
       id: 3,
+      nombres: "Carlos",
+      apellidos: "Martinez",
       nombreCompleto: "Carlos Martinez",
       email: "carlitouwu.89.23@gmail.com",
+      telefono: "7988-1200",
       rol: "Tecnico",
       estado: "Inactivo",
       fechaCreacion: "2005-01-01 11:45",
+      fechaActualizacion: "2026-04-28 14:35",
     },
     {
       id: 4,
+      nombres: "Mario",
+      apellidos: "Castro",
       nombreCompleto: "Mario Castro",
       email: "castro.marios.21345@gmail.com",
+      telefono: "7456-9087",
       rol: "Tecnico",
       estado: "Activo",
       fechaCreacion: "2026-11-01 21:00",
+      fechaActualizacion: "2026-11-02 08:10",
     },
   ],
 };
