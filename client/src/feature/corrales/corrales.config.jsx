@@ -1,21 +1,12 @@
-import {
-  CalendarDays,
-  Fence,
-  FileSearch,
-  Pencil,
-  Plus,
-  Wrench,
-  XCircle,
-} from "lucide-react";
+import { CalendarPlus, Fence } from "lucide-react";
 
 import CorralFormModal from "../../components/corrales/CorralFormModal";
 import CorralDetailModal from "../../components/corrales/CorralDetailModal";
 
-const estadoStyles = {
+const statusStyles = {
   Activo: "text-emerald-500",
   Cerrado: "text-red-500",
-  "En mantenimiento": "text-orange-500",
-  Mantenimiento: "text-orange-500",
+  Mantenimiento: "text-orange-400",
 };
 
 export const corralesConfig = {
@@ -24,24 +15,13 @@ export const corralesConfig = {
 
   cardTitle: "Gestión de Corrales",
   cardDescription: "Administra los corrales del sistema IncuBase",
-  cardIcon: Wrench,
-  cardIconColor: "text-[#0F7A4F]",
-
   buttonText: "Agregar Corral",
-  buttonIcon: Plus,
+
+  searchPlaceholder: "Buscar por código de corral...",
+  filters: ["Rango de fecha", "Tipo", "Estado"],
 
   FormModal: CorralFormModal,
   DetailModal: CorralDetailModal,
-
-  searchPlaceholder: "Buscar por código de corral...",
-
-  searchKeys: ["codigo", "ubicacion", "tipo", "estado", "fechaInstalacion"],
-
-  defaultSort: {
-    key: "codigo",
-    direction: "asc",
-    type: "text",
-  },
 
   stats: [
     {
@@ -58,7 +38,7 @@ export const corralesConfig = {
     {
       title: "En mantenimiento",
       value: 6,
-      dotColor: "bg-orange-500",
+      dotColor: "bg-orange-400",
     },
     {
       title: "Activos",
@@ -67,50 +47,18 @@ export const corralesConfig = {
     },
   ],
 
-  filters: [
-    {
-      type: "date",
-      key: "fechaInstalacion",
-      label: "Rango de fecha",
-      icon: CalendarDays,
-    },
-    {
-      type: "select",
-      key: "tipo",
-      label: "Tipo",
-      options: ["Corral Abierto", "Corral Cerrado"],
-    },
-    {
-      type: "select",
-      key: "estado",
-      label: "Estado",
-      options: ["Activo", "Cerrado", "En mantenimiento"],
-    },
-  ],
-
   columns: [
+    { header: "Código", key: "codigo" },
+    { header: "Ubicación", key: "ubicacion" },
+    { header: "Tipo de corral", key: "tipo" },
+
     {
-      key: "codigo",
-      header: "Código",
-      sortable: true,
-      sortType: "text",
-      defaultSortDirection: "asc",
-    },
-    {
-      key: "ubicacion",
-      header: "Ubicación",
-    },
-    {
-      key: "tipo",
-      header: "Tipo de corral",
-    },
-    {
-      key: "estado",
       header: "Estado del Corral",
+      key: "estado",
       render: (value) => (
         <span
-          className={`inline-flex items-center gap-2 font-semibold ${
-            estadoStyles[value] || "text-gray-500"
+          className={`flex items-center gap-2 font-semibold ${
+            statusStyles[value] || "text-gray-500"
           }`}
         >
           <span className="h-2.5 w-2.5 rounded-full bg-current" />
@@ -118,87 +66,64 @@ export const corralesConfig = {
         </span>
       ),
     },
+
     {
-      key: "fechaInstalacion",
       header: "Fecha de instalación",
-      sortable: true,
-      sortType: "date",
-      defaultSortDirection: "asc",
+      key: "fechaInstalacion",
+      renderHeader: () => (
+        <span className="flex items-center gap-2">
+          Fecha de instalación
+          <CalendarPlus className="h-5 w-5 text-[#52645E]" />
+        </span>
+      ),
     },
+
     {
-      key: "acciones",
       header: "Acciones",
+      key: "acciones",
     },
   ],
-
-  actions: [
-    {
-      key: "edit",
-      label: "Editar",
-      icon: Pencil,
-      color: "text-[#E6A11D]",
-      hover: "hover:bg-orange-50",
-    },
-    {
-      key: "delete",
-      label: "Eliminar",
-      icon: XCircle,
-      color: "text-red-400",
-      hover: "hover:bg-red-50",
-    },
-    {
-      key: "detail",
-      label: "Ver detalle",
-      icon: FileSearch,
-      color: "text-blue-400",
-      hover: "hover:bg-blue-50",
-    },
-  ],
-
-  emptyTitle: "No hay corrales registrados",
-  emptyDescription:
-    "Agrega un nuevo corral para comenzar la administración del sistema.",
 
   data: [
     {
-      id: 1,
       codigo: "C2HJJ-09",
       ubicacion: "Zona Norte",
       tipo: "Corral Abierto",
       estado: "Activo",
       fechaInstalacion: "2023-10-02 15:04",
-      creadoPor: "Karla Pocasangre",
-      observaciones: "Corral operativo y disponible para registro de nidos.",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2023-10-02 15:04",
+      observaciones: "Corral ubicado en zona norte.",
     },
     {
-      id: 2,
       codigo: "C2HJJ-10",
       ubicacion: "Zona Sur",
       tipo: "Corral Cerrado",
       estado: "Cerrado",
       fechaInstalacion: "2023-10-02 15:04",
-      creadoPor: "Josue Sanchez",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2023-10-02 15:04",
       observaciones: "Corral cerrado temporalmente.",
     },
     {
-      id: 3,
       codigo: "C2HJJ-11",
       ubicacion: "Zona Centro",
       tipo: "Corral Abierto",
       estado: "Activo",
       fechaInstalacion: "2005-01-01 11:45",
-      creadoPor: "Carlos Martinez",
-      observaciones: "Corral activo para monitoreo.",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2005-01-01 11:45",
+      observaciones: "Sin observaciones registradas.",
     },
     {
-      id: 4,
       codigo: "C2HJJ-12",
       ubicacion: "Zona Este",
       tipo: "Corral Cerrado",
-      estado: "En mantenimiento",
+      estado: "Mantenimiento",
       fechaInstalacion: "2026-11-01 21:00",
-      creadoPor: "Mario Castro",
-      observaciones: "Corral en revisión por mantenimiento.",
+      creadoPor: "Kaxierjo",
+      fechaCreacion: "2026-11-01 21:00",
+      observaciones: "Corral en mantenimiento.",
     },
   ],
 };

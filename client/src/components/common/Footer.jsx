@@ -1,14 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Mail,
-  Phone,
-  ShieldCheck,
-  FileText,
-  BookOpen,
-  ExternalLink,
-} from "lucide-react";
-
 import logo from "../../assets/logo-tortugaSVG.svg";
 
 import PrivacyModal from "../legal/PrivacyModal";
@@ -20,93 +11,69 @@ function Footer() {
 
   return (
     <>
-      <footer className="shrink-0 border-t border-[#D6E1DE] bg-white px-8 py-5">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-[1.6fr_1fr_1fr_1fr]">
+      <footer className="bg-white border-t border-[#D6E1DE] px-10 py-5">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1.6fr_0.8fr_0.8fr_0.8fr]">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#E9F5F1]">
-              <img
-                src={logo}
-                alt="IncuBase"
-                className="h-8 w-8 object-contain"
-              />
-            </div>
+            <img
+              src={logo}
+              alt="IncuBase"
+              className="h-10 w-10 object-contain"
+            />
 
-            <div className="min-w-0">
-              <h3 className="text-sm font-bold text-[#163832]">IncuBase</h3>
+            <div>
+              <h3 className="text-sm font-semibold text-[#163832]">Incubase</h3>
 
-              <p className="mt-1 max-w-[420px] text-xs leading-relaxed text-slate-500">
-                Sistema de gestión y monitoreo de huevos de Tortugas Marinas.
+              <p className="text-xs text-gray-500">
+                Sistema de gestión y monitoreo de huevos de Tortugas Marinas
               </p>
 
-              <p className="mt-4 text-[11px] text-slate-400">
+              <p className="text-[10px] text-gray-400 mt-4">
                 © 2026 Kaxierjo. Todos los derechos reservados.
               </p>
             </div>
           </div>
 
           <div>
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-[#163832]">
-              Legal
-            </h4>
+            <h4 className="text-xs font-semibold text-gray-600 mb-2">Legal</h4>
 
-            <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => setShowPrivacyModal(true)}
-                className="group inline-flex w-fit items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0F6B3D]"
-              >
-                <ShieldCheck size={14} className="text-[#7BB9A0]" />
-                Política de Privacidad
-              </button>
+            <button
+              type="button"
+              onClick={() => setShowPrivacyModal(true)}
+              className="block text-xs text-gray-500 underline cursor-pointer transition-colors hover:text-[#163832]"
+            >
+              Política de Privacidad
+            </button>
 
-              <button
-                type="button"
-                onClick={() => setShowTermsModal(true)}
-                className="group inline-flex w-fit items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0F6B3D]"
-              >
-                <FileText size={14} className="text-[#7BB9A0]" />
-                Términos y Condiciones
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowTermsModal(true)}
+              className="mt-1 block text-xs text-gray-500 underline cursor-pointer transition-colors hover:text-[#163832]"
+            >
+              Términos y Condiciones
+            </button>
           </div>
 
           <div>
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-[#163832]">
+            <h4 className="text-xs font-semibold text-gray-600 mb-2">
               Información
             </h4>
 
             <Link
               to="/guia-incubase"
-              className="inline-flex w-fit items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0F6B3D]"
+              className="block text-xs text-gray-500 underline transition-colors hover:text-[#163832]"
             >
-              <BookOpen size={14} className="text-[#7BB9A0]" />
               Guía IncuBase
-              <ExternalLink size={12} className="opacity-60" />
             </Link>
           </div>
 
           <div>
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-[#163832]">
+            <h4 className="text-xs font-semibold text-gray-600 mb-2">
               Soporte
             </h4>
 
-            <div className="flex flex-col gap-2">
-              <a
-                href="mailto:kaxierjo@gmail.com"
-                className="inline-flex w-fit items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0F6B3D]"
-              >
-                <Mail size={14} className="text-[#7BB9A0]" />
-                kaxierjo@gmail.com
-              </a>
+            <p className="text-xs text-gray-500">kaxierjo@gmail.com</p>
 
-              <a
-                href="tel:24208225"
-                className="inline-flex w-fit items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0F6B3D]"
-              >
-                <Phone size={14} className="text-[#7BB9A0]" />
-                24208225
-              </a>
-            </div>
+            <p className="text-xs text-gray-500 underline mt-1">24208225</p>
           </div>
         </div>
       </footer>
