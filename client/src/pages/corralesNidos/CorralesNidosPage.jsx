@@ -88,6 +88,59 @@ function CorralesNidosPage() {
     vacio: null,
   };
 
+  const stats = [
+    {
+      title: "Total Corrales",
+      value: 384,
+      icon: Fence,
+      iconColor: "text-[#7BBFA8]",
+    },
+    {
+      title: "Total Nidos",
+      value: 384,
+      icon: Egg,
+      iconColor: "text-[#7BBFA8]",
+    },
+    {
+      title: "Incubando",
+      value: 102,
+      dotColor: "bg-emerald-500",
+    },
+    {
+      title: "Próximos a eclosión",
+      value: 80,
+      dotColor: "bg-orange-400",
+    },
+    {
+      title: "Eclosionados",
+      value: 80,
+      dotColor: "bg-blue-400",
+    },
+  ];
+
+  const legendItems = [
+    {
+      label: "Ocupado",
+      color: "bg-emerald-500",
+    },
+    {
+      label: "Próximo a eclosión",
+      color: "bg-orange-400",
+    },
+    {
+      label: "Eclosionado",
+      color: "bg-blue-400",
+    },
+    {
+      label: "Exhumado",
+      color: "bg-red-500",
+    },
+    {
+      label: "Vacío",
+      color: "bg-[#E6ECE9]",
+    },
+  ];
+
   const handleCloseModal = () => {
     setAddOpen(false);
   };
@@ -98,56 +151,40 @@ function CorralesNidosPage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-5 gap-5">
-        <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
-          <p className="text-sm text-slate-500">Total Corrales</p>
+      <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
 
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-3xl font-bold text-[#10231F]">384</span>
-            <Fence className="text-[#7BBFA8]" />
-          </div>
-        </div>
+          return (
+            <article
+              key={stat.title}
+              className="flex min-h-[110px] items-center justify-between rounded-2xl border border-[#D7E4E1] bg-white px-6 py-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="min-w-0">
+                <p className="text-sm text-slate-500">{stat.title}</p>
 
-        <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
-          <p className="text-sm text-slate-500">Total Nidos</p>
+                <h3 className="mt-2 text-3xl font-bold text-[#10231F]">
+                  {stat.value}
+                </h3>
+              </div>
 
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-3xl font-bold text-[#10231F]">384</span>
-            <Egg className="text-[#7BBFA8]" />
-          </div>
-        </div>
+              {Icon ? (
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F1F8F5]">
+                  <Icon className={`h-6 w-6 ${stat.iconColor}`} />
+                </div>
+              ) : (
+                <span
+                  className={`h-4 w-4 shrink-0 rounded-full ${stat.dotColor}`}
+                />
+              )}
+            </article>
+          );
+        })}
+      </section>
 
-        <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
-          <p className="text-sm text-slate-500">Incubando</p>
-
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-3xl font-bold text-[#10231F]">102</span>
-            <span className="h-3 w-3 rounded-full bg-emerald-500" />
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
-          <p className="text-sm text-slate-500">Próximos a eclosión</p>
-
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-3xl font-bold text-[#10231F]">80</span>
-            <span className="h-3 w-3 rounded-full bg-orange-400" />
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#D7E4E1] bg-white p-5">
-          <p className="text-sm text-slate-500">Eclosionados</p>
-
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-3xl font-bold text-[#10231F]">80</span>
-            <span className="h-3 w-3 rounded-full bg-blue-400" />
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-[1.2fr_0.8fr] gap-6">
-        <section className="rounded-2xl border border-[#D7E4E1] bg-white p-6 shadow-sm">
-          <div className="mb-8 flex items-start justify-between">
+      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)]">
+        <section className="min-w-0 rounded-2xl border border-[#D7E4E1] bg-white p-5 shadow-sm sm:p-6">
+          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <Fence className="h-5 w-5 text-[#0F6B3D]" />
@@ -165,95 +202,90 @@ function CorralesNidosPage() {
             <button
               type="button"
               onClick={() => setAddOpen(true)}
-              className="flex items-center gap-2 rounded-xl bg-[#0F6B3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0B5631]"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#0F6B3D] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0B5631] sm:w-fit"
             >
               <Plus className="h-4 w-4" />
               Agregar Corral
             </button>
           </div>
 
-          <div className="mb-10 flex flex-wrap gap-x-10 gap-y-4 text-sm text-slate-500">
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-4 bg-emerald-500" />
-              Ocupado
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-4 bg-orange-400" />
-              Próximo a eclosión
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-4 bg-blue-400" />
-              Eclosionado
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-4 bg-red-500" />
-              Exhumado
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-4 bg-[#E6ECE9]" />
-              Vacío
-            </div>
+          <div className="mb-8 grid grid-cols-1 gap-3 text-sm text-slate-500 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {legendItems.map((item) => (
+              <div
+                key={item.label}
+                className="flex items-center gap-2 rounded-xl border border-[#E3ECE7] bg-[#F8FCFA] px-3 py-2"
+              >
+                <span className={`h-4 w-4 shrink-0 rounded ${item.color}`} />
+                <span className="truncate">{item.label}</span>
+              </div>
+            ))}
           </div>
 
-          <div className="mx-auto w-fit">
-            <div className="mb-4 ml-10 grid grid-cols-8 gap-3 text-center text-sm font-bold text-[#6B5D55]">
-              {cols.map((col) => (
-                <span key={col}>{col}</span>
-              ))}
-            </div>
+          <div className="overflow-x-auto pb-3">
+            <div className="mx-auto w-fit min-w-[620px]">
+              <div className="mb-4 ml-10 grid grid-cols-8 gap-3 text-center text-sm font-bold text-[#6B5D55]">
+                {cols.map((col) => (
+                  <span key={col}>{col}</span>
+                ))}
+              </div>
 
-            <div className="space-y-3">
-              {rows.map((row) => (
-                <div key={row} className="flex items-center gap-4">
-                  <span className="w-5 text-sm font-bold text-[#6B5D55]">
-                    {row}
-                  </span>
+              <div className="space-y-3">
+                {rows.map((row) => (
+                  <div key={row} className="flex items-center gap-4">
+                    <span className="w-5 text-sm font-bold text-[#6B5D55]">
+                      {row}
+                    </span>
 
-                  <div className="grid grid-cols-8 gap-3">
-                    {cols.map((col) => {
-                      const key = `${row}-${col}`;
-                      const estado = nidos[key] || "ocupado";
+                    <div className="grid grid-cols-8 gap-3">
+                      {cols.map((col) => {
+                        const key = `${row}-${col}`;
+                        const estado = nidos[key] || "ocupado";
 
-                      const isSelected =
-                        selectedNido.row === row && selectedNido.col === col;
+                        const isSelected =
+                          selectedNido.row === row && selectedNido.col === col;
 
-                      return (
-                        <button
-                          key={key}
-                          type="button"
-                          onClick={() =>
-                            setSelectedNido({
-                              row,
-                              col,
-                              estado,
-                            })
-                          }
-                          className={`flex h-[58px] w-[58px] items-center justify-center rounded-md border-[5px] text-2xl font-bold shadow-sm transition hover:scale-105 ${
-                            isSelected ? "border-[#0F6B3D]" : "border-[#DDF3EC]"
-                          } ${stateClasses[estado]}`}
-                        >
-                          {stateIcons[estado]}
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() =>
+                              setSelectedNido({
+                                row,
+                                col,
+                                estado,
+                              })
+                            }
+                            className={`flex h-[58px] w-[58px] items-center justify-center rounded-xl border-[4px] text-2xl font-bold shadow-sm transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-md ${
+                              isSelected
+                                ? "border-[#0F6B3D] ring-4 ring-[#0F6B3D]/15"
+                                : "border-[#DDF3EC]"
+                            } ${stateClasses[estado]}`}
+                          >
+                            {stateIcons[estado]}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end">
-            <select className="h-[48px] w-[190px] rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none">
+          <div className="mt-6 flex flex-col gap-3 border-t border-[#E3ECE7] pt-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-slate-500">
+              Corral seleccionado para monitoreo de nidos.
+            </p>
+
+            <select className="h-[48px] w-full rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none transition focus:border-[#0F6B3D] focus:ring-4 focus:ring-[#0F6B3D]/10 sm:w-[210px]">
               <option>Corral BCU67-8C</option>
             </select>
           </div>
         </section>
 
-        <NidoDetails selectedNido={selectedNido} />
+        <div className="min-w-0">
+          <NidoDetails selectedNido={selectedNido} />
+        </div>
       </div>
 
       <CorralFormModal
