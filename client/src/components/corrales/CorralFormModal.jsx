@@ -57,11 +57,19 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const payload = {
+    ubicacion: form.ubicacion,
+    fechaInstalacion: form.fechaInstalacion.replace("T", " "),
+    tipo: form.tipo,
+    estado: form.estado,
+    observaciones: form.observaciones,
+      };
 
-    onSave({
-      ...form,
-      fechaInstalacion: form.fechaInstalacion.replace("T", " "),
-    });
+    if (isEdit) {
+      payload.codigo = form.codigo;
+    }
+
+    onSave(payload);
   };
 
   return (
@@ -80,12 +88,10 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
         {!isEdit && (
           <Field label="Código">
             <input
-              name="codigo"
-              value={form.codigo}
-              onChange={handleChange}
-              placeholder="Ej: C2HJJ-09"
-              className={inputClass}
-              required
+              type="text"
+              value="Se generará automáticamente"
+              disabled
+              className="h-[43px] w-full cursor-not-allowed rounded-lg border border-[#D7E4E1] bg-[#EEF5F2] px-4 text-[13px] text-slate-500 outline-none shadow-sm"
             />
           </Field>
         )}

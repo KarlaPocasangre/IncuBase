@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import {
   CalendarDays,
   ClipboardCheck,
@@ -12,6 +12,10 @@ import {
 import RegistroNidoForm from "../../../components/nidos/RegistroNidoForm";
 import SeleccionPosicionCard from "../../../components/nidos/SeleccionPosicionCard";
 import ProtocoloCorral from "../../../components/nidos/ProtocoloCorral";
+import { obtenerCorrales } from "../../../services/corrales.service";
+import { crearNido } from "../../../services/nidos.service";
+import { buildNidoPayload } from "../../../utils/nidos.helpers";
+import { obtenerNidosPorCorral } from "../../../services/nidos.service";
 
 const initialForm = {
   especie: "",
@@ -29,17 +33,61 @@ const initialForm = {
 export default function RegistroNidosPage() {
   const [form, setForm] = useState(initialForm);
   const [resetGridKey, setResetGridKey] = useState(0);
+  const [corrales, setCorrales] = useState([]);
+  const [nidosCorral, setNidosCorral] = useState([]);
+
+  useEffect(() => {
+   const loadCorrales = async () => {
+      try {
+        const data = await obtenerCorrales();
+        setCorrales(data);
+      } catch (error) {
+        console.error("Error al cargar corrales:", error);
+      }
+    };
+
+    loadCorrales();
+  }, []);
+
+  useEffect(() => {
+  const loadNidosCorral = async () => {
+    if (!form.corral) {
+      setNidosCorral([]);
+      return;
+    }
+
+    try {
+      const data = await obtenerNidosPorCorral(form.corral);
+      setNidosCorral(data);
+    } catch (error) {
+      console.error("Error al cargar nidos del corral:", error);
+    }
+  };
+
+  loadNidosCorral();
+}, [form.corral]);
 
   /*
     Luego estos datos deberían venir del backend.
     Son las posiciones que ya tienen nido registrado.
   */
-  const posicionesOcupadas = [
-    // Ejemplo:
-    // { fila: "A", col: 1 },
-    // { fila: "A", col: 3 },
-    // { fila: "B", col: 2 },
-  ];
+  const getFilaLetra = (fila) => {
+    const filas = {
+      1: "A",
+      2: "B",
+      3: "C",
+      4: "D",
+      5: "E",
+      6: "F",
+    };
+
+    return filas[fila] || fila;
+  };
+
+  const posicionesOcupadas = nidosCorral.map((nido) => ({
+    fila: getFilaLetra(nido.sector_corral?.fila),
+    col: Number(nido.sector_corral?.columna),
+  }));
 
   const handleChange = (name, value) => {
     setForm((prev) => ({
@@ -54,9 +102,22 @@ export default function RegistroNidosPage() {
     setResetGridKey((prev) => prev + 1);
   };
 
-  const guardarRegistro = () => {
-    console.log("Datos del nido:", form);
-  };
+ const guardarRegistro = async () => {
+  try {
+    if (!form.corral || !form.posicion) {
+      console.error("Selecciona un corral y una posición");
+      return;
+    }
+
+    const payload = buildNidoPayload(form);
+
+    await crearNido(payload);
+
+    limpiarFormulario();
+  } catch (error) {
+    console.error("Error al registrar nido:", error);
+  }
+};
 
   return (
     <section className="space-y-5">
@@ -70,6 +131,7 @@ export default function RegistroNidosPage() {
           onSave={guardarRegistro}
           resetGridKey={resetGridKey}
           posicionesOcupadas={posicionesOcupadas}
+          corrales={corrales}
         />
       </div>
 

@@ -1,11 +1,50 @@
-import { useState } from "react";
+import {useEffect,useState } from "react";
 import { Plus, Egg, ClockAlert, Turtle, EggOff, Fence } from "lucide-react";
+import { crearCorral,obtenerCorrales } from "../../services/corrales.service";
+import { obtenerNidosPorCorral } from "../../services/nidos.service";
 
 import CorralFormModal from "../../components/corrales/CorralFormModal";
 import NidoDetails from "../../components/nidos/NidoDetails";
 
 function CorralesNidosPage() {
   const [addOpen, setAddOpen] = useState(false);
+
+  const [corrales, setCorrales] = useState([]);
+  const [selectedCorral, setSelectedCorral] = useState("");
+  const [nidosBackend, setNidosBackend] = useState([]);
+
+
+  const loadCorrales = async () => {
+    try {
+      const data = await obtenerCorrales();
+      setCorrales(data);
+
+      if (data.length > 0) {
+        setSelectedCorral(String(data[0].id_corral));
+      }
+    } catch (error) {
+      console.error("Error al obtener corrales:", error);
+    }
+  };
+
+  const loadNidos = async (idCorral) => {
+    try {
+      const data = await obtenerNidosPorCorral(idCorral);
+      setNidosBackend(data);
+    } catch (error) {
+      console.error("Error al obtener nidos:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadCorrales();
+  }, []);
+
+  useEffect(() => {
+  if (selectedCorral) {
+    loadNidos(selectedCorral);
+  }
+  }, [selectedCorral]);
 
   const [selectedNido, setSelectedNido] = useState({
     row: "C",
@@ -16,61 +55,7 @@ function CorralesNidosPage() {
   const rows = ["A", "B", "C", "D", "E", "F"];
   const cols = ["01", "02", "03", "04", "05", "06", "07", "08"];
 
-  const nidos = {
-    "A-01": "ocupado",
-    "A-02": "ocupado",
-    "A-03": "ocupado",
-    "A-04": "ocupado",
-    "A-05": "ocupado",
-    "A-06": "ocupado",
-    "A-07": "exhumado",
-    "A-08": "proximo",
 
-    "B-01": "ocupado",
-    "B-02": "proximo",
-    "B-03": "ocupado",
-    "B-04": "vacio",
-    "B-05": "exhumado",
-    "B-06": "ocupado",
-    "B-07": "ocupado",
-    "B-08": "ocupado",
-
-    "C-01": "exhumado",
-    "C-02": "ocupado",
-    "C-03": "ocupado",
-    "C-04": "eclosionado",
-    "C-05": "ocupado",
-    "C-06": "proximo",
-    "C-07": "ocupado",
-    "C-08": "ocupado",
-
-    "D-01": "ocupado",
-    "D-02": "ocupado",
-    "D-03": "exhumado",
-    "D-04": "ocupado",
-    "D-05": "ocupado",
-    "D-06": "vacio",
-    "D-07": "ocupado",
-    "D-08": "ocupado",
-
-    "E-01": "proximo",
-    "E-02": "ocupado",
-    "E-03": "vacio",
-    "E-04": "ocupado",
-    "E-05": "proximo",
-    "E-06": "exhumado",
-    "E-07": "ocupado",
-    "E-08": "vacio",
-
-    "F-01": "ocupado",
-    "F-02": "ocupado",
-    "F-03": "ocupado",
-    "F-04": "exhumado",
-    "F-05": "ocupado",
-    "F-06": "ocupado",
-    "F-07": "ocupado",
-    "F-08": "proximo",
-  };
 
   const stateClasses = {
     ocupado: "bg-emerald-500 text-white",
@@ -88,32 +73,78 @@ function CorralesNidosPage() {
     vacio: null,
   };
 
+  const getFilaLetra = (fila) => {
+    const filas = {
+      1: "A",
+      2: "B",
+      3: "C",
+      4: "D",
+      5: "E",
+      6: "F",
+    };
+
+    return filas[fila] || fila;
+  };
+
+  const normalizeEstadoNido = (estado) => {
+    const estadoLower = estado?.toLowerCase();
+
+    if (estadoLower === "registrado") return "ocupado";
+    if (estadoLower === "en incubación") return "ocupado";
+    if (estadoLower === "próximo a eclosión") return "proximo";
+    if (estadoLower === "eclosionado") return "eclosionado";
+    if (estadoLower === "exhumado") return "exhumado";
+
+    return "ocupado";
+  };
+
+  const nidosMap = {};
+
+  nidosBackend.forEach((nido) => {
+    const fila = getFilaLetra(nido.sector_corral?.fila);
+    const columna = String(nido.sector_corral?.columna).padStart(2, "0");
+
+    const key = `${fila}-${columna}`;
+    const estado = normalizeEstadoNido(nido.estado_nido?.nombre);
+
+    nidosMap[key] = {
+      estado,
+      data: nido,
+    };
+  });
+
   const stats = [
     {
       title: "Total Corrales",
-      value: 384,
+      value: corrales.length,
       icon: Fence,
       iconColor: "text-[#7BBFA8]",
     },
-    {
+   {
       title: "Total Nidos",
-      value: 384,
+      value: nidosBackend.length,
       icon: Egg,
       iconColor: "text-[#7BBFA8]",
     },
     {
       title: "Incubando",
-      value: 102,
+      value: nidosBackend.filter(
+        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "ocupado"
+      ).length,
       dotColor: "bg-emerald-500",
     },
     {
       title: "Próximos a eclosión",
-      value: 80,
+      value: nidosBackend.filter(
+        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "proximo"
+      ).length,
       dotColor: "bg-orange-400",
     },
     {
       title: "Eclosionados",
-      value: 80,
+      value: nidosBackend.filter(
+        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "eclosionado"
+      ).length,
       dotColor: "bg-blue-400",
     },
   ];
@@ -145,8 +176,21 @@ function CorralesNidosPage() {
     setAddOpen(false);
   };
 
-  const handleSaveCorral = () => {
-    setAddOpen(false);
+  const handleSaveCorral = async (newCorral) => {
+    try {
+      await crearCorral({
+        ubicacion: newCorral.ubicacion,
+        fechaInstalacion: newCorral.fechaInstalacion,
+        idTipoCorral: 1,
+        idEstadoCorral: 1,
+        observaciones: newCorral.observaciones,
+        creadoPor: 1,
+      });
+      await loadCorrales();
+      setAddOpen(false);
+    } catch (error) {
+      console.error("Error al crear corral:", error);
+    }
   };
 
   return (
@@ -239,7 +283,7 @@ function CorralesNidosPage() {
                     <div className="grid grid-cols-8 gap-3">
                       {cols.map((col) => {
                         const key = `${row}-${col}`;
-                        const estado = nidos[key] || "ocupado";
+                        const estado = nidosMap[key]?.estado || "vacio";
 
                         const isSelected =
                           selectedNido.row === row && selectedNido.col === col;
@@ -248,13 +292,15 @@ function CorralesNidosPage() {
                           <button
                             key={key}
                             type="button"
-                            onClick={() =>
+                           onClick={() => {
+                              const nidoData = nidosMap[key]?.data;
                               setSelectedNido({
                                 row,
                                 col,
                                 estado,
-                              })
-                            }
+                                data: nidoData || null,
+                              });
+                            }}
                             className={`flex h-[58px] w-[58px] items-center justify-center rounded-xl border-[4px] text-2xl font-bold shadow-sm transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-md ${
                               isSelected
                                 ? "border-[#0F6B3D] ring-4 ring-[#0F6B3D]/15"
@@ -277,8 +323,20 @@ function CorralesNidosPage() {
               Corral seleccionado para monitoreo de nidos.
             </p>
 
-            <select className="h-[48px] w-full rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none transition focus:border-[#0F6B3D] focus:ring-4 focus:ring-[#0F6B3D]/10 sm:w-[210px]">
-              <option>Corral BCU67-8C</option>
+            <select
+              value={selectedCorral}
+              onChange={(e) => setSelectedCorral(e.target.value)}
+              className="h-[48px] w-full rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none transition focus:border-[#0F6B3D] focus:ring-4 focus:ring-[#0F6B3D]/10 sm:w-[210px]"
+            >
+              {corrales.length === 0 ? (
+                <option value="">Sin corrales registrados</option>
+              ) : (
+                corrales.map((corral) => (
+                <option key={String(corral.id_corral)} value={String(corral.id_corral)}>
+                  {corral.codigo} - {corral.ubicacion}
+                </option>
+                ))
+              )}
             </select>
           </div>
         </section>

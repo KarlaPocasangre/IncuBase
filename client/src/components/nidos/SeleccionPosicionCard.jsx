@@ -10,6 +10,7 @@ export default function SeleccionPosicionCard({
   onSave,
   resetGridKey,
   posicionesOcupadas = [],
+  corrales = [],
 }) {
   const handleSelect = (celda) => {
     onChange("posicion", celda);
@@ -52,20 +53,30 @@ export default function SeleccionPosicionCard({
             <option value="" disabled>
               Selecciona el corral
             </option>
-            <option value="BCU67-8C">Corral BCU67-8C</option>
-            <option value="BCU67-9D">Corral BCU67-9D</option>
+
+            {corrales.map((corral) => (
+              <option key={String(corral.id_corral)} value={String(corral.id_corral)}>
+                {corral.codigo} - {corral.ubicacion}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
-      <div className="mt-6 flex justify-center">
-        <CorralGrid
-          key={resetGridKey}
-          selected={form.posicion}
-          onSelect={handleSelect}
-          posicionesOcupadas={posicionesOcupadas}
-        />
-      </div>
+        <div className="mt-6 flex justify-center">
+          <CorralGrid
+            key={resetGridKey}
+            selected={form.posicion}
+            onSelect={handleSelect}
+            posicionesOcupadas={posicionesOcupadas}
+          />
+        </div>
+
+        {posicionesOcupadas.length >= 48 && (
+          <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
+            Este corral ya está lleno. No se pueden registrar más nidos.
+          </p>
+        )}
 
       <LeyendaGrid />
 

@@ -30,6 +30,16 @@ function getStatusClass(estado) {
 }
 
 function NidoDetails({ selectedNido }) {
+
+  const nido = selectedNido?.data;
+
+  const especie = nido?.especie?.nombre_comun || "Sin especie";
+  const huevos = nido?.cantidad_huevos || "Sin dato";
+  const fechaDesove = nido?.fecha_hora_desove || "Sin fecha";
+  const fechaSiembra = nido?.fecha_hora_siembra || "Sin fecha";
+  const profundidad = nido?.profundidad_nido || "Sin dato";
+
+
   return (
     <section className="rounded-2xl border border-[#CFE0DC] bg-white p-6 shadow-sm">
       {/* HEADER */}
@@ -72,7 +82,7 @@ function NidoDetails({ selectedNido }) {
             </span>
 
             <span className="rounded-lg border border-[#CFE0DC] bg-white px-4 py-1 text-sm text-[#10231F]">
-              {selectedNido.estado === "exhumado" ? "Carey" : "Baule"}
+              {selectedNido.estado === "exhumado" ? "Carey" : especie}
             </span>
 
             <span className="rounded-lg border border-[#CFE0DC] bg-white px-4 py-1 text-sm text-[#10231F]">
@@ -90,7 +100,7 @@ function NidoDetails({ selectedNido }) {
               </div>
 
               <p className="mt-6 text-center text-lg font-bold text-[#10231F]">
-                03/10/2026 18:00
+                {fechaSiembra} 
               </p>
             </div>
           ) : selectedNido.estado === "eclosionado" ? (
@@ -106,7 +116,7 @@ function NidoDetails({ selectedNido }) {
                     </p>
 
                     <p className="mt-1 text-[15px] font-bold text-[#10231F]">
-                      03/10/2026 18:00
+                      {fechaSiembra}
                     </p>
                   </div>
                 </div>
@@ -124,7 +134,7 @@ function NidoDetails({ selectedNido }) {
                     </p>
 
                     <p className="mt-1 text-[15px] font-bold text-[#10231F]">
-                      03/10/2026 18:00
+                     {fechaSiembra}
                     </p>
                   </div>
                 </div>
@@ -150,7 +160,7 @@ function NidoDetails({ selectedNido }) {
                     <span className="text-sm">Huevos</span>
                   </div>
 
-                  <span className="text-sm font-bold text-[#10231F]">121</span>
+                  <span className="text-sm font-bold text-[#10231F]">{huevos}</span>
                 </div>
 
                 {/* DIAS */}
@@ -199,7 +209,7 @@ function NidoDetails({ selectedNido }) {
                     <span className="text-sm">Huevos</span>
                   </div>
 
-                  <span className="text-sm font-bold text-[#10231F]">121</span>
+                  <span className="text-sm font-bold text-[#10231F]">{huevos}</span>
                 </div>
 
                 {/* DIAS */}
