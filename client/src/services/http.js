@@ -40,3 +40,26 @@ export async function httpPost(endpoint, data = {}) {
 
   return handleResponse(res);
 }
+
+export async function httpPut(endpoint, data = {}) {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "PUT",
+    headers: getHeaders(),
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  return handleResponse(res);
+}
+
+export async function httpPatch(endpoint, data = {}) {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  return handleResponse(res);
+}
+

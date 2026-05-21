@@ -15,7 +15,6 @@ const estadoStyles = {
   Activo: "text-emerald-500",
   Cerrado: "text-red-500",
   "En mantenimiento": "text-orange-500",
-  Mantenimiento: "text-orange-500",
 };
 
 export const corralesConfig = {
@@ -46,23 +45,23 @@ export const corralesConfig = {
   stats: [
     {
       title: "Total de Corrales",
-      value: 8,
+      value: 0,
       icon: Fence,
       iconColor: "text-[#7BB9A0]",
     },
     {
       title: "Cerrados",
-      value: 2,
+      value: 0,
       dotColor: "bg-red-500",
     },
     {
       title: "En mantenimiento",
-      value: 6,
+      value: 0,
       dotColor: "bg-orange-500",
     },
     {
       title: "Activos",
-      value: 6,
+      value: 0,
       dotColor: "bg-emerald-500",
     },
   ],
@@ -78,13 +77,13 @@ export const corralesConfig = {
       type: "select",
       key: "tipo",
       label: "Tipo",
-      options: ["Corral Abierto", "Corral Cerrado"],
+      options: [],
     },
     {
       type: "select",
       key: "estado",
       label: "Estado",
-      options: ["Activo", "Cerrado", "En mantenimiento"],
+      options: [],
     },
   ],
 
@@ -141,7 +140,7 @@ export const corralesConfig = {
     },
     {
       key: "delete",
-      label: "Eliminar",
+      label: "Cerrar corral",
       icon: XCircle,
       color: "text-red-400",
       hover: "hover:bg-red-50",
@@ -159,46 +158,5 @@ export const corralesConfig = {
   emptyDescription:
     "Agrega un nuevo corral para comenzar la administración del sistema.",
 
-  data: [
-    {
-      id: 1,
-      codigo: "C2HJJ-09",
-      ubicacion: "Zona Norte",
-      tipo: "Corral Abierto",
-      estado: "Activo",
-      fechaInstalacion: "2023-10-02 15:04",
-      creadoPor: "Karla Pocasangre",
-      observaciones: "Corral operativo y disponible para registro de nidos.",
-    },
-    {
-      id: 2,
-      codigo: "C2HJJ-10",
-      ubicacion: "Zona Sur",
-      tipo: "Corral Cerrado",
-      estado: "Cerrado",
-      fechaInstalacion: "2023-10-02 15:04",
-      creadoPor: "Josue Sanchez",
-      observaciones: "Corral cerrado temporalmente.",
-    },
-    {
-      id: 3,
-      codigo: "C2HJJ-11",
-      ubicacion: "Zona Centro",
-      tipo: "Corral Abierto",
-      estado: "Activo",
-      fechaInstalacion: "2005-01-01 11:45",
-      creadoPor: "Carlos Martinez",
-      observaciones: "Corral activo para monitoreo.",
-    },
-    {
-      id: 4,
-      codigo: "C2HJJ-12",
-      ubicacion: "Zona Este",
-      tipo: "Corral Cerrado",
-      estado: "En mantenimiento",
-      fechaInstalacion: "2026-11-01 21:00",
-      creadoPor: "Mario Castro",
-      observaciones: "Corral en revisión por mantenimiento.",
-    },
-  ],
+  data: [],
 };

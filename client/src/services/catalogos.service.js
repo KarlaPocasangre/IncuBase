@@ -33,3 +33,21 @@ export const getEstadosUsuarioRequest = async () => {
 
   return handleResponse(response, "Error al obtener los estados de usuario");
 };
+
+export const getTiposCorralRequest = async () => {
+  const response = await fetch(`${API_URL}/tipos-corral`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  return handleResponse(response, "Error al obtener los tipos de corral");
+};
+
+export const getEstadosCorralRequest = async () => {
+  const response = await fetch(`${API_URL}/estados-corral`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  return handleResponse(response, "Error al obtener los estados de corral");
+};

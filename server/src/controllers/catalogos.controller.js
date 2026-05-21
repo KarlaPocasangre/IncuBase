@@ -3,8 +3,8 @@ const prisma = require("../config/prisma");
 function serializeBigInt(data) {
   return JSON.parse(
     JSON.stringify(data, (_, value) =>
-      typeof value === "bigint" ? Number(value) : value,
-    ),
+      typeof value === "bigint" ? Number(value) : value
+    )
   );
 }
 
@@ -62,7 +62,63 @@ const obtenerEstadosUsuario = async (req, res) => {
   }
 };
 
+const obtenerTiposCorral = async (req, res) => {
+  try {
+    const tiposCorral = await prisma.tipo_corral.findMany({
+      select: {
+        id_tipo_corral: true,
+        nombre: true,
+        descripcion: true,
+      },
+      orderBy: {
+        id_tipo_corral: "asc",
+      },
+    });
+
+    return res.json({
+      ok: true,
+      tiposCorral: serializeBigInt(tiposCorral),
+    });
+  } catch (error) {
+    console.error("Error al obtener tipos de corral:", error);
+
+    return res.status(500).json({
+      ok: false,
+      message: "Error al obtener los tipos de corral",
+    });
+  }
+};
+
+const obtenerEstadosCorral = async (req, res) => {
+  try {
+    const estadosCorral = await prisma.estado_corral.findMany({
+      select: {
+        id_estado_corral: true,
+        nombre: true,
+        descripcion: true,
+      },
+      orderBy: {
+        id_estado_corral: "asc",
+      },
+    });
+
+    return res.json({
+      ok: true,
+      estadosCorral: serializeBigInt(estadosCorral),
+    });
+  } catch (error) {
+    console.error("Error al obtener estados de corral:", error);
+
+    return res.status(500).json({
+      ok: false,
+      message: "Error al obtener los estados de corral",
+    });
+  }
+};
+
 module.exports = {
   obtenerRoles,
   obtenerEstadosUsuario,
+  obtenerTiposCorral,
+  obtenerEstadosCorral,
 };

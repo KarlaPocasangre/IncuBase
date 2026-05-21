@@ -7,15 +7,21 @@ import DateTimeInput from "../common/DateTimeInput";
 
 function formatDateForInput(dateString) {
   if (!dateString) return "";
-  return dateString.replace(" ", "T");
+
+  if (dateString.includes("T")) {
+    return dateString.slice(0, 16);
+  }
+
+  return dateString.replace(" ", "T").slice(0, 16);
 }
 
 const initialForm = {
+  id: "",
   codigo: "",
   ubicacion: "",
   fechaInstalacion: "",
-  tipo: "Corral Abierto",
-  estado: "Activo",
+  idTipoCorral: "",
+  idEstadoCorral: "",
   observaciones: "",
 };
 
@@ -25,26 +31,42 @@ const inputClass =
 const textareaClass =
   "h-[104px] w-full resize-none rounded-lg border border-[#D7E4E1] bg-[#F8FCFA] p-4 text-[13px] text-slate-600 outline-none shadow-sm transition placeholder:text-slate-400 focus:border-[#2F9A78] focus:ring-2 focus:ring-[#2F9A78]/20";
 
-function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
+function CorralFormModal({
+  open,
+  mode = "add",
+  corral,
+  catalogos,
+  onClose,
+  onSave,
+}) {
   const isEdit = mode === "edit";
   const [form, setForm] = useState(initialForm);
+
+  const tiposCorral = catalogos?.tiposCorral || [];
+  const estadosCorral = catalogos?.estadosCorral || [];
 
   useEffect(() => {
     if (open && corral && isEdit) {
       setForm({
+        id: corral.id || "",
         codigo: corral.codigo || "",
         ubicacion: corral.ubicacion || "",
         fechaInstalacion: formatDateForInput(corral.fechaInstalacion),
-        tipo: corral.tipo || "Corral Abierto",
-        estado: corral.estado || "Activo",
+        idTipoCorral: corral.idTipoCorral || "",
+        idEstadoCorral: corral.idEstadoCorral || "",
         observaciones: corral.observaciones || "",
       });
+      return;
     }
 
     if (open && !isEdit) {
-      setForm(initialForm);
+      setForm({
+        ...initialForm,
+        idTipoCorral: tiposCorral[0]?.id_tipo_corral || "",
+        idEstadoCorral: estadosCorral[0]?.id_estado_corral || "",
+      });
     }
-  }, [open, corral, isEdit]);
+  }, [open, corral, isEdit, tiposCorral, estadosCorral]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,17 +79,15 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = {
-    ubicacion: form.ubicacion,
-    fechaInstalacion: form.fechaInstalacion.replace("T", " "),
-    tipo: form.tipo,
-    estado: form.estado,
-    observaciones: form.observaciones,
-      };
 
-    if (isEdit) {
-      payload.codigo = form.codigo;
-    }
+    const payload = {
+      id: form.id,
+      ubicacion: form.ubicacion,
+      fechaInstalacion: form.fechaInstalacion,
+      idTipoCorral: Number(form.idTipoCorral),
+      idEstadoCorral: Number(form.idEstadoCorral),
+      observaciones: form.observaciones,
+    };
 
     onSave(payload);
   };
@@ -85,16 +105,14 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
       maxWidth="max-w-[511px]"
     >
       <form onSubmit={handleSubmit} className="space-y-5">
-        {!isEdit && (
-          <Field label="Código">
-            <input
-              type="text"
-              value="Se generará automáticamente"
-              disabled
-              className="h-[43px] w-full cursor-not-allowed rounded-lg border border-[#D7E4E1] bg-[#EEF5F2] px-4 text-[13px] text-slate-500 outline-none shadow-sm"
-            />
-          </Field>
-        )}
+        <Field label="Código">
+          <input
+            type="text"
+            value={isEdit ? form.codigo : "Se generará automáticamente"}
+            disabled
+            className="h-[43px] w-full cursor-not-allowed rounded-lg border border-[#D7E4E1] bg-[#EEF5F2] px-4 text-[13px] text-slate-500 outline-none shadow-sm"
+          />
+        </Field>
 
         <Field label="Ubicación">
           <input
@@ -118,26 +136,40 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
         <div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
           <Field label="Tipo de Corral">
             <select
-              name="tipo"
-              value={form.tipo}
+              name="idTipoCorral"
+              value={form.idTipoCorral}
               onChange={handleChange}
               className={inputClass}
+              required
             >
-              <option>Corral Abierto</option>
-              <option>Corral Cerrado</option>
+              <option value="">Seleccione</option>
+
+              {tiposCorral.map((tipo) => (
+                <option key={tipo.id_tipo_corral} value={tipo.id_tipo_corral}>
+                  {tipo.nombre}
+                </option>
+              ))}
             </select>
           </Field>
 
           <Field label="Estado del Corral">
             <select
-              name="estado"
-              value={form.estado}
+              name="idEstadoCorral"
+              value={form.idEstadoCorral}
               onChange={handleChange}
               className={inputClass}
+              required
             >
-              <option>Activo</option>
-              <option>Cerrado</option>
-              <option>Mantenimiento</option>
+              <option value="">Seleccione</option>
+
+              {estadosCorral.map((estado) => (
+                <option
+                  key={estado.id_estado_corral}
+                  value={estado.id_estado_corral}
+                >
+                  {estado.nombre}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
