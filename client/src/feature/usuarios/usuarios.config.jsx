@@ -136,6 +136,7 @@ export const usuariosConfig = {
       header: "Fecha de creación",
       sortable: true,
       sortType: "date",
+      sortKey: "fechaCreacionRaw",
       defaultSortDirection: "asc",
     },
     {

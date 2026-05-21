@@ -229,6 +229,14 @@ function ManagementPage({
             return true;
           }
 
+          const filterConfig = config.filters?.find(
+            (filter) => filter.key === key,
+          );
+
+          if (filterConfig?.type === "select") {
+            return normalizeText(item[key]) === normalizeText(value);
+          }
+
           return normalizeText(item[key]).includes(normalizeText(value));
         },
       );
@@ -239,8 +247,14 @@ function ManagementPage({
     if (!sortConfig?.key) return filtered;
 
     return [...filtered].sort((a, b) => {
-      const aValue = getComparableValue(a[sortConfig.key], sortConfig.type);
-      const bValue = getComparableValue(b[sortConfig.key], sortConfig.type);
+      const sortColumn = config.columns?.find(
+        (column) => column.key === sortConfig.key,
+      );
+
+      const sortKey = sortColumn?.sortKey || sortConfig.key;
+
+      const aValue = getComparableValue(a[sortKey], sortConfig.type);
+      const bValue = getComparableValue(b[sortKey], sortConfig.type);
 
       if (aValue < bValue) {
         return sortConfig.direction === "asc" ? -1 : 1;
@@ -259,6 +273,7 @@ function ManagementPage({
     sortConfig,
     config.searchKeys,
     config.columns,
+    config.filters,
   ]);
 
   return (

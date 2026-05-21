@@ -68,6 +68,7 @@ function mapUsuario(usuario) {
     estado: usuario.estado_usuario?.nombre || "Sin estado",
 
     fechaCreacion: formatFecha(usuario.fecha_creacion),
+    fechaCreacionRaw: usuario.fecha_creacion,
   };
 }
 
