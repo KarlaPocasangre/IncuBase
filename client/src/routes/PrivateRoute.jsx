@@ -1,19 +1,28 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function PrivateRoute({ children, allowedRoles }) {
-  const token = localStorage.getItem("token");
-  const usuarioGuardado = localStorage.getItem("usuario");
+  const { usuario, loadingAuth, autenticado } = useAuth();
 
-  let usuario = null;
+  if (loadingAuth) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#EEF3F0] px-4">
+        <div className="rounded-2xl border border-[#D8E5DF] bg-white px-8 py-6 text-center shadow-sm">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#D8E5DF] border-t-[#163832]" />
 
-  try {
-    usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
-  } catch (error) {
-    console.error("Error leyendo usuario desde localStorage:", error);
-    localStorage.removeItem("usuario");
+          <p className="text-sm font-semibold text-[#163832]">
+            Verificando sesión...
+          </p>
+
+          <p className="mt-1 text-xs text-gray-500">
+            Espera un momento, estamos validando tu acceso.
+          </p>
+        </div>
+      </div>
+    );
   }
 
-  if (!token) {
+  if (!autenticado) {
     return <Navigate to="/login" replace />;
   }
 

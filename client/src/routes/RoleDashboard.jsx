@@ -1,22 +1,29 @@
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+
 import DashboardAdminPage from "../pages/dashboard/DashboardAdminPage.jsx";
 import DashboardTecnicoPage from "../pages/dashboard/DashboardTecnicoPage.jsx";
-import Forbidden from "../pages/errors/Forbidden.jsx";
 
 function RoleDashboard() {
-  const storedUsuario = localStorage.getItem("usuario");
-  const usuario = storedUsuario ? JSON.parse(storedUsuario) : null;
+  const { usuario } = useAuth();
 
-  const rol = usuario?.rol || usuario?.nombre_rol;
+  const normalizarRol = (rol) =>
+    rol
+      ?.trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
-  if (rol === "Administrador") {
+  const rolUsuario = normalizarRol(usuario?.rol);
+
+  if (rolUsuario === "Administrador") {
     return <DashboardAdminPage />;
   }
 
-  if (rol === "Técnico" || rol === "Tecnico") {
+  if (rolUsuario === "Tecnico") {
     return <DashboardTecnicoPage />;
   }
 
-  return <Forbidden />;
+  return <Navigate to="/403" replace />;
 }
 
 export default RoleDashboard;

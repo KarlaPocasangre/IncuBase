@@ -23,22 +23,14 @@ import turtleIcon from "../../assets/turtleWhite.svg";
 import turtleCollapsedIcon from "../../assets/turtle2SVG.svg";
 
 import { showLogoutConfirm } from "../../utils/alerts";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [gestionOpen, setGestionOpen] = useState(false);
 
   const navigate = useNavigate();
-
-  const usuarioGuardado = localStorage.getItem("usuario");
-  let usuario = null;
-
-  try {
-    usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
-  } catch (error) {
-    console.error("Error leyendo usuario desde localStorage:", error);
-    localStorage.removeItem("usuario");
-  }
+  const { usuario, logout } = useAuth();
 
   const normalizarRol = (rol) =>
     rol
@@ -139,7 +131,7 @@ function Sidebar() {
     .map((section) => ({
       ...section,
       items: section.items.filter(
-        (item) => !item.roles || item.roles.includes(rolUsuario)
+        (item) => !item.roles || item.roles.includes(rolUsuario),
       ),
     }))
     .filter((section) => section.items.length > 0);
@@ -183,8 +175,7 @@ function Sidebar() {
 
     if (!result.isConfirmed) return;
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+    await logout();
     navigate("/login", { replace: true });
   };
 

@@ -4,6 +4,10 @@ export function loginRequest(data) {
   return httpPost("/api/auth/login", data);
 }
 
+export function logoutRequest() {
+  return httpPost("/api/auth/logout");
+}
+
 export function forgotPasswordRequest(data) {
   return httpPost("/api/auth/forgot-password", data);
 }

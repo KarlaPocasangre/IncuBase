@@ -1,17 +1,9 @@
 const BASE_URL = "http://localhost:4000";
 
 function getHeaders() {
-  const token = localStorage.getItem("token");
-
-  const headers = {
+  return {
     "Content-Type": "application/json",
   };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  return headers;
 }
 
 async function handleResponse(res) {
@@ -32,15 +24,17 @@ export async function httpGet(endpoint) {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     method: "GET",
     headers: getHeaders(),
+    credentials: "include",
   });
 
   return handleResponse(res);
 }
 
-export async function httpPost(endpoint, data) {
+export async function httpPost(endpoint, data = {}) {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     method: "POST",
     headers: getHeaders(),
+    credentials: "include",
     body: JSON.stringify(data),
   });
 

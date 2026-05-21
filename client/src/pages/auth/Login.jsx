@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+
 import AuthLayout from "../../layouts/AuthLayout";
 import AuthCard from "../../components/auth/AuthCard";
 import NoticeModal from "../../components/legal/NoticeModal";
 import TermsModal from "../../components/legal/TermsModal";
 import PrivacyModal from "../../components/legal/PrivacyModal";
-import { loginRequest,perfilRequest  } from "../../services/auth.service";
+
+import { loginRequest } from "../../services/auth.service";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -27,10 +30,8 @@ function Login() {
     privacidad: false,
   });
 
-  const [pendingToken, setPendingToken] = useState("");
-  const [pendingUser, setPendingUser] = useState(null);
-
   const navigate = useNavigate();
+  const { cargarPerfil } = useAuth();
 
   const validar = () => {
     const nuevosErrores = {};
@@ -116,11 +117,7 @@ function Login() {
     try {
       setLoading(true);
 
-      const response = await loginRequest({ email, password });
-      const data = response.data;
-
-      setPendingToken(data.token);
-      setPendingUser(data.usuario);
+      await loginRequest({ email, password });
 
       setChecks({
         aviso: false,
@@ -142,20 +139,18 @@ function Login() {
 
   const handleConfirmarAviso = async () => {
     try {
-      localStorage.setItem("token", pendingToken);
+      const usuarioPerfil = await cargarPerfil();
 
-      const response = await perfilRequest();
-      const usuarioPerfil = response.data.usuario;
-
-      localStorage.setItem("usuario", JSON.stringify(usuarioPerfil));
+      if (!usuarioPerfil) {
+        setErrorGeneral("No se pudo cargar el perfil del usuario");
+        setMostrarAviso(false);
+        return;
+      }
 
       setMostrarAviso(false);
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Error cargando perfil:", error);
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("usuario");
 
       setErrorGeneral("No se pudo cargar el perfil del usuario");
       setMostrarAviso(false);
