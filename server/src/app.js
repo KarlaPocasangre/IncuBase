@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
 const corralesRoutes = require("./routes/corrales.routes");
 const nidosRoutes = require("./routes/nidos.routes");
+const usuariosRoutes = require("./routes/usuario.routes");
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/corrales", corralesRoutes);
 app.use("/api/nidos", nidosRoutes);
+app.use("/api/usuarios", usuariosRoutes);
 
 module.exports = app;

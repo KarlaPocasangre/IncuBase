@@ -17,6 +17,17 @@ const initialForm = {
   acceptedTerms: false,
 };
 
+const roleIdMap = {
+  Administrador: 1,
+  Tecnico: 2,
+  Técnico: 2,
+};
+
+const estadoIdMap = {
+  Activo: 1,
+  Inactivo: 2,
+};
+
 const inputClass =
   "h-[43px] w-full rounded-lg border border-[#D7E4E1] bg-[#F8FCFA] px-4 text-[13px] text-slate-600 outline-none shadow-sm transition placeholder:text-slate-400 focus:border-[#2F9A78] focus:ring-2 focus:ring-[#2F9A78]/20";
 
@@ -58,6 +69,7 @@ function UsuarioFormModal({
   mode = "add",
   usuario,
   item,
+  loading = false,
   onClose,
   onSave,
 }) {
@@ -82,7 +94,10 @@ function UsuarioFormModal({
         nombres: currentUsuario.nombres || nombresSeparados.nombres || "",
         apellidos: currentUsuario.apellidos || nombresSeparados.apellidos || "",
         email: currentUsuario.email || "",
-        telefono: currentUsuario.telefono || "",
+        telefono:
+          currentUsuario.telefono === "Sin teléfono"
+            ? ""
+            : currentUsuario.telefono || "",
         password: "",
         confirmPassword: "",
         rol: currentUsuario.rol || "Tecnico",
@@ -113,8 +128,23 @@ function UsuarioFormModal({
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!form.nombres.trim()) {
+      setFormError("Debes ingresar los nombres del usuario.");
+      return;
+    }
+
+    if (!form.apellidos.trim()) {
+      setFormError("Debes ingresar los apellidos del usuario.");
+      return;
+    }
+
+    if (!form.email.trim()) {
+      setFormError("Debes ingresar el correo del usuario.");
+      return;
+    }
 
     if (!isEdit && !isPasswordValid(passwordRules)) {
       setFormError("La contraseña aún no cumple con todos los requisitos.");
@@ -145,6 +175,8 @@ function UsuarioFormModal({
       telefono: form.telefono.trim(),
       rol: form.rol,
       estado: form.estado,
+      id_rol: roleIdMap[form.rol],
+      id_estado_usuario: estadoIdMap[form.estado],
       fechaCreacion:
         currentUsuario?.fechaCreacion ||
         new Date().toISOString().slice(0, 16).replace("T", " "),
@@ -152,9 +184,11 @@ function UsuarioFormModal({
 
     if (!isEdit) {
       payload.password = form.password;
+      payload.estado = "Activo";
+      payload.id_estado_usuario = 1;
     }
 
-    onSave(payload);
+    await onSave(payload);
   };
 
   return (
@@ -328,7 +362,13 @@ function UsuarioFormModal({
         )}
 
         <ModalActions className="pt-3">
-          <ModalButton variant="cancel" size="sm" onClick={onClose}>
+          <ModalButton
+            variant="cancel"
+            size="sm"
+            type="button"
+            onClick={onClose}
+            disabled={loading}
+          >
             Cancelar
           </ModalButton>
 
@@ -336,8 +376,13 @@ function UsuarioFormModal({
             variant={isEdit ? "update" : "add"}
             size="sm"
             type="submit"
+            disabled={loading}
           >
-            {isEdit ? "Modificar Usuario" : "Agregar Usuario"}
+            {loading
+              ? "Guardando..."
+              : isEdit
+                ? "Modificar Usuario"
+                : "Agregar Usuario"}
           </ModalButton>
         </ModalActions>
       </form>

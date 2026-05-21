@@ -32,7 +32,14 @@ function getComparableValue(value, type) {
   return normalizeText(value);
 }
 
-function ManagementPage({ config }) {
+function ManagementPage({
+  config,
+  data: externalData,
+  onCreate,
+  onUpdate,
+  onDelete,
+  loading = false,
+}) {
   const navigate = useNavigate();
 
   const [addOpen, setAddOpen] = useState(false);
@@ -40,7 +47,7 @@ function ManagementPage({ config }) {
   const [detailOpen, setDetailOpen] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
-  const [data, setData] = useState(config.data || []);
+  const [localData, setLocalData] = useState(config.data || []);
 
   const [searchValue, setSearchValue] = useState("");
   const [filterValues, setFilterValues] = useState({});
@@ -49,9 +56,22 @@ function ManagementPage({ config }) {
   const FormModal = config.FormModal;
   const DetailModal = config.DetailModal;
 
-  const handleAdd = (newItem) => {
-    setData((prev) => [newItem, ...prev]);
-    setAddOpen(false);
+  const data = externalData || localData;
+
+  const handleAdd = async (newItem) => {
+    try {
+      if (onCreate) {
+        await onCreate(newItem);
+      } else if (config.onCreate) {
+        await config.onCreate(newItem);
+      } else {
+        setLocalData((prev) => [newItem, ...prev]);
+      }
+
+      setAddOpen(false);
+    } catch (error) {
+      console.error("Error al agregar registro:", error);
+    }
   };
 
   const handleEdit = (item) => {
@@ -59,27 +79,46 @@ function ManagementPage({ config }) {
     setEditOpen(true);
   };
 
-  const handleEditSave = (updatedItem) => {
-    setData((prev) =>
-      prev.map((item) => {
-        const itemId = getItemId(item);
-        const updatedId = getItemId(updatedItem);
+  const handleEditSave = async (updatedItem) => {
+    try {
+      if (onUpdate) {
+        await onUpdate(updatedItem);
+      } else if (config.onUpdate) {
+        await config.onUpdate(updatedItem);
+      } else {
+        setLocalData((prev) =>
+          prev.map((item) => {
+            const itemId = getItemId(item);
+            const updatedId = getItemId(updatedItem);
 
-        return itemId === updatedId ? updatedItem : item;
-      }),
-    );
+            return itemId === updatedId ? updatedItem : item;
+          }),
+        );
+      }
 
-    setEditOpen(false);
-    setSelectedItem(null);
+      setEditOpen(false);
+      setSelectedItem(null);
+    } catch (error) {
+      console.error("Error al editar registro:", error);
+    }
   };
 
-  const handleDelete = (item) => {
-    if (config.onDelete) {
-      config.onDelete(item);
-      return;
-    }
+  const handleDelete = async (item) => {
+    try {
+      if (onDelete) {
+        await onDelete(item);
+        return;
+      }
 
-    console.log("Eliminar registro:", item);
+      if (config.onDelete) {
+        await config.onDelete(item);
+        return;
+      }
+
+      console.log("Eliminar registro:", item);
+    } catch (error) {
+      console.error("Error al eliminar registro:", error);
+    }
   };
 
   const handleDetail = (item) => {
@@ -270,6 +309,7 @@ function ManagementPage({ config }) {
           exhumacion={null}
           nacimiento={null}
           usuario={null}
+          loading={loading}
           onClose={() => setAddOpen(false)}
           onSave={handleAdd}
         />
@@ -285,6 +325,7 @@ function ManagementPage({ config }) {
           exhumacion={selectedItem}
           nacimiento={selectedItem}
           usuario={selectedItem}
+          loading={loading}
           onClose={() => {
             setEditOpen(false);
             setSelectedItem(null);
