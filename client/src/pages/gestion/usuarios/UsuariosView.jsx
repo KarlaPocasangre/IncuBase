@@ -7,6 +7,7 @@ import {
   createUsuarioRequest,
   disableUsuarioRequest,
   getUsuariosRequest,
+  updateUsuarioRequest,
 } from "../../../services/usuarios.service";
 
 import {
@@ -22,6 +23,8 @@ import {
   showRegisterSuccess,
   showStatusChangeError,
   showStatusChangeSuccess,
+  showUpdateError,
+  showUpdateSuccess,
 } from "../../../utils/alerts";
 
 import { MODULES } from "../../../constants/modules";
@@ -63,7 +66,6 @@ function mapUsuario(usuario) {
     estado: usuario.estado_usuario?.nombre || "Sin estado",
 
     fechaCreacion: formatFecha(usuario.fecha_creacion),
-    fechaActualizacion: formatFecha(usuario.fecha_actualizacion),
   };
 }
 
@@ -150,6 +152,49 @@ export default function GestionUsuariosPage() {
       }
 
       showRegisterError({
+        module: MODULES.USUARIO,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateUsuario = async (formData) => {
+    try {
+      setLoading(true);
+
+      await updateUsuarioRequest(formData.id, {
+        nombre: formData.nombres,
+        apellido: formData.apellidos,
+        email: formData.email,
+        telefono: formData.telefono,
+        id_rol: formData.id_rol,
+        id_estado_usuario: formData.id_estado_usuario,
+      });
+
+      await cargarUsuarios();
+
+      showUpdateSuccess({
+        module: MODULES.USUARIO,
+      });
+    } catch (error) {
+      console.error("Error al actualizar usuario:", error);
+
+      const message = normalizeText(error.message);
+
+      if (
+        message.includes("correo") ||
+        message.includes("email") ||
+        message.includes("ya existe") ||
+        message.includes("registrado")
+      ) {
+        showInvalidDataAlert({
+          text: "El correo ingresado ya está registrado. Usa un correo diferente.",
+        });
+        return;
+      }
+
+      showUpdateError({
         module: MODULES.USUARIO,
       });
     } finally {
@@ -274,6 +319,7 @@ export default function GestionUsuariosPage() {
       config={pageConfig}
       data={usuarios}
       onCreate={handleAddUsuario}
+      onUpdate={handleUpdateUsuario}
       onDelete={handleDisableUsuario}
       loading={loading}
     />

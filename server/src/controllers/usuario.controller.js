@@ -215,9 +215,102 @@ const desactivarUsuario = async (req, res) => {
     });
   }
 };
+const actualizarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { nombre, apellido, email, telefono, id_rol, id_estado_usuario } =
+      req.body;
+
+    if (!nombre || !apellido || !email || !id_rol || !id_estado_usuario) {
+      return res.status(400).json({
+        ok: false,
+        message: "Todos los campos obligatorios deben completarse",
+      });
+    }
+
+    const usuarioExistente = await prisma.usuario.findUnique({
+      where: {
+        id_usuario: BigInt(id),
+      },
+    });
+
+    if (!usuarioExistente) {
+      return res.status(404).json({
+        ok: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    const correoEnUso = await prisma.usuario.findFirst({
+      where: {
+        email: email.trim().toLowerCase(),
+        NOT: {
+          id_usuario: BigInt(id),
+        },
+      },
+    });
+
+    if (correoEnUso) {
+      return res.status(409).json({
+        ok: false,
+        message: "Ya existe un usuario con ese correo",
+      });
+    }
+
+    const usuarioActualizado = await prisma.usuario.update({
+      where: {
+        id_usuario: BigInt(id),
+      },
+      data: {
+        nombre: nombre.trim(),
+        apellido: apellido.trim(),
+        email: email.trim().toLowerCase(),
+        telefono: telefono?.trim() || null,
+        id_rol: BigInt(id_rol),
+        id_estado_usuario: BigInt(id_estado_usuario),
+      },
+      select: {
+        id_usuario: true,
+        nombre: true,
+        apellido: true,
+        email: true,
+        telefono: true,
+        fecha_creacion: true,
+        rol: {
+          select: {
+            id_rol: true,
+            nombre_rol: true,
+          },
+        },
+        estado_usuario: {
+          select: {
+            id_estado_usuario: true,
+            nombre: true,
+          },
+        },
+      },
+    });
+
+    return res.json({
+      ok: true,
+      message: "Usuario actualizado correctamente",
+      usuario: serializeBigInt(usuarioActualizado),
+    });
+  } catch (error) {
+    console.error("Error al actualizar usuario:", error);
+
+    return res.status(500).json({
+      ok: false,
+      message: "Error al actualizar el usuario",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   obtenerUsuarios,
   crearUsuario,
+  actualizarUsuario,
   desactivarUsuario,
 };

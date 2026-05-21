@@ -38,6 +38,19 @@ export const createUsuarioRequest = async (usuario) => {
   return handleResponse(response, "Error al agregar usuario");
 };
 
+export const updateUsuarioRequest = async (id, usuario) => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(usuario),
+  });
+
+  return handleResponse(response, "Error al actualizar usuario");
+};
+
 export const disableUsuarioRequest = async (id) => {
   const response = await fetch(`${API_URL}/${id}/desactivar`, {
     method: "PATCH",

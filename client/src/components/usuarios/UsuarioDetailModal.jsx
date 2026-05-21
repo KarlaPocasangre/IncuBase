@@ -5,7 +5,6 @@ import {
   Phone,
   ShieldCheck,
   User,
-  UserCog,
 } from "lucide-react";
 
 import BaseModal from "../common/BaseModal";
@@ -68,12 +67,6 @@ function UsuarioDetailModal({ open, usuario, item, onClose }) {
           icon={CalendarDays}
           label="Fecha de creación"
           value={getValue(currentUsuario.fechaCreacion)}
-        />
-
-        <DetailRow
-          icon={UserCog}
-          label="Última modificación"
-          value={getValue(currentUsuario.fechaActualizacion)}
         />
       </DetailSection>
 
