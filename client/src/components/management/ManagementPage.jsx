@@ -310,6 +310,7 @@ function ManagementPage({
           nacimiento={null}
           usuario={null}
           loading={loading}
+          catalogos={config.catalogos}
           onClose={() => setAddOpen(false)}
           onSave={handleAdd}
         />
@@ -326,6 +327,7 @@ function ManagementPage({
           nacimiento={selectedItem}
           usuario={selectedItem}
           loading={loading}
+          catalogos={config.catalogos}
           onClose={() => {
             setEditOpen(false);
             setSelectedItem(null);

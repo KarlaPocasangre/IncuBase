@@ -6,6 +6,19 @@ import {
   createUsuarioRequest,
   getUsuariosRequest,
 } from "../../../services/usuarios.service";
+import {
+  getEstadosUsuarioRequest,
+  getRolesRequest,
+} from "../../../services/catalogos.service";
+
+import {
+  showInvalidDataAlert,
+  showLoadDataError,
+  showRegisterError,
+  showRegisterSuccess,
+} from "../../../utils/alerts";
+
+import { MODULES } from "../../../constants/modules";
 
 function formatFecha(fecha) {
   if (!fecha) return "Sin fecha";
@@ -22,6 +35,9 @@ function formatFecha(fecha) {
 function mapUsuario(usuario) {
   return {
     id: usuario.id_usuario,
+    id_rol: usuario.rol?.id_rol || usuario.id_rol,
+    id_estado_usuario:
+      usuario.estado_usuario?.id_estado_usuario || usuario.id_estado_usuario,
     nombres: usuario.nombre,
     apellidos: usuario.apellido,
     nombreCompleto: `${usuario.nombre} ${usuario.apellido}`,
@@ -36,6 +52,8 @@ function mapUsuario(usuario) {
 
 export default function GestionUsuariosPage() {
   const [usuarios, setUsuarios] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [estadosUsuario, setEstadosUsuario] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const cargarUsuarios = async () => {
@@ -48,12 +66,34 @@ export default function GestionUsuariosPage() {
       setUsuarios(usuariosMapeados);
     } catch (error) {
       console.error("Error al cargar usuarios:", error);
-      alert(error.message || "Error al cargar los usuarios");
+
+      showLoadDataError({
+        moduleName: "los usuarios",
+      });
+    }
+  };
+
+  const cargarCatalogos = async () => {
+    try {
+      const [rolesData, estadosData] = await Promise.all([
+        getRolesRequest(),
+        getEstadosUsuarioRequest(),
+      ]);
+
+      setRoles(rolesData.roles || []);
+      setEstadosUsuario(estadosData.estadosUsuario || []);
+    } catch (error) {
+      console.error("Error al cargar catálogos:", error);
+
+      showLoadDataError({
+        moduleName: "los catálogos de usuarios",
+      });
     }
   };
 
   useEffect(() => {
     cargarUsuarios();
+    cargarCatalogos();
   }, []);
 
   const handleAddUsuario = async (formData) => {
@@ -71,9 +111,30 @@ export default function GestionUsuariosPage() {
       });
 
       await cargarUsuarios();
+
+      showRegisterSuccess({
+        module: MODULES.USUARIO,
+      });
     } catch (error) {
       console.error("Error al agregar usuario:", error);
-      alert(error.message || "Error al agregar usuario");
+
+      const message = error.message || "";
+
+      if (
+        message.toLowerCase().includes("correo") ||
+        message.toLowerCase().includes("email") ||
+        message.toLowerCase().includes("ya existe") ||
+        message.toLowerCase().includes("registrado")
+      ) {
+        showInvalidDataAlert({
+          text: "El correo ingresado ya está registrado. Usa un correo diferente.",
+        });
+        return;
+      }
+
+      showRegisterError({
+        module: MODULES.USUARIO,
+      });
     } finally {
       setLoading(false);
     }
@@ -97,6 +158,30 @@ export default function GestionUsuariosPage() {
     return {
       ...usuariosConfig,
       data: [],
+
+      catalogos: {
+        roles,
+        estadosUsuario,
+      },
+
+      filters: usuariosConfig.filters.map((filter) => {
+        if (filter.key === "rol") {
+          return {
+            ...filter,
+            options: roles.map((rol) => rol.nombre_rol),
+          };
+        }
+
+        if (filter.key === "estado") {
+          return {
+            ...filter,
+            options: estadosUsuario.map((estado) => estado.nombre),
+          };
+        }
+
+        return filter;
+      }),
+
       stats: usuariosConfig.stats.map((stat) => {
         if (stat.title === "Total de Usuarios") {
           return {
@@ -129,7 +214,7 @@ export default function GestionUsuariosPage() {
         return stat;
       }),
     };
-  }, [usuarios]);
+  }, [usuarios, roles, estadosUsuario]);
 
   return (
     <ManagementPage

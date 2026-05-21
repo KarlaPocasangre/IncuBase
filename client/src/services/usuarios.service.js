@@ -1,29 +1,28 @@
 const API_URL = "http://localhost:4000/api/usuarios";
 
+const handleResponse = async (response, defaultMessage) => {
+  const contentType = response.headers.get("content-type");
+
+  if (!contentType || !contentType.includes("application/json")) {
+    throw new Error("El servidor no devolvió JSON.");
+  }
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || defaultMessage);
+  }
+
+  return data;
+};
+
 export const getUsuariosRequest = async () => {
   const response = await fetch(API_URL, {
     method: "GET",
     credentials: "include",
   });
 
-  const contentType = response.headers.get("content-type");
-
-  if (!contentType || !contentType.includes("application/json")) {
-    const text = await response.text();
-    console.error("Respuesta no JSON:", text);
-
-    throw new Error(
-      "El servidor no devolvió JSON. Revisa si la ruta /api/usuarios existe.",
-    );
-  }
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Error al obtener usuarios");
-  }
-
-  return data;
+  return handleResponse(response, "Error al obtener los usuarios");
 };
 
 export const createUsuarioRequest = async (usuario) => {
@@ -36,22 +35,5 @@ export const createUsuarioRequest = async (usuario) => {
     body: JSON.stringify(usuario),
   });
 
-  const contentType = response.headers.get("content-type");
-
-  if (!contentType || !contentType.includes("application/json")) {
-    const text = await response.text();
-    console.error("Respuesta no JSON:", text);
-
-    throw new Error(
-      "El servidor no devolvió JSON. Revisa si la ruta POST /api/usuarios existe.",
-    );
-  }
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Error al agregar usuario");
-  }
-
-  return data;
+  return handleResponse(response, "Error al agregar usuario");
 };

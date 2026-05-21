@@ -12,20 +12,9 @@ const initialForm = {
   telefono: "",
   password: "",
   confirmPassword: "",
-  rol: "Tecnico",
-  estado: "Activo",
+  id_rol: "",
+  id_estado_usuario: "",
   acceptedTerms: false,
-};
-
-const roleIdMap = {
-  Administrador: 1,
-  Tecnico: 2,
-  Técnico: 2,
-};
-
-const estadoIdMap = {
-  Activo: 1,
-  Inactivo: 2,
 };
 
 const inputClass =
@@ -64,17 +53,27 @@ function isPasswordValid(rules) {
   return Object.values(rules).every(Boolean);
 }
 
+function getEstadoActivo(estadosUsuario) {
+  return estadosUsuario.find(
+    (estado) => estado.nombre?.toLowerCase() === "activo",
+  );
+}
+
 function UsuarioFormModal({
   open,
   mode = "add",
   usuario,
   item,
   loading = false,
+  catalogos = {},
   onClose,
   onSave,
 }) {
   const currentUsuario = usuario || item;
   const isEdit = mode === "edit";
+
+  const roles = catalogos.roles || [];
+  const estadosUsuario = catalogos.estadosUsuario || [];
 
   const [form, setForm] = useState(initialForm);
   const [showPassword, setShowPassword] = useState(false);
@@ -87,7 +86,11 @@ function UsuarioFormModal({
   );
 
   useEffect(() => {
-    if (open && currentUsuario && isEdit) {
+    if (!open) return;
+
+    const estadoActivo = getEstadoActivo(estadosUsuario);
+
+    if (currentUsuario && isEdit) {
       const nombresSeparados = splitName(currentUsuario.nombreCompleto);
 
       setForm({
@@ -100,22 +103,24 @@ function UsuarioFormModal({
             : currentUsuario.telefono || "",
         password: "",
         confirmPassword: "",
-        rol: currentUsuario.rol || "Tecnico",
-        estado: currentUsuario.estado || "Activo",
+        id_rol: currentUsuario.id_rol || "",
+        id_estado_usuario: currentUsuario.id_estado_usuario || "",
         acceptedTerms: true,
       });
     }
 
-    if (open && !isEdit) {
-      setForm(initialForm);
+    if (!isEdit) {
+      setForm({
+        ...initialForm,
+        id_rol: roles[0]?.id_rol || "",
+        id_estado_usuario: estadoActivo?.id_estado_usuario || "",
+      });
     }
 
-    if (open) {
-      setFormError("");
-      setShowPassword(false);
-      setShowConfirmPassword(false);
-    }
-  }, [open, currentUsuario, isEdit]);
+    setFormError("");
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+  }, [open, currentUsuario, isEdit, roles, estadosUsuario]);
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
@@ -146,6 +151,16 @@ function UsuarioFormModal({
       return;
     }
 
+    if (!form.id_rol) {
+      setFormError("Debes seleccionar un rol.");
+      return;
+    }
+
+    if (!form.id_estado_usuario) {
+      setFormError("Debes seleccionar un estado.");
+      return;
+    }
+
     if (!isEdit && !isPasswordValid(passwordRules)) {
       setFormError("La contraseña aún no cumple con todos los requisitos.");
       return;
@@ -163,6 +178,15 @@ function UsuarioFormModal({
       return;
     }
 
+    const selectedRol = roles.find(
+      (rol) => Number(rol.id_rol) === Number(form.id_rol),
+    );
+
+    const selectedEstado = estadosUsuario.find(
+      (estado) =>
+        Number(estado.id_estado_usuario) === Number(form.id_estado_usuario),
+    );
+
     const nombreCompleto = `${form.nombres} ${form.apellidos}`.trim();
 
     const payload = {
@@ -173,10 +197,10 @@ function UsuarioFormModal({
       nombreCompleto,
       email: form.email.trim(),
       telefono: form.telefono.trim(),
-      rol: form.rol,
-      estado: form.estado,
-      id_rol: roleIdMap[form.rol],
-      id_estado_usuario: estadoIdMap[form.estado],
+      id_rol: Number(form.id_rol),
+      id_estado_usuario: Number(form.id_estado_usuario),
+      rol: selectedRol?.nombre_rol || "",
+      estado: selectedEstado?.nombre || "",
       fechaCreacion:
         currentUsuario?.fechaCreacion ||
         new Date().toISOString().slice(0, 16).replace("T", " "),
@@ -184,8 +208,6 @@ function UsuarioFormModal({
 
     if (!isEdit) {
       payload.password = form.password;
-      payload.estado = "Activo";
-      payload.id_estado_usuario = 1;
     }
 
     await onSave(payload);
@@ -303,28 +325,41 @@ function UsuarioFormModal({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Rol">
             <select
-              name="rol"
-              value={form.rol}
+              name="id_rol"
+              value={form.id_rol}
               onChange={handleChange}
               className={inputClass}
               required
             >
-              <option value="Tecnico">Tecnico</option>
-              <option value="Administrador">Administrador</option>
+              <option value="">Selecciona un rol</option>
+
+              {roles.map((rol) => (
+                <option key={rol.id_rol} value={rol.id_rol}>
+                  {rol.nombre_rol}
+                </option>
+              ))}
             </select>
           </Field>
 
-          {isEdit && (
+          {(isEdit || estadosUsuario.length > 0) && (
             <Field label="Estado">
               <select
-                name="estado"
-                value={form.estado}
+                name="id_estado_usuario"
+                value={form.id_estado_usuario}
                 onChange={handleChange}
                 className={inputClass}
                 required
               >
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
+                <option value="">Selecciona un estado</option>
+
+                {estadosUsuario.map((estado) => (
+                  <option
+                    key={estado.id_estado_usuario}
+                    value={estado.id_estado_usuario}
+                  >
+                    {estado.nombre}
+                  </option>
+                ))}
               </select>
             </Field>
           )}
