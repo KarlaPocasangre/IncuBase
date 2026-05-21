@@ -16,11 +16,13 @@ import {
 } from "../../../services/catalogos.service";
 
 import {
+  showAdminPasswordConfirm,
   showDisableUserConfirm,
   showInvalidDataAlert,
   showLoadDataError,
   showRegisterError,
   showRegisterSuccess,
+  showRoleChangeConfirm,
   showStatusChangeError,
   showStatusChangeSuccess,
   showUpdateError,
@@ -163,6 +165,49 @@ export default function GestionUsuariosPage() {
     try {
       setLoading(true);
 
+      const usuarioOriginal = usuarios.find(
+        (usuario) => Number(usuario.id) === Number(formData.id),
+      );
+
+      if (!usuarioOriginal) {
+        showInvalidDataAlert({
+          text: "No se encontró la información original del usuario.",
+        });
+        return;
+      }
+
+      const cambioRol =
+        Number(usuarioOriginal.id_rol) !== Number(formData.id_rol);
+
+      const nuevoRol = roles.find(
+        (rol) => Number(rol.id_rol) === Number(formData.id_rol),
+      );
+
+      let adminPassword = "";
+
+      if (cambioRol) {
+        const confirmResult = await showRoleChangeConfirm({
+          newRole: nuevoRol?.nombre_rol || "nuevo rol",
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        const nuevoRolEsAdministrador =
+          normalizeText(nuevoRol?.nombre_rol) === "administrador";
+
+        if (nuevoRolEsAdministrador) {
+          const passwordResult = await showAdminPasswordConfirm({
+            title: "Autorizar cambio a Administrador",
+            text: "Para asignar permisos de administrador, ingresa tu contraseña.",
+            confirmButtonText: "Autorizar",
+          });
+
+          if (!passwordResult.isConfirmed) return;
+
+          adminPassword = passwordResult.value;
+        }
+      }
+
       await updateUsuarioRequest(formData.id, {
         nombre: formData.nombres,
         apellido: formData.apellidos,
@@ -170,6 +215,7 @@ export default function GestionUsuariosPage() {
         telefono: formData.telefono,
         id_rol: formData.id_rol,
         id_estado_usuario: formData.id_estado_usuario,
+        adminPassword,
       });
 
       await cargarUsuarios();
@@ -190,6 +236,28 @@ export default function GestionUsuariosPage() {
       ) {
         showInvalidDataAlert({
           text: "El correo ingresado ya está registrado. Usa un correo diferente.",
+        });
+        return;
+      }
+
+      if (
+        message.includes("contrasena") ||
+        message.includes("contraseña") ||
+        message.includes("password")
+      ) {
+        showInvalidDataAlert({
+          text: "La contraseña del administrador no es correcta.",
+        });
+        return;
+      }
+
+      if (
+        message.includes("permiso") ||
+        message.includes("autorizado") ||
+        message.includes("administrador")
+      ) {
+        showInvalidDataAlert({
+          text: "No tienes permisos para realizar este cambio de rol.",
         });
         return;
       }

@@ -395,6 +395,49 @@ export const showResolveAlertConfirm = () => {
   });
 };
 
+export const showAdminPasswordConfirm = ({
+  title = "Confirmar permisos de administrador",
+  text = "Ingresa tu contraseña para autorizar este cambio de rol.",
+  confirmButtonText = "Confirmar cambio",
+  cancelButtonText = "Cancelar",
+} = {}) => {
+  return Swal.fire({
+    icon: "warning",
+    title,
+    text,
+    input: "password",
+    inputPlaceholder: "Contraseña del administrador",
+    inputAttributes: {
+      autocapitalize: "off",
+      autocomplete: "current-password",
+    },
+    showCancelButton: true,
+    confirmButtonText,
+    cancelButtonText,
+    reverseButtons: true,
+    buttonsStyling: false,
+    customClass,
+    preConfirm: (password) => {
+      if (!password) {
+        Swal.showValidationMessage("Debes ingresar tu contraseña.");
+        return false;
+      }
+
+      return password;
+    },
+  });
+};
+
+export const showRoleChangeConfirm = ({ newRole = "Administrador" } = {}) => {
+  return showConfirmAction({
+    title: "¿Cambiar rol de usuario?",
+    text: `Este usuario pasará a tener el rol "${newRole}". Revisa bien antes de continuar.`,
+    confirmButtonText: "Sí, cambiar rol",
+    cancelButtonText: "Cancelar",
+    icon: "warning",
+  });
+};
+
 /* =========================================================
    ALERTAS DEL SISTEMA INCUBASE
 ========================================================= */
