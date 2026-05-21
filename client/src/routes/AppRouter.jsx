@@ -35,18 +35,19 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* PUBLICAS */}
+        {/* RUTAS PÚBLICAS */}
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* ERRORES */}
+        {/* RUTAS DE ERROR - FUERA DEL LAYOUT */}
         <Route path="/403" element={<Forbidden />} />
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/500" element={<ServerError />} />
+        <Route path="*" element={<NotFound />} />
 
-        {/* PRIVADAS GENERALES */}
+        {/* RUTAS PRIVADAS GENERALES */}
         <Route
           element={
             <PrivateRoute>
@@ -65,7 +66,7 @@ function AppRouter() {
           <Route path="/guia-incubase" element={<GuiaIncubasePage />} />
         </Route>
 
-        {/* PRIVADAS SOLO ADMINISTRADOR */}
+        {/* RUTAS PRIVADAS SOLO ADMINISTRADOR */}
         <Route
           element={
             <PrivateRoute allowedRoles={["Administrador"]}>
@@ -76,20 +77,15 @@ function AppRouter() {
           <Route path="/gestion-corrales" element={<GestionCorralesPage />} />
           <Route path="/usuarios" element={<UsuariosView />} />
           <Route path="/gestion-nidos" element={<GestionNidosPage />} />
-
           <Route
             path="/gestion-nacimientos"
             element={<GestionNacimientosPage />}
           />
-
           <Route
             path="/gestion-exhumacion"
             element={<GestionExhumacionPage />}
           />
         </Route>
-
-        {/* RUTA NO ENCONTRADA */}
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
