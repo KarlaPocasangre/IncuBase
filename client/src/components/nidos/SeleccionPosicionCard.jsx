@@ -12,7 +12,11 @@ export default function SeleccionPosicionCard({
   posicionesOcupadas = [],
   corrales = [],
 }) {
+  const hayCorralSeleccionado = Boolean(form.corral);
+
   const handleSelect = (celda) => {
+    if (!hayCorralSeleccionado) return;
+
     onChange("posicion", celda);
   };
 
@@ -31,8 +35,8 @@ export default function SeleccionPosicionCard({
           </h3>
 
           <p className="mt-1 text-sm text-[#6B7280]">
-            Primero selecciona casillas claras. Las alternas se habilitan cuando
-            las claras estén completas.
+            Primero selecciona un corral activo para habilitar la cuadrícula de
+            posiciones.
           </p>
         </div>
       </div>
@@ -55,7 +59,10 @@ export default function SeleccionPosicionCard({
             </option>
 
             {corrales.map((corral) => (
-              <option key={String(corral.id_corral)} value={String(corral.id_corral)}>
+              <option
+                key={String(corral.id_corral)}
+                value={String(corral.id_corral)}
+              >
                 {corral.codigo} - {corral.ubicacion}
               </option>
             ))}
@@ -63,73 +70,98 @@ export default function SeleccionPosicionCard({
         </div>
       </div>
 
-        <div className="mt-6 flex justify-center">
-          <CorralGrid
-            key={resetGridKey}
-            selected={form.posicion}
-            onSelect={handleSelect}
-            posicionesOcupadas={posicionesOcupadas}
-          />
-        </div>
+      {!hayCorralSeleccionado ? (
+        <EmptyCorralSelectionState />
+      ) : (
+        <>
+          <div className="mt-6 flex justify-center">
+            <CorralGrid
+              key={`${resetGridKey}-${form.corral}`}
+              selected={form.posicion}
+              onSelect={handleSelect}
+              posicionesOcupadas={posicionesOcupadas}
+            />
+          </div>
 
-        {posicionesOcupadas.length >= 48 && (
-          <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
-            Este corral ya está lleno. No se pueden registrar más nidos.
-          </p>
-        )}
+          {posicionesOcupadas.length >= 48 && (
+            <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
+              Este corral ya está lleno. No se pueden registrar más nidos.
+            </p>
+          )}
 
-      <LeyendaGrid />
+          <LeyendaGrid />
 
-      <div className="mt-5 rounded-2xl border border-[#D8E5DF] bg-[#F8FCFA] p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Posición seleccionada
-        </p>
+          <div className="mt-5 rounded-2xl border border-[#D8E5DF] bg-[#F8FCFA] p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              Posición seleccionada
+            </p>
 
-        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-lg font-bold text-[#163832]">
-            {posicionSeleccionada}
-          </p>
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-lg font-bold text-[#163832]">
+                {posicionSeleccionada}
+              </p>
 
-          <span
-            className={`w-fit rounded-full border px-3 py-1 text-xs font-semibold ${
-              form.posicion
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border-gray-200 bg-gray-50 text-gray-500"
-            }`}
-          >
-            {form.posicion ? "Disponible para registro" : "Pendiente"}
-          </span>
-        </div>
+              <span
+                className={`w-fit rounded-full border px-3 py-1 text-xs font-semibold ${
+                  form.posicion
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : "border-gray-200 bg-gray-50 text-gray-500"
+                }`}
+              >
+                {form.posicion ? "Disponible para registro" : "Pendiente"}
+              </span>
+            </div>
 
-        <p className="mt-2 text-xs text-gray-500">
-          Esta posición se asociará al nido al guardar el registro.
-        </p>
+            <p className="mt-2 text-xs text-gray-500">
+              Esta posición se asociará al nido al guardar el registro.
+            </p>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-[#D8E5DF] bg-white p-4">
+            <p className="mb-3 text-sm text-gray-500">
+              Verifica los datos del nido y la posición seleccionada antes de
+              guardar.
+            </p>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <ClearButton
+                variant="form"
+                className="w-full sm:flex-1"
+                onClick={onClear}
+              >
+                Limpiar formulario
+              </ClearButton>
+
+              <SaveButton
+                type="button"
+                className="w-full sm:flex-1"
+                onClick={onSave}
+              >
+                Guardar registro
+              </SaveButton>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function EmptyCorralSelectionState() {
+  return (
+    <div className="mt-8 flex min-h-[430px] flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8E5DF] bg-[#F8FCFA] px-6 text-center">
+      <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-[#7A8A86] shadow-sm">
+        <Fence size={42} strokeWidth={1.6} />
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[#D8E5DF] bg-white p-4">
-        <p className="mb-3 text-sm text-gray-500">
-          Verifica los datos del nido y la posición seleccionada antes de
-          guardar.
-        </p>
+      <h3 className="text-[18px] font-semibold text-[#163832]">
+        Selecciona un corral
+      </h3>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <ClearButton
-            variant="form"
-            className="w-full sm:flex-1"
-            onClick={onClear}
-          >
-            Limpiar formulario
-          </ClearButton>
-
-          <SaveButton
-            type="button"
-            className="w-full sm:flex-1"
-            onClick={onSave}
-          >
-            Guardar registro
-          </SaveButton>
-        </div>
-      </div>
+      <p className="mt-2 max-w-[360px] text-sm leading-6 text-[#6B7280]">
+        Debes seleccionar un corral activo antes de elegir una posición para el
+        nido.
+      </p>
     </div>
   );
 }
@@ -174,7 +206,7 @@ function LeyendaGrid() {
   );
 }
 
-function LeyendaItem({ color, border, iconBg, iconColor, label }) {
+function LeyendaItem({ color, border, iconBg, label }) {
   return (
     <div className="flex items-center gap-2">
       <span className={`relative h-5 w-5 rounded-md border ${color} ${border}`}>
