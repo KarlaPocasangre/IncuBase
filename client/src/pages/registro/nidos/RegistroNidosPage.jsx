@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CalendarDays,
   ClipboardCheck,
@@ -41,7 +41,15 @@ export default function RegistroNidosPage() {
   const [corrales, setCorrales] = useState([]);
   const [nidosCorral, setNidosCorral] = useState([]);
 
-  const hayCorrales = corrales.length > 0;
+  const corralesActivos = useMemo(() => {
+    return corrales.filter((corral) => {
+      const estado = corral.estado?.trim().toLowerCase();
+
+      return estado === "activo";
+    });
+  }, [corrales]);
+
+  const hayCorralesActivos = corralesActivos.length > 0;
 
   useEffect(() => {
     const loadCorrales = async () => {
@@ -50,7 +58,13 @@ export default function RegistroNidosPage() {
 
         setCorrales(data);
 
-        if (data.length === 0) {
+        const activos = data.filter((corral) => {
+          const estado = corral.estado?.trim().toLowerCase();
+
+          return estado === "activo";
+        });
+
+        if (activos.length === 0) {
           setForm((prev) => ({
             ...prev,
             corral: "",
@@ -74,6 +88,15 @@ export default function RegistroNidosPage() {
         return;
       }
 
+      const corralSeleccionado = corralesActivos.find(
+        (corral) => String(corral.id_corral) === String(form.corral),
+      );
+
+      if (!corralSeleccionado) {
+        setNidosCorral([]);
+        return;
+      }
+
       try {
         const data = await obtenerNidosPorCorral(form.corral);
         setNidosCorral(data);
@@ -83,7 +106,7 @@ export default function RegistroNidosPage() {
     };
 
     loadNidosCorral();
-  }, [form.corral]);
+  }, [form.corral, corralesActivos]);
 
   const getFilaLetra = (fila) => {
     const filas = {
@@ -124,6 +147,17 @@ export default function RegistroNidosPage() {
         return;
       }
 
+      const corralSeleccionado = corralesActivos.find(
+        (corral) => String(corral.id_corral) === String(form.corral),
+      );
+
+      if (!corralSeleccionado) {
+        console.error(
+          "No se puede registrar un nido en un corral que no está activo.",
+        );
+        return;
+      }
+
       const payload = buildNidoPayload(form);
 
       await crearNido(payload);
@@ -139,7 +173,7 @@ export default function RegistroNidosPage() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.35fr_1fr]">
         <RegistroNidoForm form={form} onChange={handleChange} />
 
-        {hayCorrales ? (
+        {hayCorralesActivos ? (
           <SeleccionPosicionCard
             form={form}
             onChange={handleChange}
@@ -147,10 +181,13 @@ export default function RegistroNidosPage() {
             onSave={guardarRegistro}
             resetGridKey={resetGridKey}
             posicionesOcupadas={posicionesOcupadas}
-            corrales={corrales}
+            corrales={corralesActivos}
           />
         ) : (
-          <EmptyCorralesState />
+          <EmptyCorralesState
+            title="No hay corrales activos"
+            description="Registra o activa un corral antes de seleccionar una posición para el nido."
+          />
         )}
       </div>
 

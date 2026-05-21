@@ -10,6 +10,14 @@ function formatDateForInput(dateString) {
   return dateString.replace(" ", "T");
 }
 
+function getCurrentDateTimeLocal() {
+  const now = new Date();
+
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+  return now.toISOString().slice(0, 16);
+}
+
 const initialForm = {
   codigo: "",
   ubicacion: "",
@@ -28,6 +36,9 @@ const textareaClass =
 function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
   const isEdit = mode === "edit";
   const [form, setForm] = useState(initialForm);
+  const [errorFecha, setErrorFecha] = useState("");
+
+  const currentDateTime = getCurrentDateTimeLocal();
 
   useEffect(() => {
     if (open && corral && isEdit) {
@@ -39,15 +50,29 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
         estado: corral.estado || "Activo",
         observaciones: corral.observaciones || "",
       });
+
+      setErrorFecha("");
     }
 
     if (open && !isEdit) {
       setForm(initialForm);
+      setErrorFecha("");
     }
   }, [open, corral, isEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "fechaInstalacion") {
+      const fechaSeleccionada = new Date(value);
+      const ahora = new Date();
+
+      if (value && fechaSeleccionada > ahora) {
+        setErrorFecha("La fecha de instalación no puede ser futura.");
+      } else {
+        setErrorFecha("");
+      }
+    }
 
     setForm((prev) => ({
       ...prev,
@@ -57,16 +82,30 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!form.fechaInstalacion) {
+      setErrorFecha("Debes ingresar la fecha de instalación.");
+      return;
+    }
+
+    const fechaSeleccionada = new Date(form.fechaInstalacion);
+    const ahora = new Date();
+
+    if (fechaSeleccionada > ahora) {
+      setErrorFecha("La fecha de instalación no puede ser futura.");
+      return;
+    }
+
     const payload = {
-    ubicacion: form.ubicacion,
-    fechaInstalacion: form.fechaInstalacion.replace("T", " "),
-    tipo: form.tipo,
-    estado: form.estado,
-    observaciones: form.observaciones,
-      };
+      ubicacion: form.ubicacion,
+      fechaInstalacion: form.fechaInstalacion.replace("T", " "),
+      tipo: form.tipo,
+      observaciones: form.observaciones,
+    };
 
     if (isEdit) {
       payload.codigo = form.codigo;
+      payload.estado = form.estado;
     }
 
     onSave(payload);
@@ -107,15 +146,26 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
           />
         </Field>
 
-        <DateTimeInput
-          label="Fecha de instalación"
-          name="fechaInstalacion"
-          value={form.fechaInstalacion}
-          onChange={handleChange}
-          required
-        />
+        <div>
+          <DateTimeInput
+            label="Fecha de instalación"
+            name="fechaInstalacion"
+            value={form.fechaInstalacion}
+            onChange={handleChange}
+            max={currentDateTime}
+            required
+          />
 
-        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+          {errorFecha && (
+            <p className="mt-2 text-[12px] font-medium text-red-500">
+              {errorFecha}
+            </p>
+          )}
+        </div>
+
+        <div
+          className={`grid grid-cols-1 gap-7 ${isEdit ? "sm:grid-cols-2" : ""}`}
+        >
           <Field label="Tipo de Corral">
             <select
               name="tipo"
@@ -128,18 +178,20 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
             </select>
           </Field>
 
-          <Field label="Estado del Corral">
-            <select
-              name="estado"
-              value={form.estado}
-              onChange={handleChange}
-              className={inputClass}
-            >
-              <option>Activo</option>
-              <option>Cerrado</option>
-              <option>Mantenimiento</option>
-            </select>
-          </Field>
+          {isEdit && (
+            <Field label="Estado del Corral">
+              <select
+                name="estado"
+                value={form.estado}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                <option>Activo</option>
+                <option>Cerrado</option>
+                <option>En mantenimiento</option>
+              </select>
+            </Field>
+          )}
         </div>
 
         <Field label="Observaciones">
@@ -161,6 +213,7 @@ function CorralFormModal({ open, mode = "add", corral, onClose, onSave }) {
             variant={isEdit ? "update" : "add"}
             size="sm"
             type="submit"
+            disabled={Boolean(errorFecha)}
           >
             {isEdit ? "Modificar" : "Guardar"}
           </ModalButton>

@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Plus, Egg, ClockAlert, Turtle, EggOff, Fence } from "lucide-react";
+import {
+  Plus,
+  Egg,
+  ClockAlert,
+  Turtle,
+  EggOff,
+  Fence,
+  AlertTriangle,
+  Lock,
+} from "lucide-react";
 
 import { crearCorral, obtenerCorrales } from "../../services/corrales.service";
 import { obtenerNidosPorCorral } from "../../services/nidos.service";
@@ -20,6 +29,21 @@ function CorralesNidosPage() {
   const cols = ["01", "02", "03", "04", "05", "06", "07", "08"];
 
   const hayCorrales = corrales.length > 0;
+
+  const selectedCorralData = corrales.find(
+    (corral) => String(corral.id_corral) === String(selectedCorral),
+  );
+
+  const estadoCorralSeleccionado =
+    selectedCorralData?.estado?.trim().toLowerCase() || "activo";
+
+  const corralEnMantenimiento =
+    estadoCorralSeleccionado === "en mantenimiento" ||
+    estadoCorralSeleccionado === "mantenimiento";
+
+  const corralCerrado = estadoCorralSeleccionado === "cerrado";
+
+  const corralNoOperativo = corralEnMantenimiento || corralCerrado;
 
   const loadCorrales = async () => {
     try {
@@ -200,6 +224,18 @@ function CorralesNidosPage() {
     }
   };
 
+  const getEstadoBadgeClass = () => {
+    if (corralEnMantenimiento) {
+      return "bg-orange-50 text-orange-700 border-orange-200";
+    }
+
+    if (corralCerrado) {
+      return "bg-red-50 text-red-700 border-red-200";
+    }
+
+    return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  };
+
   return (
     <div className="space-y-6">
       <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
@@ -276,6 +312,36 @@ function CorralesNidosPage() {
             <EmptyCorralesState />
           ) : (
             <>
+              {corralEnMantenimiento && (
+                <div className="mb-5 flex gap-3 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-700">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+
+                  <div>
+                    <p className="font-semibold">Corral en mantenimiento</p>
+                    <p className="mt-1">
+                      Puedes consultar los nidos existentes, pero este corral no
+                      está disponible para operaciones nuevas. Las posiciones
+                      vacías estarán bloqueadas.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {corralCerrado && (
+                <div className="mb-5 flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <Lock className="mt-0.5 h-5 w-5 shrink-0" />
+
+                  <div>
+                    <p className="font-semibold">Corral cerrado</p>
+                    <p className="mt-1">
+                      Este corral está cerrado. Puedes consultar su información
+                      histórica, pero no está disponible para nuevas
+                      operaciones.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="overflow-x-auto pb-3">
                 <div className="mx-auto w-fit min-w-[620px]">
                   <div className="mb-4 ml-10 grid grid-cols-8 gap-3 text-center text-sm font-bold text-[#6B5D55]">
@@ -296,6 +362,10 @@ function CorralesNidosPage() {
                             const key = `${row}-${col}`;
                             const estado = nidosMap[key]?.estado || "vacio";
 
+                            const celdaVacia = estado === "vacio";
+                            const celdaBloqueada =
+                              corralNoOperativo && celdaVacia;
+
                             const isSelected =
                               selectedNido?.row === row &&
                               selectedNido?.col === col;
@@ -304,7 +374,15 @@ function CorralesNidosPage() {
                               <button
                                 key={key}
                                 type="button"
+                                disabled={celdaBloqueada}
+                                title={
+                                  celdaBloqueada
+                                    ? "Posición bloqueada: el corral no está operativo"
+                                    : "Ver detalles de la posición"
+                                }
                                 onClick={() => {
+                                  if (celdaBloqueada) return;
+
                                   const nidoData = nidosMap[key]?.data;
 
                                   setSelectedNido({
@@ -314,13 +392,25 @@ function CorralesNidosPage() {
                                     data: nidoData || null,
                                   });
                                 }}
-                                className={`flex h-[58px] w-[58px] items-center justify-center rounded-xl border-[4px] text-2xl font-bold shadow-sm transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-md ${
+                                className={`flex h-[58px] w-[58px] items-center justify-center rounded-xl border-[4px] text-2xl font-bold shadow-sm transition ${
+                                  celdaBloqueada
+                                    ? "cursor-not-allowed opacity-45"
+                                    : "hover:-translate-y-0.5 hover:scale-105 hover:shadow-md"
+                                } ${
                                   isSelected
                                     ? "border-[#0F6B3D] ring-4 ring-[#0F6B3D]/15"
                                     : "border-[#DDF3EC]"
                                 } ${stateClasses[estado]}`}
                               >
-                                {stateIcons[estado]}
+                                {celdaBloqueada ? (
+                                  <Lock
+                                    size={18}
+                                    className="text-slate-400"
+                                    strokeWidth={2}
+                                  />
+                                ) : (
+                                  stateIcons[estado]
+                                )}
                               </button>
                             );
                           })}
@@ -332,13 +422,26 @@ function CorralesNidosPage() {
               </div>
 
               <div className="mt-6 flex flex-col gap-3 border-t border-[#E3ECE7] pt-5 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-slate-500">
-                  Corral seleccionado para monitoreo de nidos.
-                </p>
+                <div>
+                  <p className="text-sm text-slate-500">
+                    Corral seleccionado para monitoreo de nidos.
+                  </p>
+
+                  {selectedCorralData && (
+                    <span
+                      className={`mt-2 inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getEstadoBadgeClass()}`}
+                    >
+                      Estado: {selectedCorralData.estado}
+                    </span>
+                  )}
+                </div>
 
                 <select
                   value={selectedCorral}
-                  onChange={(e) => setSelectedCorral(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedCorral(e.target.value);
+                    setSelectedNido(null);
+                  }}
                   className="h-[48px] w-full rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none transition focus:border-[#0F6B3D] focus:ring-4 focus:ring-[#0F6B3D]/10 sm:w-[260px]"
                 >
                   {corrales.map((corral) => (

@@ -1,6 +1,9 @@
 import { Fence } from "lucide-react";
 
-function EmptyCorralesState() {
+function EmptyCorralesState({
+  title = "No hay corrales registrados",
+  description = "Registra un corral antes de seleccionar una posición para el nido.",
+}) {
   return (
     <section className="flex min-h-[520px] flex-col rounded-2xl border border-[#C9DDD8] bg-white p-6 shadow-sm">
       <div className="mb-6">
@@ -18,12 +21,10 @@ function EmptyCorralesState() {
           <Fence size={46} strokeWidth={1.6} />
         </div>
 
-        <h3 className="text-[18px] font-medium text-[#6B7C77]">
-          No hay corrales registrados
-        </h3>
+        <h3 className="text-[18px] font-medium text-[#6B7C77]">{title}</h3>
 
         <p className="mt-2 max-w-[360px] text-sm text-[#8B9A96]">
-          Registra un corral antes de seleccionar una posición para el nido.
+          {description}
         </p>
       </div>
     </section>
