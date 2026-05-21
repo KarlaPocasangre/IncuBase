@@ -66,6 +66,13 @@ function ManagementTable({
     }
   };
 
+  const shouldShowAction = (action, row) => {
+    if (action.hiddenWhen?.(row)) return false;
+    if (action.show && !action.show(row)) return false;
+
+    return true;
+  };
+
   const renderSortIndicator = (column) => {
     if (!column.sortable) return null;
 
@@ -168,31 +175,31 @@ function ManagementTable({
                     >
                       {column.key === "acciones" ? (
                         <div className="flex items-center gap-2">
-                          {tableActions.map((action) => {
-                            const Icon = action.icon;
+                          {tableActions
+                            .filter((action) => shouldShowAction(action, row))
+                            .map((action) => {
+                              const Icon = action.icon;
 
-                            if (action.show && !action.show(row)) return null;
-
-                            return (
-                              <button
-                                key={action.key}
-                                type="button"
-                                title={action.label}
-                                aria-label={action.label}
-                                onClick={() => handleAction(action.key, row)}
-                                className={`rounded-lg p-1.5 transition-all duration-200 ${
-                                  action.hover || "hover:bg-gray-100"
-                                }`}
-                              >
-                                <Icon
-                                  className={`h-5 w-5 ${
-                                    action.color || "text-gray-500"
+                              return (
+                                <button
+                                  key={action.key}
+                                  type="button"
+                                  title={action.label}
+                                  aria-label={action.label}
+                                  onClick={() => handleAction(action.key, row)}
+                                  className={`rounded-lg p-1.5 transition-all duration-200 ${
+                                    action.hover || "hover:bg-gray-100"
                                   }`}
-                                  strokeWidth={1.9}
-                                />
-                              </button>
-                            );
-                          })}
+                                >
+                                  <Icon
+                                    className={`h-5 w-5 ${
+                                      action.color || "text-gray-500"
+                                    }`}
+                                    strokeWidth={1.9}
+                                  />
+                                </button>
+                              );
+                            })}
                         </div>
                       ) : column.render ? (
                         column.render(row[column.key], row)

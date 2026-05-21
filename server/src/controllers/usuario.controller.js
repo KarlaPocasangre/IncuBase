@@ -141,7 +141,83 @@ const crearUsuario = async (req, res) => {
   }
 };
 
+const desactivarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const estadoInactivo = await prisma.estado_usuario.findUnique({
+      where: {
+        nombre: "Inactivo",
+      },
+    });
+
+    if (!estadoInactivo) {
+      return res.status(404).json({
+        ok: false,
+        message: "No existe el estado Inactivo en la base de datos",
+      });
+    }
+
+    const usuarioExistente = await prisma.usuario.findUnique({
+      where: {
+        id_usuario: BigInt(id),
+      },
+    });
+
+    if (!usuarioExistente) {
+      return res.status(404).json({
+        ok: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    const usuarioActualizado = await prisma.usuario.update({
+      where: {
+        id_usuario: BigInt(id),
+      },
+      data: {
+        id_estado_usuario: estadoInactivo.id_estado_usuario,
+      },
+      select: {
+        id_usuario: true,
+        nombre: true,
+        apellido: true,
+        email: true,
+        telefono: true,
+        fecha_creacion: true,
+        rol: {
+          select: {
+            id_rol: true,
+            nombre_rol: true,
+          },
+        },
+        estado_usuario: {
+          select: {
+            id_estado_usuario: true,
+            nombre: true,
+          },
+        },
+      },
+    });
+
+    return res.json({
+      ok: true,
+      message: "Usuario desactivado correctamente",
+      usuario: serializeBigInt(usuarioActualizado),
+    });
+  } catch (error) {
+    console.error("Error al desactivar usuario:", error);
+
+    return res.status(500).json({
+      ok: false,
+      message: "Error al desactivar el usuario",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   obtenerUsuarios,
   crearUsuario,
+  desactivarUsuario,
 };

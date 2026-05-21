@@ -158,6 +158,7 @@ export const usuariosConfig = {
       icon: UserRoundX,
       color: "text-red-400",
       hover: "hover:bg-red-50",
+      hiddenWhen: (row) => row.estado === "Inactivo",
     },
     {
       key: "detail",

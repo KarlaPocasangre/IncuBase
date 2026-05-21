@@ -2,20 +2,26 @@ import { useEffect, useMemo, useState } from "react";
 
 import ManagementPage from "../../../components/management/ManagementPage";
 import { usuariosConfig } from "../../../feature/usuarios/usuarios.config";
+
 import {
   createUsuarioRequest,
+  disableUsuarioRequest,
   getUsuariosRequest,
 } from "../../../services/usuarios.service";
+
 import {
   getEstadosUsuarioRequest,
   getRolesRequest,
 } from "../../../services/catalogos.service";
 
 import {
+  showDisableUserConfirm,
   showInvalidDataAlert,
   showLoadDataError,
   showRegisterError,
   showRegisterSuccess,
+  showStatusChangeError,
+  showStatusChangeSuccess,
 } from "../../../utils/alerts";
 
 import { MODULES } from "../../../constants/modules";
@@ -32,19 +38,30 @@ function formatFecha(fecha) {
   });
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 function mapUsuario(usuario) {
   return {
     id: usuario.id_usuario,
     id_rol: usuario.rol?.id_rol || usuario.id_rol,
     id_estado_usuario:
       usuario.estado_usuario?.id_estado_usuario || usuario.id_estado_usuario,
+
     nombres: usuario.nombre,
     apellidos: usuario.apellido,
     nombreCompleto: `${usuario.nombre} ${usuario.apellido}`,
+
     email: usuario.email,
     telefono: usuario.telefono || "Sin teléfono",
+
     rol: usuario.rol?.nombre_rol || "Sin rol",
     estado: usuario.estado_usuario?.nombre || "Sin estado",
+
     fechaCreacion: formatFecha(usuario.fecha_creacion),
     fechaActualizacion: formatFecha(usuario.fecha_actualizacion),
   };
@@ -118,13 +135,13 @@ export default function GestionUsuariosPage() {
     } catch (error) {
       console.error("Error al agregar usuario:", error);
 
-      const message = error.message || "";
+      const message = normalizeText(error.message);
 
       if (
-        message.toLowerCase().includes("correo") ||
-        message.toLowerCase().includes("email") ||
-        message.toLowerCase().includes("ya existe") ||
-        message.toLowerCase().includes("registrado")
+        message.includes("correo") ||
+        message.includes("email") ||
+        message.includes("ya existe") ||
+        message.includes("registrado")
       ) {
         showInvalidDataAlert({
           text: "El correo ingresado ya está registrado. Usa un correo diferente.",
@@ -140,19 +157,55 @@ export default function GestionUsuariosPage() {
     }
   };
 
+  const handleDisableUsuario = async (usuario) => {
+    const estadoActual = normalizeText(usuario.estado);
+
+    if (estadoActual === "inactivo") {
+      showInvalidDataAlert({
+        text: "Este usuario ya se encuentra inactivo.",
+      });
+      return;
+    }
+
+    try {
+      const result = await showDisableUserConfirm();
+
+      if (!result.isConfirmed) return;
+
+      setLoading(true);
+
+      await disableUsuarioRequest(usuario.id);
+
+      await cargarUsuarios();
+
+      showStatusChangeSuccess({
+        module: MODULES.USUARIO,
+      });
+    } catch (error) {
+      console.error("Error al desactivar usuario:", error);
+
+      showStatusChangeError({
+        module: MODULES.USUARIO,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const pageConfig = useMemo(() => {
     const totalUsuarios = usuarios.length;
 
     const totalAdministradores = usuarios.filter(
-      (usuario) => usuario.rol === "Administrador",
+      (usuario) => normalizeText(usuario.rol) === "administrador",
     ).length;
 
-    const totalTecnicos = usuarios.filter(
-      (usuario) => usuario.rol === "Técnico" || usuario.rol === "Tecnico",
-    ).length;
+    const totalTecnicos = usuarios.filter((usuario) => {
+      const rol = normalizeText(usuario.rol);
+      return rol === "tecnico" || rol === "tecnico de campo";
+    }).length;
 
     const totalActivos = usuarios.filter(
-      (usuario) => usuario.estado === "Activo",
+      (usuario) => normalizeText(usuario.estado) === "activo",
     ).length;
 
     return {
@@ -221,6 +274,7 @@ export default function GestionUsuariosPage() {
       config={pageConfig}
       data={usuarios}
       onCreate={handleAddUsuario}
+      onDelete={handleDisableUsuario}
       loading={loading}
     />
   );

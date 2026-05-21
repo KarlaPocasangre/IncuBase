@@ -37,3 +37,12 @@ export const createUsuarioRequest = async (usuario) => {
 
   return handleResponse(response, "Error al agregar usuario");
 };
+
+export const disableUsuarioRequest = async (id) => {
+  const response = await fetch(`${API_URL}/${id}/desactivar`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  return handleResponse(response, "Error al desactivar usuario");
+};
