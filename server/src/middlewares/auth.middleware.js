@@ -1,32 +1,27 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 const verificarToken = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization
+    const token = req.cookies?.token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return res.status(401).json({
         success: false,
-        mensaje: 'Token no proporcionado'
-      })
+        mensaje: "No autenticado",
+      });
     }
 
-    const token = authHeader.split(' ')[1]
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    req.usuario = decoded
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.usuario = decoded;
-    console.log("Usuario decodificado:", decoded)
 
-    next()
+    next();
   } catch (error) {
     return res.status(401).json({
       success: false,
-      mensaje: 'Token inválido o expirado'
-    })
+      mensaje: "Sesión inválida o expirada",
+    });
   }
-}
+};
 
-module.exports = verificarToken
+module.exports = verificarToken;

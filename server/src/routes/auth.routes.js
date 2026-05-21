@@ -1,21 +1,25 @@
-const express = require('express')
+const express = require("express");
+
 const {
   login,
+  logout,
   forgotPassword,
   verifyCode,
   resetPassword,
-  perfil
-} = require('../controllers/auth.controller')
+  perfil,
+} = require("../controllers/auth.controller");
 
-const verificarToken = require('../middlewares/auth.middleware')
+const verificarToken = require("../middlewares/auth.middleware");
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/login', login)
-router.post('/forgot-password', forgotPassword)
-router.post('/verify-code', verifyCode)
-router.post('/reset-password', resetPassword)
+router.post("/login", login);
+router.post("/logout", logout);
 
-router.get('/perfil', verificarToken, perfil)
+router.post("/forgot-password", forgotPassword);
+router.post("/verify-code", verifyCode);
+router.post("/reset-password", resetPassword);
 
-module.exports = router
+router.get("/perfil", verificarToken, perfil);
+
+module.exports = router;
