@@ -1,9 +1,11 @@
-import {useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Egg, ClockAlert, Turtle, EggOff, Fence } from "lucide-react";
-import { crearCorral,obtenerCorrales } from "../../services/corrales.service";
+
+import { crearCorral, obtenerCorrales } from "../../services/corrales.service";
 import { obtenerNidosPorCorral } from "../../services/nidos.service";
 
 import CorralFormModal from "../../components/corrales/CorralFormModal";
+import EmptyCorralesState from "../../components/corrales/EmptyCorralesState";
 import NidoDetails from "../../components/nidos/NidoDetails";
 
 function CorralesNidosPage() {
@@ -12,15 +14,25 @@ function CorralesNidosPage() {
   const [corrales, setCorrales] = useState([]);
   const [selectedCorral, setSelectedCorral] = useState("");
   const [nidosBackend, setNidosBackend] = useState([]);
+  const [selectedNido, setSelectedNido] = useState(null);
 
+  const rows = ["A", "B", "C", "D", "E", "F"];
+  const cols = ["01", "02", "03", "04", "05", "06", "07", "08"];
+
+  const hayCorrales = corrales.length > 0;
 
   const loadCorrales = async () => {
     try {
       const data = await obtenerCorrales();
+
       setCorrales(data);
 
       if (data.length > 0) {
         setSelectedCorral(String(data[0].id_corral));
+      } else {
+        setSelectedCorral("");
+        setNidosBackend([]);
+        setSelectedNido(null);
       }
     } catch (error) {
       console.error("Error al obtener corrales:", error);
@@ -30,7 +42,9 @@ function CorralesNidosPage() {
   const loadNidos = async (idCorral) => {
     try {
       const data = await obtenerNidosPorCorral(idCorral);
+
       setNidosBackend(data);
+      setSelectedNido(null);
     } catch (error) {
       console.error("Error al obtener nidos:", error);
     }
@@ -41,21 +55,10 @@ function CorralesNidosPage() {
   }, []);
 
   useEffect(() => {
-  if (selectedCorral) {
-    loadNidos(selectedCorral);
-  }
+    if (selectedCorral) {
+      loadNidos(selectedCorral);
+    }
   }, [selectedCorral]);
-
-  const [selectedNido, setSelectedNido] = useState({
-    row: "C",
-    col: "04",
-    estado: "eclosionado",
-  });
-
-  const rows = ["A", "B", "C", "D", "E", "F"];
-  const cols = ["01", "02", "03", "04", "05", "06", "07", "08"];
-
-
 
   const stateClasses = {
     ocupado: "bg-emerald-500 text-white",
@@ -120,7 +123,7 @@ function CorralesNidosPage() {
       icon: Fence,
       iconColor: "text-[#7BBFA8]",
     },
-   {
+    {
       title: "Total Nidos",
       value: nidosBackend.length,
       icon: Egg,
@@ -128,22 +131,25 @@ function CorralesNidosPage() {
     },
     {
       title: "Incubando",
-      value: nidosBackend.filter(
-        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "ocupado"
-      ).length,
+      value: nidosBackend.filter((nido) => {
+        const estado = nido.estado_nido?.nombre?.toLowerCase();
+
+        return estado === "registrado" || estado === "en incubación";
+      }).length,
       dotColor: "bg-emerald-500",
     },
     {
       title: "Próximos a eclosión",
       value: nidosBackend.filter(
-        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "proximo"
+        (nido) =>
+          nido.estado_nido?.nombre?.toLowerCase() === "próximo a eclosión",
       ).length,
       dotColor: "bg-orange-400",
     },
     {
       title: "Eclosionados",
       value: nidosBackend.filter(
-        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "eclosionado"
+        (nido) => nido.estado_nido?.nombre?.toLowerCase() === "eclosionado",
       ).length,
       dotColor: "bg-blue-400",
     },
@@ -186,6 +192,7 @@ function CorralesNidosPage() {
         observaciones: newCorral.observaciones,
         creadoPor: 1,
       });
+
       await loadCorrales();
       setAddOpen(false);
     } catch (error) {
@@ -265,80 +272,87 @@ function CorralesNidosPage() {
             ))}
           </div>
 
-          <div className="overflow-x-auto pb-3">
-            <div className="mx-auto w-fit min-w-[620px]">
-              <div className="mb-4 ml-10 grid grid-cols-8 gap-3 text-center text-sm font-bold text-[#6B5D55]">
-                {cols.map((col) => (
-                  <span key={col}>{col}</span>
-                ))}
-              </div>
-
-              <div className="space-y-3">
-                {rows.map((row) => (
-                  <div key={row} className="flex items-center gap-4">
-                    <span className="w-5 text-sm font-bold text-[#6B5D55]">
-                      {row}
-                    </span>
-
-                    <div className="grid grid-cols-8 gap-3">
-                      {cols.map((col) => {
-                        const key = `${row}-${col}`;
-                        const estado = nidosMap[key]?.estado || "vacio";
-
-                        const isSelected =
-                          selectedNido.row === row && selectedNido.col === col;
-
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                           onClick={() => {
-                              const nidoData = nidosMap[key]?.data;
-                              setSelectedNido({
-                                row,
-                                col,
-                                estado,
-                                data: nidoData || null,
-                              });
-                            }}
-                            className={`flex h-[58px] w-[58px] items-center justify-center rounded-xl border-[4px] text-2xl font-bold shadow-sm transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-md ${
-                              isSelected
-                                ? "border-[#0F6B3D] ring-4 ring-[#0F6B3D]/15"
-                                : "border-[#DDF3EC]"
-                            } ${stateClasses[estado]}`}
-                          >
-                            {stateIcons[estado]}
-                          </button>
-                        );
-                      })}
-                    </div>
+          {!hayCorrales ? (
+            <EmptyCorralesState />
+          ) : (
+            <>
+              <div className="overflow-x-auto pb-3">
+                <div className="mx-auto w-fit min-w-[620px]">
+                  <div className="mb-4 ml-10 grid grid-cols-8 gap-3 text-center text-sm font-bold text-[#6B5D55]">
+                    {cols.map((col) => (
+                      <span key={col}>{col}</span>
+                    ))}
                   </div>
-                ))}
+
+                  <div className="space-y-3">
+                    {rows.map((row) => (
+                      <div key={row} className="flex items-center gap-4">
+                        <span className="w-5 text-sm font-bold text-[#6B5D55]">
+                          {row}
+                        </span>
+
+                        <div className="grid grid-cols-8 gap-3">
+                          {cols.map((col) => {
+                            const key = `${row}-${col}`;
+                            const estado = nidosMap[key]?.estado || "vacio";
+
+                            const isSelected =
+                              selectedNido?.row === row &&
+                              selectedNido?.col === col;
+
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                onClick={() => {
+                                  const nidoData = nidosMap[key]?.data;
+
+                                  setSelectedNido({
+                                    row,
+                                    col,
+                                    estado,
+                                    data: nidoData || null,
+                                  });
+                                }}
+                                className={`flex h-[58px] w-[58px] items-center justify-center rounded-xl border-[4px] text-2xl font-bold shadow-sm transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-md ${
+                                  isSelected
+                                    ? "border-[#0F6B3D] ring-4 ring-[#0F6B3D]/15"
+                                    : "border-[#DDF3EC]"
+                                } ${stateClasses[estado]}`}
+                              >
+                                {stateIcons[estado]}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div className="mt-6 flex flex-col gap-3 border-t border-[#E3ECE7] pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-slate-500">
-              Corral seleccionado para monitoreo de nidos.
-            </p>
+              <div className="mt-6 flex flex-col gap-3 border-t border-[#E3ECE7] pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-slate-500">
+                  Corral seleccionado para monitoreo de nidos.
+                </p>
 
-            <select
-              value={selectedCorral}
-              onChange={(e) => setSelectedCorral(e.target.value)}
-              className="h-[48px] w-full rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none transition focus:border-[#0F6B3D] focus:ring-4 focus:ring-[#0F6B3D]/10 sm:w-[210px]"
-            >
-              {corrales.length === 0 ? (
-                <option value="">Sin corrales registrados</option>
-              ) : (
-                corrales.map((corral) => (
-                <option key={String(corral.id_corral)} value={String(corral.id_corral)}>
-                  {corral.codigo} - {corral.ubicacion}
-                </option>
-                ))
-              )}
-            </select>
-          </div>
+                <select
+                  value={selectedCorral}
+                  onChange={(e) => setSelectedCorral(e.target.value)}
+                  className="h-[48px] w-full rounded-xl border border-[#D7E4E1] bg-white px-4 text-sm text-slate-600 outline-none transition focus:border-[#0F6B3D] focus:ring-4 focus:ring-[#0F6B3D]/10 sm:w-[260px]"
+                >
+                  {corrales.map((corral) => (
+                    <option
+                      key={String(corral.id_corral)}
+                      value={String(corral.id_corral)}
+                    >
+                      {corral.codigo} - {corral.ubicacion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
         </section>
 
         <div className="min-w-0">

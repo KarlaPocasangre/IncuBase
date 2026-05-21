@@ -1,8 +1,7 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CalendarDays,
   ClipboardCheck,
-  Egg,
   Fence,
   MapPin,
   Hash,
@@ -12,10 +11,15 @@ import {
 import RegistroNidoForm from "../../../components/nidos/RegistroNidoForm";
 import SeleccionPosicionCard from "../../../components/nidos/SeleccionPosicionCard";
 import ProtocoloCorral from "../../../components/nidos/ProtocoloCorral";
+import EmptyCorralesState from "../../../components/corrales/EmptyCorralesState";
+
 import { obtenerCorrales } from "../../../services/corrales.service";
-import { crearNido } from "../../../services/nidos.service";
+import {
+  crearNido,
+  obtenerNidosPorCorral,
+} from "../../../services/nidos.service";
+
 import { buildNidoPayload } from "../../../utils/nidos.helpers";
-import { obtenerNidosPorCorral } from "../../../services/nidos.service";
 
 const initialForm = {
   especie: "",
@@ -33,14 +37,28 @@ const initialForm = {
 export default function RegistroNidosPage() {
   const [form, setForm] = useState(initialForm);
   const [resetGridKey, setResetGridKey] = useState(0);
+
   const [corrales, setCorrales] = useState([]);
   const [nidosCorral, setNidosCorral] = useState([]);
 
+  const hayCorrales = corrales.length > 0;
+
   useEffect(() => {
-   const loadCorrales = async () => {
+    const loadCorrales = async () => {
       try {
         const data = await obtenerCorrales();
+
         setCorrales(data);
+
+        if (data.length === 0) {
+          setForm((prev) => ({
+            ...prev,
+            corral: "",
+            posicion: null,
+          }));
+
+          setNidosCorral([]);
+        }
       } catch (error) {
         console.error("Error al cargar corrales:", error);
       }
@@ -50,27 +68,23 @@ export default function RegistroNidosPage() {
   }, []);
 
   useEffect(() => {
-  const loadNidosCorral = async () => {
-    if (!form.corral) {
-      setNidosCorral([]);
-      return;
-    }
+    const loadNidosCorral = async () => {
+      if (!form.corral) {
+        setNidosCorral([]);
+        return;
+      }
 
-    try {
-      const data = await obtenerNidosPorCorral(form.corral);
-      setNidosCorral(data);
-    } catch (error) {
-      console.error("Error al cargar nidos del corral:", error);
-    }
-  };
+      try {
+        const data = await obtenerNidosPorCorral(form.corral);
+        setNidosCorral(data);
+      } catch (error) {
+        console.error("Error al cargar nidos del corral:", error);
+      }
+    };
 
-  loadNidosCorral();
-}, [form.corral]);
+    loadNidosCorral();
+  }, [form.corral]);
 
-  /*
-    Luego estos datos deberían venir del backend.
-    Son las posiciones que ya tienen nido registrado.
-  */
   const getFilaLetra = (fila) => {
     const filas = {
       1: "A",
@@ -99,40 +113,45 @@ export default function RegistroNidosPage() {
 
   const limpiarFormulario = () => {
     setForm(initialForm);
+    setNidosCorral([]);
     setResetGridKey((prev) => prev + 1);
   };
 
- const guardarRegistro = async () => {
-  try {
-    if (!form.corral || !form.posicion) {
-      console.error("Selecciona un corral y una posición");
-      return;
+  const guardarRegistro = async () => {
+    try {
+      if (!form.corral || !form.posicion) {
+        console.error("Selecciona un corral y una posición");
+        return;
+      }
+
+      const payload = buildNidoPayload(form);
+
+      await crearNido(payload);
+
+      limpiarFormulario();
+    } catch (error) {
+      console.error("Error al registrar nido:", error);
     }
-
-    const payload = buildNidoPayload(form);
-
-    await crearNido(payload);
-
-    limpiarFormulario();
-  } catch (error) {
-    console.error("Error al registrar nido:", error);
-  }
-};
+  };
 
   return (
     <section className="space-y-5">
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.35fr_1fr]">
         <RegistroNidoForm form={form} onChange={handleChange} />
 
-        <SeleccionPosicionCard
-          form={form}
-          onChange={handleChange}
-          onClear={limpiarFormulario}
-          onSave={guardarRegistro}
-          resetGridKey={resetGridKey}
-          posicionesOcupadas={posicionesOcupadas}
-          corrales={corrales}
-        />
+        {hayCorrales ? (
+          <SeleccionPosicionCard
+            form={form}
+            onChange={handleChange}
+            onClear={limpiarFormulario}
+            onSave={guardarRegistro}
+            resetGridKey={resetGridKey}
+            posicionesOcupadas={posicionesOcupadas}
+            corrales={corrales}
+          />
+        ) : (
+          <EmptyCorralesState />
+        )}
       </div>
 
       <ResumenRegistroNido form={form} />
@@ -156,6 +175,7 @@ function ResumenRegistroNido({ form }) {
           <h2 className="text-base font-bold text-[#163832]">
             Resumen del registro
           </h2>
+
           <p className="text-sm text-gray-500">
             Vista rápida de los datos principales antes de guardar.
           </p>
@@ -202,6 +222,7 @@ function ResumenItem({ icon: Icon, label, value }) {
     <article className="rounded-xl border border-[#D8E5DF] bg-[#F8FCFA] p-4">
       <div className="mb-2 flex items-center gap-2">
         <Icon className="h-4 w-4 text-[#0F6B3D]" />
+
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
           {label}
         </p>
